@@ -11,7 +11,7 @@ export default function Contact() {
         <li><a href={links.github} target="_blank" rel="noreferrer">GitHub: adymsma-works</a></li>
         <li><a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn: Arvin Yapliong</a></li>
         <li><a href={links.company} target="_blank" rel="noreferrer">MSMA Solutions</a></li>
-        <li><a href={links.resume} download>Resume (PDF)</a></li>
+        <li><a href={links.resume} download="Arvin_Yapliong_Developer_Resume.pdf">Resume (PDF)</a></li>
       </ul>
     </Section>
   );
