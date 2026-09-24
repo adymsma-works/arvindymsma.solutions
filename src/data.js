@@ -5,7 +5,7 @@ export const links = {
   github: "https://github.com/adymsma-works",
   linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
   company: "https://msma.ph",
-  resume: "/Arvin_Yapliong_Developer_Resume.pdf",
+  resume: `${import.meta.env.BASE_URL}Arvin_Yapliong_Developer_Resume.pdf`,
 };
 
 export const hris = {
