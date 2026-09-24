@@ -1,7 +1,7 @@
 // All portfolio text lives here. Edit this file to update the site.
 
 export const links = {
-  email: "arvindy10111@gmail.com",
+  email: "ady.msma@gmail.com",
   github: "https://github.com/adymsma-works",
   linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
   company: "https://msma.ph",
