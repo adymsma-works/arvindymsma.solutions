@@ -1,131 +1,57 @@
-# Hi, I'm Arvin Dy 👋
+# arvindymsma.solutions
 
-## IT Associate | Developer
+Portfolio of Arvin D. Yapliong, built with React and Vite. Plain CSS, no runtime dependencies beyond React.
 
-I am an IT Associate specializing in web application development, system implementation, and business software solutions.
+## Where things live
 
-Currently working at **MSMA Solutions Department** where I contribute to developing a cloud-based Human Resource Information System (HRIS) with biometric and face recognition attendance capabilities.
+| To change | Edit |
+| --- | --- |
+| Any text, links, projects, jobs, skills | `src/data.js` |
+| Colors, fonts, spacing | top of `src/index.css` (the `:root` block) |
+| Page title, description, share tags | `index.html` |
+| Resume file | replace `public/Arvin_Yapliong_Developer_Resume.pdf` (keep the name) |
 
----
+## Run it on your computer
 
-# 🚀 Current Project
+1. Install Node.js 22 LTS or newer from nodejs.org. Check with `node -v`.
+2. Open a terminal in this folder and run `npm install` (first time only; it also refreshes `package-lock.json`).
+3. Run `npm run dev` and open the address it prints (usually http://localhost:5173). Edits show instantly.
+4. Before publishing, run `npm run build`, then `npm run preview` to test the real production build.
 
-## Cloud-Based HRIS System
+## Save your changes to GitHub
 
-A web-based Human Resource Information System designed to improve employee management and attendance monitoring.
+```bash
+git add -A
+git commit -m "Redesign portfolio"
+git push origin main
+```
 
-### Main Features
+## Deploy
 
-✔ Employee Information Management  
-✔ Attendance Monitoring  
-✔ Biometric Integration  
-✔ Face Recognition Attendance  
-✔ Cloud-Based Access  
-✔ HR Reports and Dashboard  
+### Option A: Vercel (simplest)
 
-### Technology Stack
+1. Sign in at vercel.com with your GitHub account.
+2. Add New, then Project, and import `adymsma-works/arvindymsma.solutions`.
+3. Vercel detects Vite. Confirm build command `npm run build` and output directory `dist`, then Deploy.
+4. Every push to `main` now redeploys automatically.
+5. Delete the `.github` folder (it is only for GitHub Pages).
 
-Frontend:
-- Angular
-- TypeScript
-- HTML
-- CSS
-- Bootstrap
+Netlify works the same way: Add new site, Import from Git, build `npm run build`, publish directory `dist`.
 
-Backend:
-- Node.js
-- Next.js
+### Option B: GitHub Pages (no extra account)
 
-Database:
-- MySQL
+1. Push the project (the workflow in `.github/workflows/deploy.yml` is included).
+2. On GitHub open the repo, then Settings, Pages, and set Source to GitHub Actions.
+3. Open the Actions tab and wait for "Deploy to GitHub Pages" to turn green.
 
-Tools:
-- Git
-- GitHub
-- VS Code
+## Use your domain (arvindymsma.solutions)
 
+1. Add the domain in your host: Vercel under Project, Settings, Domains; GitHub Pages under Settings, Pages, Custom domain.
+2. The host shows the exact DNS records to create. At your domain registrar, open DNS settings and add them (typically an A record or CNAME).
+3. Wait a few minutes up to a few hours, then enable HTTPS if the host asks. `public/CNAME` already contains the domain for GitHub Pages.
 
----
+## After it is live
 
-# 💻 Featured Projects
-
-
-## Alpha Insurance & Surety Company System
-
-Role:
-**Lead Developer**
-
-A web application developed to improve company workflow and business process management.
-
-
----
-
-## Bail Bonds and Records Management System
-
-Role:
-**Software Implementor Intern**
-
-Developed and maintained a system for managing bail bonds and records.
-
-
----
-
-## BinBetter
-
-Role:
-**Programmer**
-
-Developed software features and contributed to system implementation.
-
-
----
-
-## eSportsPP
-
-Role:
-**Project Manager / Programmer**
-
-Managed project activities while contributing programming tasks.
-
-
----
-
-# 🛠 Skills
-
-
-### Frontend
-
-Angular  
-TypeScript  
-HTML  
-CSS  
-Bootstrap  
-
-
-### Backend
-
-Node.js  
-Next.js  
-
-
-### Database
-
-MySQL  
-
-
-### Development Tools
-
-Git  
-GitHub  
-VS Code  
-
-
----
-
-# 📫 Connect With Me
-
-GitHub:
-github.com/adymsma-works
-
-LinkedIn:
-linkedin.com/in/arvin-y-18a8312a5
+- Open the site on your phone and check every link, especially the resume download.
+- Paste the URL into LinkedIn's Post Inspector or a chat app to preview the share card.
+- Run Lighthouse in Chrome DevTools; expect high scores.
