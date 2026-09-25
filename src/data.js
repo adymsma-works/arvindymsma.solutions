@@ -2,12 +2,6 @@
 
 export const links = {
   email: "ady.msma@gmail.com",
-<<<<<<< HEAD
-  github: "https://github.com/adymsma-works",
-  linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
-  company: "https://msma.ph",
-  resume: `${import.meta.env.BASE_URL}Arvin_Yapliong_Developer_Resume.pdf`,
-=======
   phone: "09670872093",
   github: "https://github.com/adymsma-works",
   linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
@@ -21,7 +15,6 @@ export const links = {
 // Shown on the business card section. tag mirrors the MSMA Solutions Department line.
 export const card = {
   tag: "Building solutions. Driving progress.",
->>>>>>> 34e5c79 (Redesign + business card)
 };
 
 export const hris = {
@@ -42,17 +35,10 @@ export const hris = {
 };
 
 export const otherProjects = [
-<<<<<<< HEAD
-  { name: "Alpha Insurance System", role: "Lead Developer", text: "A web-based business solution supporting company workflow and daily operations." },
-  { name: "Bail bonds records system", role: "Software Implementor Intern, 2024", text: "Developed and maintained a bail bonds and records management system." },
-  { name: "BinBetter", role: "Programmer", text: "Contributed programming tasks and software development." },
-  { name: "eSportsPP", role: "Project Manager and Programmer", text: "Managed project activities while building software features." },
-=======
   { name: "Alpha Insurance System", role: "Lead Developer, 2025", text: "A web-based business solution supporting company workflow and daily operations." },
   { name: "Bail bonds records system", role: "Software Implementor Intern, 2024", text: "Developed and maintained a bail bonds and records management system." },
   { name: "BinBetter", role: "Programmer, 2024", text: "Contributed programming tasks and software development." },
   { name: "eSportsPP", role: "Project Manager and Programmer, 2023", text: "Managed project activities while building software features." },
->>>>>>> 34e5c79 (Redesign + business card)
 ];
 
 export const timesheet = [
@@ -82,13 +68,8 @@ export const timesheet = [
 export const education = [
   { title: "BS Information Technology", where: "University of Cebu, 2025" },
   { title: "TVL Computer Programming", where: "College of Technological Sciences Cebu, 2019" },
-<<<<<<< HEAD
-  { title: "Google IT Support Certificate", where: "Certification" },
-  { title: "Microsoft IT Support Specialist", where: "Certification" },
-=======
   { title: "Google IT Support Certificate", where: "Credential ID M9WPKPBQEDGZ" },
   { title: "Microsoft IT Support Specialist", where: "Credential ID K1V9PSQ9X0PC" },
->>>>>>> 34e5c79 (Redesign + business card)
 ];
 
 export const stack = [
