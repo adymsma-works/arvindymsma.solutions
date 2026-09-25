@@ -1,10 +1,22 @@
 :root {
+<<<<<<< HEAD
   --paper: #ECEFEA;
   --card: #F8F9F5;
   --ink: #12244A;
   --mute: #4C5B78;
   --line: #B9C6DC;
   --stamp: #C8321E;
+=======
+  --paper: #EDF1F6;
+  --card: #FFFFFF;
+  --ink: #0A2647;
+  --ink-deep: #081C37;
+  --ink-mid: #103D6D;
+  --mute: #48607F;
+  --line: #C7D5E4;
+  --stamp: #C8321E;
+  --lime: #A6C42B;
+>>>>>>> 34e5c79 (Redesign + business card)
   --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -55,7 +67,12 @@ a { color: inherit; text-underline-offset: .2em; }
 /* Sections */
 .sec { padding-block: clamp(3rem, 7vw, 5.5rem); border-top: 1px solid var(--line); }
 .sec-grid { display: grid; gap: 1.6rem; }
+<<<<<<< HEAD
 .sec-title { font: 900 clamp(2.2rem, 4.4vw, 3rem)/1 var(--display); overflow-wrap: anywhere; text-transform: uppercase; letter-spacing: .01em; }
+=======
+.sec-grid > * { min-width: 0; }
+.sec-title { font: 900 clamp(2.2rem, 4vw, 2.6rem)/1.02 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+>>>>>>> 34e5c79 (Redesign + business card)
 .sec-body > * + * { margin-top: 1rem; }
 .sec-body p { max-width: 62ch; }
 .sub { font: 800 1.6rem/1.1 var(--display); text-transform: uppercase; letter-spacing: .02em; margin-top: 3rem !important; padding-bottom: .6rem; border-bottom: 2px solid var(--ink); }
@@ -107,6 +124,32 @@ h4 { font-size: 1.02rem; }
 .contact-list a:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--stamp); text-decoration-thickness: 3px; }
 .sec.ink :focus-visible { outline-color: #fff; }
 
+<<<<<<< HEAD
+=======
+/* Business card: a physical object on the page, so it gets shadow + radius
+   where the rest of the site stays flat and ruled. */
+.bizcard { display: grid; margin-top: 1.6rem; max-width: 640px; border-radius: 14px; overflow: hidden; box-shadow: 0 22px 44px -20px rgba(8, 28, 55, .45); }
+.bizcard-left, .bizcard-right { min-width: 0; }
+.bizcard-left { background: linear-gradient(155deg, var(--ink-deep), var(--ink-mid)); color: #fff; padding: 1.6rem 1.5rem; }
+.bizcard-left h3 { font: 900 2.4rem/1 var(--display); letter-spacing: .03em; }
+.bizcard-left h3 span { color: var(--lime); }
+.bizcard-left .dept { margin-top: .3rem !important; font-size: .8rem; font-weight: 700; letter-spacing: .1em; color: #C7D8EC; }
+.bizcard-left .tag { margin-top: 1.4rem !important; font-size: .78rem; font-weight: 700; letter-spacing: .06em; color: var(--lime); line-height: 1.4; }
+.bizcard-right { background: #fff; color: var(--ink); padding: 1.6rem 1.5rem; position: relative; }
+.bc-name { font: 800 1.5rem/1.15 var(--display); text-transform: uppercase; }
+.bc-role { color: var(--ink-mid) !important; font-weight: 700; margin-top: .3rem !important; }
+.bc-dept { color: var(--mute) !important; font-size: .92rem; margin-top: .1rem !important; }
+.bc-contact { margin-top: 1rem !important; padding-top: 1rem; border-top: 1px solid var(--line); display: grid; gap: .45rem; }
+.bc-contact a { text-decoration: none; font-size: .92rem; }
+.bc-contact a:hover { color: var(--ink-mid); text-decoration: underline; }
+.bc-foot { margin-top: .45rem !important; display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.bc-foot a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; font-size: .85rem; }
+.bc-foot a:hover { color: var(--ink-mid); text-decoration: underline; }
+.bc-qr { flex-shrink: 0; border-radius: 6px; border: 1px solid var(--line); }
+@media (max-width: 560px) { .bizcard { grid-template-columns: 1fr; } }
+@media (min-width: 561px) { .bizcard { grid-template-columns: 38% 62%; } }
+
+>>>>>>> 34e5c79 (Redesign + business card)
 .foot { padding-block: 1.6rem; font-size: .9rem; color: var(--mute); }
 
 /* Wider screens: a form-style label column on the left */
@@ -123,7 +166,11 @@ h4 { font-size: 1.02rem; }
 }
 @media (min-width: 960px) {
   .hero { grid-template-columns: 1.15fr .85fr; gap: 4rem; }
+<<<<<<< HEAD
   .sec-grid { grid-template-columns: 15rem 1fr; gap: 2.5rem; }
+=======
+  .sec-grid { grid-template-columns: 17rem 1fr; gap: 2rem; }
+>>>>>>> 34e5c79 (Redesign + business card)
   .sec-title { position: sticky; top: 88px; align-self: start; }
 }
 @media (max-width: 480px) {

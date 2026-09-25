@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Yapliong;Arvin;D.;;
+FN:Arvin D. Yapliong
+ORG:MSMA Solutions Department
+TITLE:IT Associate | Developer
+EMAIL;TYPE=INTERNET:ady.msma@gmail.com
+TEL;TYPE=CELL:+639670872093
+URL:https://adymsma-works.github.io/arvindymsma.solutions/
+URL;TYPE=LinkedIn:https://www.linkedin.com/in/arvin-y-18a8312a5
+URL;TYPE=GitHub:https://github.com/adymsma-works
+ADR;TYPE=WORK:;;Cebu City;;;;Philippines
+NOTE:Full-stack developer building the cloud HRIS at MSMA Solutions Department.
+END:VCARD
