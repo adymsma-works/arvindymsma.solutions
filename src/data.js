@@ -37,17 +37,17 @@ export const hris = {
 };
 
 export const otherProjects = [
-  { name: "Alpha Insurance System", role: "Lead Developer · 2025", text: "A web-based business solution supporting company workflow and daily operations." },
-  { name: "Bail bonds records system", role: "Software Implementor Intern · 2024", text: "Developed and maintained a bail bonds and records management system." },
-  { name: "BinBetter", role: "Programmer · 2024", text: "Contributed programming tasks and software development." },
+  { name: "Bail bonds & Record system", role: "Lead Developer · 2025", text: "From traditional encoding to developed and maintained a system to manage bail bonds and records" },
+  { name: "POS system", role: "Software Implementor Intern · 2024", text: "Managed POS systems for sales, inventory, and customers. Reconciled data, trained users, created reports, and provided tech support." },
+  { name: "BinBetter", role: "Programmer · 2024", text: "Capstone Project" },
   { name: "eSportsPP", role: "Project Manager and Programmer · 2023", text: "Managed project activities while building software features." },
 ];
 
 // Newest first — the way recruiters read a resume.
 export const timesheet = [
   { period: "Now", role: "IT Associate | Developer", org: "MSMA Solutions Department", text: "Building and improving business software, including the cloud HRIS. Supporting testing, implementation and automation work.", active: true },
-  { period: "2025", role: "Web Developer Intern", org: "Alpha Insurance & Surety Company Inc.", text: "Contributed to web application development and software improvements.", active: false },
-  { period: "2024", role: "Software Implementor Intern", org: "Cebu Innosoft Solutions Services Inc.", text: "Developed and maintained a bail bonds and records management system.", active: false },
+  { period: "2025", role: "Web Developer Intern", org: "Alpha Insurance & Surety Company Inc.", text: "Developed and maintained a bail bonds and records management system.", active: false },
+  { period: "2024", role: "Software Implementor Intern", org: "Cebu Innosoft Solutions Services Inc.", text: "Managed POS systems for sales, inventory, and customers. Reconciled data, trained users, created reports, and provided tech support.", active: false },
 ];
 
 export const education = [
