@@ -5,7 +5,13 @@ import Stack from "./components/Stack";
 import Card from "./components/Card";
 import Contact from "./components/Contact";
 
-const nav = [["Work", "#work"], ["Experience", "#experience"], ["Stack", "#stack"], ["Card", "#card"], ["Contact", "#contact"]];
+const nav = [
+  ["Work", "#work"],
+  ["Experience", "#experience"],
+  ["Stack", "#stack"],
+  ["Card", "#card"],
+  ["Contact", "#contact"],
+];
 
 export default function App() {
   return (
