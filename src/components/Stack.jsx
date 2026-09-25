@@ -6,8 +6,11 @@ export default function Stack() {
     <>
       <Section id="stack" title="Stack">
         <dl className="stack">
-          {stack.map(([k, v]) => (
-            <div key={k}><dt>{k}</dt><dd>{v}</dd></div>
+          {stack.map(([k, items]) => (
+            <div key={k}>
+              <dt>{k}</dt>
+              <dd><ul className="chips">{items.map((i) => <li key={i}>{i}</li>)}</ul></dd>
+            </div>
           ))}
         </dl>
 
@@ -15,8 +18,8 @@ export default function Stack() {
         <ul className="ledger">
           {workflows.map((w) => (
             <li key={w.when}>
-              <h4>{w.when}</h4>
-              <p>{w.then}</p>
+              <h4><span className="when">When</span> {w.when.replace(/^A /, "a ")}</h4>
+              <p><span className="when">Then</span> {w.then}</p>
             </li>
           ))}
         </ul>
@@ -27,7 +30,7 @@ export default function Stack() {
         <ol className="steps">
           {approach.map(([t, d], i) => (
             <li key={t}>
-              <span>{i + 1}</span>
+              <span aria-hidden="true">{i + 1}</span>
               <h3>{t}</h3>
               <p>{d}</p>
             </li>

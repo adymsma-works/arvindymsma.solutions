@@ -1,0 +1,22 @@
+/* The standalone printable card page (card.html). */
+@import "../index.css";
+
+body { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 12px 20px; font-size: .95rem; font-weight: 600; }
+.toolbar > span { display: flex; gap: .6rem; align-items: center; }
+.toolbar a, .toolbar button { font: inherit; color: var(--ink); text-decoration: none; padding: .55rem 1rem; border: 2px solid var(--ink); border-radius: var(--radius); background: transparent; cursor: pointer; }
+.toolbar button { background: var(--ink); color: var(--paper); }
+.toolbar a:hover { background: var(--ink); color: var(--paper); }
+.toolbar button:hover { background: var(--ink-mid); border-color: var(--ink-mid); }
+main { display: grid; place-items: center; padding: 16px 20px 48px; }
+main .bizcard-frame { max-width: 1000px; margin: 0; }
+main .bizcard { box-shadow: 0 24px 70px rgba(8, 28, 55, .22); }
+
+@page { size: landscape; margin: 12mm; }
+@media print {
+  body { background: #fff; display: block; min-height: 0; }
+  .toolbar { display: none; }
+  main { padding: 0; }
+  main .bizcard-frame { max-width: none; }
+  main .bizcard { box-shadow: none; border: 1px solid var(--line); }
+}

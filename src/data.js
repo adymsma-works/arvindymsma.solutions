@@ -1,54 +1,68 @@
-// All portfolio text lives here. Edit this file to update the site.
+// All portfolio TEXT lives here. Contact details live in ./profile.js.
+import { profile, localPhone } from "./profile.js";
+import { siteUrl, siteDisplay, qrCode } from "virtual:site";
+
+const base = import.meta.env.BASE_URL;
 
 export const links = {
-  email: "ady.msma@gmail.com",
-  phone: "09670872093",
-  github: "https://github.com/adymsma-works",
-  linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
-  company: "https://msma.ph",
-  siteUrl: "https://arvindymsma.solutions/",
-  resume: `${import.meta.env.BASE_URL}Arvin_Yapliong_Developer_Resume.pdf`,
-  vcard: `${import.meta.env.BASE_URL}arvin-yapliong.vcf`,
-  printableCard: `${import.meta.env.BASE_URL}card.html`,
+  email: profile.email,
+  phone: profile.phone,
+  phoneLocal: localPhone(),
+  github: profile.github,
+  linkedin: profile.linkedin,
+  company: profile.company,
+  siteUrl,
+  siteDisplay,
+  qrCode,
+  resume: `${base}${profile.resumeFile}`,
+  vcard: `${base}${profile.vcardFile}`,
+  printableCard: `${base}card.html`,
 };
-
-export const card = { tag: "Building solutions. Driving progress." };
 
 export const hris = {
   name: "Cloud HRIS platform",
-  meta: "IT Associate Developer at MSMA Solutions Department",
-  summary: "A cloud-based human resource information system built to modernize employee management and attendance monitoring, with biometric and face-recognition attendance verification.",
-  features: ["Employee information management", "Biometric attendance integration", "Face-recognition attendance verification", "Attendance monitoring dashboard", "HR data management", "Cloud-based access"],
+  meta: "IT Associate Developer · MSMA Solutions Department · In progress",
+  summary:
+    "A cloud-based human resource information system that replaces paper time cards and spreadsheets with one place for employee records and attendance, verified by biometrics and face recognition.",
+  features: [
+    "Employee information management",
+    "Biometric attendance integration",
+    "Face-recognition attendance verification",
+    "Attendance monitoring dashboard",
+    "HR data management",
+    "Cloud-based access",
+  ],
   layers: ["HR staff and employees", "Web app", "API services", "MySQL database"],
-  built: "React, Angular, Node.js, MySQL and n8n",
+  built: ["React", "Angular", "Node.js", "MySQL", "n8n"],
 };
 
 export const otherProjects = [
-  { name: "Alpha Insurance System", role: "Lead Developer, 2025", text: "A web-based business solution supporting company workflow and daily operations." },
-  { name: "Bail bonds records system", role: "Software Implementor Intern, 2024", text: "Developed and maintained a bail bonds and records management system." },
-  { name: "BinBetter", role: "Programmer, 2024", text: "Contributed programming tasks and software development." },
-  { name: "eSportsPP", role: "Project Manager and Programmer, 2023", text: "Managed project activities while building software features." },
+  { name: "Alpha Insurance System", role: "Lead Developer · 2025", text: "A web-based business solution supporting company workflow and daily operations." },
+  { name: "Bail bonds records system", role: "Software Implementor Intern · 2024", text: "Developed and maintained a bail bonds and records management system." },
+  { name: "BinBetter", role: "Programmer · 2024", text: "Contributed programming tasks and software development." },
+  { name: "eSportsPP", role: "Project Manager and Programmer · 2023", text: "Managed project activities while building software features." },
 ];
 
+// Newest first — the way recruiters read a resume.
 export const timesheet = [
-  { period: "2024", role: "Software Implementor Intern", org: "Cebu Innosoft Solutions Services Inc.", text: "Developed and maintained a bail bonds and records management system.", active: false },
-  { period: "2025", role: "Web Developer Intern", org: "Alpha Insurance & Surety Company Inc.", text: "Contributed to web application development and software improvements.", active: false },
   { period: "Now", role: "IT Associate | Developer", org: "MSMA Solutions Department", text: "Building and improving business software, including the cloud HRIS. Supporting testing, implementation and automation work.", active: true },
+  { period: "2025", role: "Web Developer Intern", org: "Alpha Insurance & Surety Company Inc.", text: "Contributed to web application development and software improvements.", active: false },
+  { period: "2024", role: "Software Implementor Intern", org: "Cebu Innosoft Solutions Services Inc.", text: "Developed and maintained a bail bonds and records management system.", active: false },
 ];
 
 export const education = [
-  { title: "BS Information Technology", where: "University of Cebu, 2025" },
-  { title: "TVL Computer Programming", where: "College of Technological Sciences Cebu, 2019" },
+  { title: "BS Information Technology", where: "University of Cebu · 2025" },
+  { title: "TVL Computer Programming", where: "College of Technological Sciences Cebu · 2019" },
   { title: "Google IT Support Certificate", where: "Credential ID M9WPKPBQEDGZ" },
   { title: "Microsoft IT Support Specialist", where: "Credential ID K1V9PSQ9X0PC" },
 ];
 
 export const stack = [
-  ["Frontend", "Angular, React, TypeScript, HTML5, CSS3, Bootstrap, Tailwind CSS"],
-  ["Backend", "Node.js, Next.js, REST API development"],
-  ["Database", "MySQL, database design"],
-  ["Tools", "Git, GitHub, VS Code"],
-  ["Automation and AI", "n8n workflow automation, API integration, Claude Code"],
+  ["Frontend", ["Angular", "React", "TypeScript", "HTML5", "CSS3", "Bootstrap", "Tailwind CSS"]],
+  ["Backend", ["Node.js", "Next.js", "REST APIs"]],
+  ["Database", ["MySQL", "Database design"]],
+  ["Tools", ["Git", "GitHub", "VS Code"]],
+  ["Automation & AI", ["n8n", "API integration", "Claude Code"]],
 ];
 
 export const workflows = [

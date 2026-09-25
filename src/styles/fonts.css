@@ -1,0 +1,8 @@
+/* Self-hosted fonts (no request to Google): faster, private, works offline. */
+@import "@fontsource/big-shoulders-display/latin-700";
+@import "@fontsource/big-shoulders-display/latin-800";
+@import "@fontsource/big-shoulders-display/latin-900";
+@import "@fontsource/public-sans/latin-400";
+@import "@fontsource/public-sans/latin-500";
+@import "@fontsource/public-sans/latin-600";
+@import "@fontsource/public-sans/latin-700";

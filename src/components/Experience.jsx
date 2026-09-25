@@ -6,20 +6,20 @@ export default function Experience() {
     <Section id="experience" title="Experience">
       <ol className="sheet">
         {timesheet.map((r) => (
-          <li key={r.role} className={r.active ? "on" : ""}>
+          <li key={r.role} className={r.active ? "on" : undefined}>
             <span className="period">{r.period}</span>
             <div>
               <h3>{r.role}</h3>
               <p className="meta">{r.org}</p>
               <p>{r.text}</p>
             </div>
-            <span className={`status${r.active ? " live" : ""}`}>{r.active ? "Still clocked in" : "Completed"}</span>
+            {r.active && <span className="status live">Still clocked in</span>}
           </li>
         ))}
       </ol>
 
       <h3 className="sub">Education and certifications</h3>
-      <ul className="ledger tight">
+      <ul className="edu">
         {education.map((e) => (
           <li key={e.title}>
             <h4>{e.title}</h4>

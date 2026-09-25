@@ -5,6 +5,7 @@ export default function Work() {
   return (
     <Section id="work" title="Work">
       <article className="feature">
+        <p className="kicker">Featured project</p>
         <h3>{hris.name}</h3>
         <p className="meta">{hris.meta}</p>
         <p>{hris.summary}</p>
@@ -19,7 +20,9 @@ export default function Work() {
           {hris.layers.map((l) => <li key={l}>{l}</li>)}
         </ol>
         <p className="note">n8n workflows run alongside the API for notifications and process automation.</p>
-        <p className="note">Built with {hris.built}.</p>
+
+        <h4>Built with</h4>
+        <ul className="chips">{hris.built.map((b) => <li key={b}>{b}</li>)}</ul>
       </article>
 
       <h3 className="sub">Other projects</h3>

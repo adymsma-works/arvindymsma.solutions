@@ -1,0 +1,6 @@
+@import "./fonts.css";
+@import "../index.css";
+.nf { min-height: 100vh; display: grid; place-content: center; justify-items: start; gap: 1rem; padding: 2rem; max-width: 40rem; margin-inline: auto; }
+.nf-code { font: 900 7rem/.8 var(--display); color: var(--stamp); }
+.nf h1 { font: 900 clamp(2.4rem, 7vw, 3.6rem)/1 var(--display); text-transform: uppercase; }
+.nf .btn { margin-top: 1rem; }

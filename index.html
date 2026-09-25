@@ -3,28 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Arvin D. Yapliong | Full-Stack Developer in Cebu City</title>
-    <meta name="description" content="Full-stack developer in Cebu City building a cloud HRIS with biometric attendance, plus business systems and n8n workflow automation at MSMA Solutions Department." />
-    <meta name="theme-color" content="#ECEFEA" />
-    <link rel="canonical" href="https://arvindymsma.solutions/" />
+    <title>{{NAME}} | {{HEADLINE}} in {{CITY}}</title>
+    <meta name="description" content="{{SUMMARY}}" />
+    <meta name="theme-color" content="#EDF1F6" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="{{SITE_URL}}" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://arvindymsma.solutions/" />
-    <meta property="og:title" content="Arvin D. Yapliong | Full-Stack Developer" />
-    <meta property="og:description" content="HR, attendance and workflow systems for real businesses. Based in Cebu City, Philippines." />
-    <meta name="twitter:card" content="summary" />
+    <!-- Share preview (LinkedIn, Messenger, Slack, X). URLs must be absolute. -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="{{NAME}}" />
+    <meta property="og:url" content="{{SITE_URL}}" />
+    <meta property="og:title" content="{{NAME}} | {{HEADLINE}}" />
+    <meta property="og:description" content="HR, attendance and workflow systems for real businesses. Based in {{CITY}}, Philippines." />
+    <meta property="og:image" content="{{SITE_URL}}og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{NAME}}, {{HEADLINE}}. I build HR, attendance and workflow systems for real businesses." />
+    <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"Person","name":"Arvin D. Yapliong","jobTitle":"Full-Stack Developer","email":"ady.msma@gmail.com","telephone":"+639670872093","url":"https://arvindymsma.solutions/","address":{"@type":"PostalAddress","addressLocality":"Cebu City","addressCountry":"PH"}}
-    </script>
+    <script type="application/ld+json">{{JSON_LD}}</script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding:2rem;font-family:system-ui,sans-serif">This portfolio needs JavaScript. You can still reach me at <a href="mailto:ady.msma@gmail.com">ady.msma@gmail.com</a>.</p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

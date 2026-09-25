@@ -1,119 +1,82 @@
 # arvindymsma.solutions
 
-<<<<<<< HEAD
-Portfolio of Arvin D. Yapliong, built with React and Vite. Plain CSS, no runtime dependencies beyond React.
-=======
-Portfolio of Arvin D. Yapliong, built with React and Vite. Plain CSS, no runtime dependencies beyond React. Deployed with GitHub Pages at `adymsma-works.github.io/arvindymsma.solutions`.
->>>>>>> 34e5c79 (Redesign + business card)
+Portfolio of Arvin D. Yapliong. React 19 + Vite 8, plain CSS, self-hosted fonts.
+Deployed to GitHub Pages by GitHub Actions on every push to `main`.
+
+**Live:** https://adymsma-works.github.io/arvindymsma.solutions/
 
 ## Where things live
 
 | To change | Edit |
 | --- | --- |
-<<<<<<< HEAD
-| Any text, links, projects, jobs, skills | `src/data.js` |
-| Colors, fonts, spacing | top of `src/index.css` (the `:root` block) |
-| Page title, description, share tags | `index.html` |
-| Resume file | replace `public/Arvin_Yapliong_Developer_Resume.pdf` (keep the name) |
-=======
-| Any text, links, projects, jobs, skills, phone/email | `src/data.js` |
+| Name, email, phone, links, job title | `src/profile.js` (one place; the site, card, QR code, `.vcf` and share tags all read it) |
+| Projects, jobs, skills, any other text | `src/data.js` |
 | Colors, fonts, spacing | the `:root` block at the top of `src/index.css` |
-| The business card section on the site | `src/components/Card.jsx` |
-| The standalone, printable business card | `public/card.html` |
-| The one-tap "save contact" file | `public/arvin-yapliong.vcf` |
-| Page title, description, share tags | `index.html` |
-| Resume file | replace `public/Arvin_Yapliong_Developer_Resume.pdf` (keep the filename, or update the filename in `src/data.js`) |
+| Business card design | `src/components/BizCard.jsx` + `src/styles/bizcard.css` (used by the site **and** the printable card) |
+| Page title, description, share tags | `index.html` (`{{TOKENS}}` are filled in at build time) |
+| Share preview image | replace `public/og.png` (1200 × 630) |
+| Resume | replace `public/Arvin_Yapliong_Developer_Resume.pdf` (keep the filename, or change `resumeFile` in `src/profile.js`) |
 
-## The palette
-
-Tokens live at the top of `src/index.css`:
-
-- `--ink` / `--ink-deep` / `--ink-mid` — MSMA navy, pulled from the business card's gradient. Used for headings, the nav, and the card.
-- `--paper` / `--card` — the light background and white surfaces.
-- `--lime` — the MSMA accent from the card. Used sparingly (the business card panel, small highlights) because it's too low-contrast for body text on a light background.
-- `--stamp` — the red ink-stamp color, used only for the "Clocked in" stamp and "Still clocked in" status. This is the site's own signature detail, separate from the MSMA colors.
->>>>>>> 34e5c79 (Redesign + business card)
+You never type the site URL anywhere. It comes from GitHub (see `docs/ADR-001-deployment.md`).
+The QR code, `arvin-yapliong.vcf`, `robots.txt` and `sitemap.xml` are generated during the build.
 
 ## Run it on your computer
 
-1. Install Node.js 22 LTS or newer from nodejs.org. Check with `node -v`.
-<<<<<<< HEAD
-2. Open a terminal in this folder and run `npm install` (first time only; it also refreshes `package-lock.json`).
-3. Run `npm run dev` and open the address it prints (usually http://localhost:5173). Edits show instantly.
-4. Before publishing, run `npm run build`, then `npm run preview` to test the real production build.
-=======
-2. Open a terminal in this folder and run `npm install` (first time only; also refreshes `package-lock.json`).
-3. Run `npm run dev` and open the address it prints (usually http://localhost:5173). Edits show instantly.
-4. Before publishing, run `npm run build`, then `npm run preview` to test the real production build.
-5. To check the printable business card on its own, open `public/card.html` directly in a browser, or visit `/card.html` on the dev server.
->>>>>>> 34e5c79 (Redesign + business card)
+1. Install **Node.js 22 LTS** (or newer) from https://nodejs.org. Check: `node -v` → `v22.x` or higher.
+2. In this folder: `npm ci` (first time, or after pulling changes).
+3. `npm run dev` and open the address it prints — **http://localhost:5173/arvindymsma.solutions/**. Edits show instantly.
+4. Before pushing: `npm run lint`, `npm run build`, `npm run check`, then `npm run preview` to click through the real build.
 
-## Save your changes to GitHub
+`npm run check` is the safety net: it fails if any page would load blank, a link points outside
+the site's folder, a merge-conflict marker slipped in, or a required file (resume, .vcf) is missing.
+GitHub runs it too and refuses to deploy if it fails.
+
+## Deploy to GitHub Pages
+
+One-time setup (in the GitHub website):
+
+1. Repo **adymsma-works/arvindymsma.solutions** → **Settings** → **Pages**.
+2. **Build and deployment → Source: GitHub Actions**.
+3. **Custom domain:** leave it **empty** unless the domain's DNS is already set up (see below).
+   If it shows `arvindymsma.solutions` and that domain isn't live, click **Remove** —
+   otherwise GitHub redirects visitors to an address that doesn't exist.
+
+Every deploy after that:
 
 ```bash
 git add -A
-<<<<<<< HEAD
-git commit -m "Redesign portfolio"
+git commit -m "Describe your change"
 git push origin main
 ```
 
-## Deploy
+Then open the **Actions** tab and wait for **Deploy to GitHub Pages** to go green (about 1 minute).
+Pull requests get built and checked, but only `main` deploys.
 
-### Option A: Vercel (simplest)
+## Using your own domain later (arvindymsma.solutions)
 
-1. Sign in at vercel.com with your GitHub account.
-2. Add New, then Project, and import `adymsma-works/arvindymsma.solutions`.
-3. Vercel detects Vite. Confirm build command `npm run build` and output directory `dist`, then Deploy.
-4. Every push to `main` now redeploys automatically.
-5. Delete the `.github` folder (it is only for GitHub Pages).
+1. Buy/renew the domain, then at the registrar's DNS settings add:
+   - `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+   - `CNAME` for `www` → `adymsma-works.github.io`
+2. GitHub → Settings → Pages → **Custom domain** → `arvindymsma.solutions` → Save. Wait for the DNS check to pass, then tick **Enforce HTTPS**.
+3. Actions → **Deploy to GitHub Pages** → **Run workflow**. The build asks GitHub for the new address, so the
+   canonical URL, share tags, QR code and `.vcf` all switch to `https://arvindymsma.solutions/` automatically. No code changes.
 
-Netlify works the same way: Add new site, Import from Git, build `npm run build`, publish directory `dist`.
+## After each deploy
 
-### Option B: GitHub Pages (no extra account)
+- Open the site on your phone. Tap **Save contact**, **Open printable card**, **Download resume**.
+- Paste the URL into https://www.linkedin.com/post-inspector/ to check the share preview.
+- Chrome DevTools → Lighthouse → run on mobile.
 
-1. Push the project (the workflow in `.github/workflows/deploy.yml` is included).
-2. On GitHub open the repo, then Settings, Pages, and set Source to GitHub Actions.
-3. Open the Actions tab and wait for "Deploy to GitHub Pages" to turn green.
+## Project structure
 
-## Use your domain (arvindymsma.solutions)
-
-1. Add the domain in your host: Vercel under Project, Settings, Domains; GitHub Pages under Settings, Pages, Custom domain.
-2. The host shows the exact DNS records to create. At your domain registrar, open DNS settings and add them (typically an A record or CNAME).
-3. Wait a few minutes up to a few hours, then enable HTTPS if the host asks. `public/CNAME` already contains the domain for GitHub Pages.
-
-## After it is live
-
-- Open the site on your phone and check every link, especially the resume download.
-=======
-git commit -m "Update portfolio"
-git push origin main
 ```
-
-## Deploy to GitHub Pages (step by step)
-
-This repo already has everything wired up: `vite.config.js` sets `base: "/arvindymsma.solutions/"` to match the repo name, and `.github/workflows/deploy.yml` builds and publishes automatically on every push to `main`.
-
-1. **Push this project to GitHub** if you haven't already (`git push origin main`).
-2. On GitHub, open your repo **adymsma-works/arvindymsma.solutions**.
-3. Go to **Settings → Pages**.
-4. Under **Build and deployment → Source**, choose **GitHub Actions** (not "Deploy from a branch"). If it's currently set to a branch and GitHub has added a Jekyll workflow for you, that's fine — this repo's own `.github/workflows/deploy.yml` is the one that will run once the source is switched to Actions.
-5. Go to the **Actions** tab. You should see "Deploy to GitHub Pages" running (it runs automatically on every push, or click **Run workflow** to trigger it manually). Wait for it to turn green.
-6. Back in **Settings → Pages**, GitHub will show your live URL: **https://adymsma-works.github.io/arvindymsma.solutions/**. Open it and check every link, especially "Save contact" and "Open printable card".
-
-From now on, every `git push origin main` redeploys automatically — no extra steps.
-
-### Using your own domain later (arvindymsma.solutions)
-
-The site currently deploys to the github.io URL above, not to arvindymsma.solutions — no custom domain is pointed at it yet, so **there's no CNAME file in this repo**. When you're ready:
-
-1. At your domain registrar, add the DNS records GitHub asks for (Settings → Pages → Custom domain → enter `arvindymsma.solutions` — GitHub will show you the exact A/CNAME records to add).
-2. Once DNS is verified, GitHub will re-add `public/CNAME` for you automatically, or you can create it yourself with just the one line `arvindymsma.solutions`.
-3. Update `index.html`: swap the four URLs currently pointing at `adymsma-works.github.io/arvindymsma.solutions/` to `https://arvindymsma.solutions/` (canonical, `og:url`, and the two in the JSON-LD block). Also update `siteUrl` in `src/data.js`, the link and QR code on the business card, and `URL:` in `public/arvin-yapliong.vcf`.
-4. If the base path changes to root, also set `base: "/"` in `vite.config.js`.
-
-## After it is live
-
-- Open the site on your phone and test the "Save contact (.vcf)" and "Open printable card" buttons.
->>>>>>> 34e5c79 (Redesign + business card)
-- Paste the URL into LinkedIn's Post Inspector or a chat app to preview the share card.
-- Run Lighthouse in Chrome DevTools; expect high scores.
+index.html  card.html  404.html     page entry points
+build/site-plugin.js                derives base path from SITE_URL; generates QR, .vcf, robots, sitemap
+scripts/check-dist.js               post-build checks (run in CI)
+src/profile.js                      contact details (single source of truth)
+src/data.js                         portfolio text
+src/components/                     React components (BizCard is shared by the site and card.html)
+src/styles/                         fonts, business card, printable page, 404
+public/                             copied as-is: resume, og.png, icons
+docs/                               design critique and architecture decision record
+```

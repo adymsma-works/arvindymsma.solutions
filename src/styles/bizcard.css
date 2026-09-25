@@ -1,0 +1,54 @@
+/* Business card. A physical object on the page, so it gets shadow and radius
+   where the rest of the site stays flat and ruled. Everything scales with the
+   card's own width (container query units), so the same component works in
+   the site section and on the full-size printable page. */
+
+.bizcard-frame { container-type: inline-size; width: 100%; max-width: 640px; margin-top: 1.6rem; }
+.bizcard {
+  display: grid; grid-template-columns: 38% 62%; aspect-ratio: 1.75;
+  border-radius: 2.2cqi; overflow: hidden; background: #fff; color: var(--ink);
+  box-shadow: 0 22px 44px -20px rgba(8, 28, 55, .45);
+  font-family: var(--body);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* Reset page-level spacing inside the card (class rules below re-add their own). */
+.bizcard :is(p, h1, ul) { margin: 0; padding: 0; max-width: none; }
+.bizcard a { text-decoration: none; color: inherit; }
+.bizcard a:hover { text-decoration: underline; }
+
+.bizcard-left {
+  background: linear-gradient(155deg, var(--ink-deep), var(--ink-mid)); color: #fff;
+  padding: 7cqi 4.5cqi; display: flex; flex-direction: column; justify-content: center; min-width: 0;
+}
+.bc-logo { font: 900 11cqi/0.9 var(--display); letter-spacing: .03em; }
+.bc-logo span { color: var(--lime); }
+.bc-dept-caps { margin-top: 1.6cqi !important; font-size: 1.85cqi; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #C7D8EC; }
+.bc-tag { margin-top: 6cqi !important; font-size: 1.85cqi; font-weight: 700; letter-spacing: .07em; line-height: 1.45; text-transform: uppercase; color: var(--lime); }
+
+.bizcard-right { position: relative; padding: 6.5cqi 6cqi; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.bc-name { font: 800 5.4cqi/1.05 var(--display); text-transform: uppercase; letter-spacing: .01em; }
+.bc-role { margin-top: 1.2cqi !important; font-size: 2.9cqi; font-weight: 700; color: var(--ink-mid); }
+.bc-dept { margin-top: .4cqi !important; font-size: 2.5cqi; color: var(--mute); }
+.bc-contact { margin-top: 3.5cqi !important; padding-top: 3.5cqi !important; border-top: 2px solid var(--line); display: grid; gap: 1.4cqi; list-style: none; padding-right: 16cqi !important; }
+.bc-contact li { font-size: 2.45cqi; display: flex; }
+.bc-contact a { min-width: 0; }
+.bc-contact .bc-url { font-size: 2.2cqi; line-height: 1.35; }
+.bc-contact a > span:first-child { display: inline-block; width: 1.4em; color: var(--ink-mid); }
+.bc-contact a { display: flex; }
+.bc-qr { position: absolute; right: 5cqi; bottom: 6cqi; width: 14cqi; height: auto; aspect-ratio: 1; border-radius: 1cqi; border: 1px solid var(--line); background: #fff; }
+
+/* Narrow phones: stack the halves so text stays legible. */
+@container (max-width: 420px) {
+  .bizcard { grid-template-columns: 1fr; aspect-ratio: auto; border-radius: 12px; }
+  .bizcard-left { padding: 1.4rem 1.3rem; }
+  .bc-logo { font-size: 2.6rem; }
+  .bc-dept-caps { font-size: .72rem; margin-top: .35rem !important; }
+  .bc-tag { font-size: .72rem; margin-top: 1rem !important; }
+  .bizcard-right { padding: 1.4rem 1.3rem; }
+  .bc-name { font-size: 1.5rem; }
+  .bc-role { font-size: .95rem; margin-top: .3rem !important; }
+  .bc-dept { font-size: .88rem; }
+  .bc-contact { margin-top: 1rem !important; padding-top: 1rem !important; gap: .45rem; padding-right: 84px !important; }
+  .bc-contact li, .bc-contact .bc-url { font-size: .88rem; overflow-wrap: anywhere; }
+  .bc-qr { width: 72px; right: 1.3rem; bottom: 1.4rem; }
+}
