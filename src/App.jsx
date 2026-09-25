@@ -2,16 +2,10 @@ import Hero from "./components/Hero";
 import Work from "./components/Work";
 import Experience from "./components/Experience";
 import Stack from "./components/Stack";
-<<<<<<< HEAD
-import Contact from "./components/Contact";
-
-const nav = [["Work", "#work"], ["Experience", "#experience"], ["Stack", "#stack"], ["Contact", "#contact"]];
-=======
 import Card from "./components/Card";
 import Contact from "./components/Contact";
 
 const nav = [["Work", "#work"], ["Experience", "#experience"], ["Stack", "#stack"], ["Card", "#card"], ["Contact", "#contact"]];
->>>>>>> 34e5c79 (Redesign + business card)
 
 export default function App() {
   return (
@@ -33,10 +27,7 @@ export default function App() {
         <Work />
         <Experience />
         <Stack />
-<<<<<<< HEAD
-=======
         <Card />
->>>>>>> 34e5c79 (Redesign + business card)
         <Contact />
       </main>
       <footer className="foot">
