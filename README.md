@@ -3,6 +3,8 @@
 Portfolio of Arvin D. Yapliong. React 19 + Vite 8, plain CSS, self-hosted fonts.
 Deployed to GitHub Pages by GitHub Actions on every push to `main`.
 
+This repo also hosts **Pitaka**, a private, local-first finance app, in `apps/pitaka/` (see [Pitaka](#pitaka) below).
+
 **Live:** https://adymsma-works.github.io/arvindymsma.solutions/
 
 ## Where things live
@@ -23,7 +25,7 @@ The QR code, `arvin-yapliong.vcf`, `robots.txt` and `sitemap.xml` are generated 
 ## Run it on your computer
 
 1. Install **Node.js 22 LTS** (or newer) from https://nodejs.org. Check: `node -v` → `v22.x` or higher.
-2. In this folder: `npm ci` (first time, or after pulling changes).
+2. In this folder: `npm ci` (first time, or after pulling changes). This installs the portfolio **and** Pitaka.
 3. `npm run dev` and open the address it prints — **http://localhost:5173/arvindymsma.solutions/**. Edits show instantly.
 4. Before pushing: `npm run lint`, `npm run build`, `npm run check`, then `npm run preview` to click through the real build.
 
@@ -80,3 +82,57 @@ src/styles/                         fonts, business card, printable page, 404
 public/                             copied as-is: resume, og.png, icons
 docs/                               design critique and architecture decision record
 ```
+
+## Pitaka
+
+A private personal-finance app at **https://adymsma-works.github.io/arvindymsma.solutions/pitaka/**.
+Unlisted (not linked from the portfolio, `noindex`), installable on your phone, works offline.
+
+**Stack:** React 19 + TypeScript (strict) + Tailwind CSS v4 + Recharts + zod, Vite 8, vitest, vite-plugin-pwa.
+It lives in `apps/pitaka/` as an npm workspace and builds into `dist/pitaka/`, so the same GitHub Actions
+deploy publishes both. There is no `gh-pages` branch.
+
+### Run it locally
+
+```bash
+npm ci                 # once, at the repo root
+npm run dev:pitaka     # http://localhost:5174/arvindymsma.solutions/pitaka/
+npm test               # unit tests for the money math + encryption
+npm run typecheck
+```
+
+### First use
+
+1. Open the Pitaka URL and create a **6-digit PIN** (4 is allowed but weaker).
+2. On the Welcome screen choose **Import preset file** and pick your private `pitaka-preset.json`.
+3. Fill in what the dashboard asks for (amber box): salary basis, monthly support, essentials, coop loan paid so far, and so on.
+4. Then **delete the preset file** from your Downloads; Pitaka has its own encrypted copy.
+
+### Privacy: what the PIN does and doesn't do
+
+- Everything is stored **encrypted** (AES-256-GCM) in this browser's localStorage. The key is derived from your PIN with
+  PBKDF2-SHA256 (600,000 iterations). The PIN itself is never stored. Nothing is sent to any server.
+- Wrong PINs trigger a growing delay (1s, 2s, 4s… up to 60s). The app auto-locks after inactivity and when you leave it.
+- **Limit:** a short PIN has few combinations. It stops casual access, not a determined attacker who copies your browser
+  data and tries every PIN offline. Lock your phone and keep backups.
+- **No recovery:** a forgotten PIN means wiping the data and restoring a backup.
+- Data is per browser and device. Your phone and laptop don't sync. Use backups to move data.
+
+### Backups
+
+Settings → Backup & restore:
+- **Encrypted backup** opens only with your PIN at the time of export. Safe to keep in cloud storage.
+- **Readable backup** is plain JSON. Treat it like a bank statement.
+
+`.gitignore` blocks `*preset*.json` and `pitaka-backup-*.json`, and `npm run check` fails the deploy if preset data
+ever ends up in the published site. **Never commit your preset or backups: this repo is public.**
+
+### Where things live
+
+| To change | Edit |
+| --- | --- |
+| Money math (DTI, runway, payoff, MP2, interest) | `apps/pitaka/src/lib/finance.ts` (+ `finance.test.ts`) |
+| Data model / validation | `apps/pitaka/src/types/index.ts`, `apps/pitaka/src/lib/schema.ts` |
+| Encryption / storage | `apps/pitaka/src/lib/crypto.ts`, `apps/pitaka/src/lib/storage.ts` |
+| PIN screens + auto-lock | `apps/pitaka/src/components/SecurityWrapper.tsx` |
+| Screens | `apps/pitaka/src/features/*.tsx` |

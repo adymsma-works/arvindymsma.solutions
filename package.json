@@ -5,9 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "dev:pitaka": "npm run dev -w pitaka",
+    "build": "vite build && npm run build -w pitaka",
+    "build:portfolio": "vite build",
+    "build:pitaka": "npm run build -w pitaka",
     "preview": "vite preview",
     "lint": "eslint .",
+    "typecheck": "npm run typecheck -w pitaka",
+    "test": "npm run test -w pitaka",
     "check": "node scripts/check-dist.js"
   },
   "dependencies": {
@@ -28,5 +33,8 @@
   },
   "engines": {
     "node": ">=22.12"
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ]
 }

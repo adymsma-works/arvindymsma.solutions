@@ -23,7 +23,11 @@ if (!existsSync(dist)) {
 const files = walk(dist);
 
 // 1. Required files exist.
-for (const f of ["index.html", "card.html", "404.html", profile.resumeFile, profile.vcardFile, "og.png", "favicon.svg"]) {
+for (const f of [
+  "index.html", "card.html", "404.html", profile.resumeFile, profile.vcardFile, "og.png", "favicon.svg",
+  // Pitaka (apps/pitaka) — built into dist/pitaka/
+  "pitaka/index.html", "pitaka/sw.js", "pitaka/manifest.webmanifest", "pitaka/registerSW.js",
+]) {
   if (!existsSync(join(dist, f))) fail(`missing dist/${f}`);
 }
 
@@ -34,7 +38,21 @@ for (const f of files.filter((f) => [".html", ".css", ".js", ".vcf", ".xml", ".t
   if (extname(f) === ".html" && /\{\{\w+\}\}/.test(text)) fail(`unreplaced {{TOKEN}} in ${f}`);
 }
 
-// 3. Every local src/href in the HTML resolves to a real file under the base path.
+// 3. Pitaka must stay private: unlisted, noindex, CSP on, and no personal preset baked in.
+if (existsSync(join(dist, "pitaka/index.html"))) {
+  const html = readFileSync(join(dist, "pitaka/index.html"), "utf8");
+  if (!html.includes('name="robots" content="noindex,nofollow"')) fail("pitaka/index.html is missing noindex");
+  if (!html.includes("Content-Security-Policy")) fail("pitaka/index.html is missing its Content-Security-Policy");
+  if (readFileSync(join(dist, "sitemap.xml"), "utf8").includes("pitaka")) fail("sitemap.xml must not list Pitaka");
+  if (readFileSync(join(dist, "robots.txt"), "utf8").includes("pitaka")) fail("robots.txt must not mention Pitaka");
+  for (const f of files.filter((f) => f.startsWith(join(dist, "pitaka")) && /\.(js|json|html)$/.test(f))) {
+    // The private preset carries this marker; it must never end up in the public bundle.
+    if (readFileSync(f, "utf8").includes("PRIVATE-PITAKA-PRESET")) fail(`${f} contains personal preset data`);
+  }
+  for (const f of files) if (/preset.*\.json$/i.test(f)) fail(`${f}: preset files must never be published`);
+}
+
+// 4. Every local src/href in the HTML resolves to a real file under the base path.
 for (const f of files.filter((f) => f.endsWith(".html"))) {
   const html = readFileSync(f, "utf8");
   for (const [, url] of html.matchAll(/(?:src|href)="([^"]+)"/g)) {

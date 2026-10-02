@@ -34,12 +34,19 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      # One install covers the portfolio and apps/pitaka (npm workspaces).
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
+      - name: Lint (portfolio)
         run: npm run lint
 
+      - name: Typecheck + unit tests (Pitaka)
+        run: |
+          npm run typecheck
+          npm test
+
+      # Builds the portfolio into dist/ and Pitaka into dist/pitaka/
       - name: Build
         run: npm run build
         env:
@@ -47,6 +54,8 @@ jobs:
 
       - name: Check build output
         run: npm run check
+        env:
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'

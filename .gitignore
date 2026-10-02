@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Pitaka: personal financial presets/backups must never be committed (public repo)
+*preset*.json
+!apps/pitaka/src/**/*.json
+pitaka-backup-*.json
