@@ -9,15 +9,16 @@ export default function About() {
         <figure className="about-photo">
           <div className="portrait-frame">
             <img
-              src={url("images/portrait-avatar.webp")}
-              alt="My avatar: a glossy green bunny with closed eyes and black headphones, sitting on a wet stone slab."
-              width="900"
-              height="1125"
+              src={url("images/portrait-arvin.webp")}
+              alt="Arvin smiling at the technical desk beside a lit stage, in a black polo with a technical staff pass."
+              width="840"
+              height="1050"
               loading="lazy"
               decoding="async"
+              style={{ objectPosition: "50% 30%" }}
             />
           </div>
-          <figcaption>My avatar, mid-playlist. It shows up in the animation on the home page too.</figcaption>
+          <figcaption>On the technical desk beside the stage, technical staff pass on.</figcaption>
         </figure>
         <div className="about-copy">
           <h1 className="h1" id="about-title">
