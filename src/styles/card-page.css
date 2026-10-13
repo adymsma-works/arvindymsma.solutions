@@ -1,5 +1,10 @@
-/* The standalone printable card page (card.html). */
-@import "../index.css";
+/* The standalone printable card page (card.html): a light, print-first page. */
+@import "./bizcard.css";
+
+:root { --paper: #EDF1F6; --ink: #0A2647; --ink-mid: #103D6D; --line: #C7D5E4; --radius: 4px; }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.6 "Public Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 3px solid #06b6d4; outline-offset: 3px; }
 
 body { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
 .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 12px 20px; font-size: .95rem; font-weight: 600; }

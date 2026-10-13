@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+.ssr
 dist-ssr
 *.local
 
@@ -23,7 +24,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Pitaka: personal financial presets/backups must never be committed (public repo)
+# Personal finance presets/backups (old Pitaka files) must never be committed: this repo is public
 *preset*.json
-!apps/pitaka/src/**/*.json
 pitaka-backup-*.json

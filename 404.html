@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Page not found | {{NAME}}</title>
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#111114" />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/src/styles/not-found.css" />
   </head>
   <body>
-    <main class="nf">
-      <p class="nf-code">404</p>
-      <h1>Not clocked in here.</h1>
-      <p>This page doesn't exist. The portfolio is one page away.</p>
-      <a class="btn primary" href="{{SITE_URL}}">Back to the portfolio</a>
+    <header class="nf-top container">
+      <a class="brand" href="{{SITE_URL}}" aria-label="Arvin Yapliong, home"><span class="logo-mark" aria-hidden="true">AY</span><span class="brand-name">Arvin Yapliong</span></a>
+    </header>
+    <main class="container page-head lost" id="main">
+      <p class="code-num">404</p>
+      <h1 class="h1">That page is not here.</h1>
+      <p class="lead">It may have clocked out early. These are safe places to land:</p>
+      <div class="row">
+        <a class="btn btn-primary" href="{{SITE_URL}}">Back home</a>
+        <a class="btn btn-ghost" href="{{SITE_URL}}work/">See the work</a>
+        <a class="btn btn-ghost" href="{{SITE_URL}}contact/">Get in touch</a>
+      </div>
     </main>
   </body>
 </html>

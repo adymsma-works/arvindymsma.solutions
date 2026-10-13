@@ -1,4 +1,4 @@
-// Who you are and how to reach you — the ONE place for contact details.
+// Who you are and how to reach you: the ONE place for contact details.
 // Used by the React site, the printable card, the .vcf contact file,
 // the QR code, the share tags and the search-engine data.
 // Plain data only (no import.meta), so vite.config.js can read it too.

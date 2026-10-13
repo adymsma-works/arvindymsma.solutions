@@ -10,6 +10,7 @@
 
 import QRCode from "qrcode";
 import { profile } from "../src/profile.js";
+import { findPages } from "./pages.js";
 
 export const DEFAULT_SITE_URL = "https://adymsma-works.github.io/arvindymsma.solutions/";
 
@@ -86,7 +87,9 @@ export default function sitePlugin() {
     "robots.txt": { type: "text/plain", body: `User-agent: *\nAllow: /\nSitemap: ${site.siteUrl}sitemap.xml\n` },
     "sitemap.xml": {
       type: "application/xml",
-      body: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${site.siteUrl}</loc></url>\n</urlset>\n`,
+      body: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${findPages()
+        .map((p) => `  <url><loc>${site.siteUrl}${p}</loc></url>`)
+        .join("\n")}\n</urlset>\n`,
     },
   });
 

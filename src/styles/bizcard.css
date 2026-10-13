@@ -3,7 +3,14 @@
    card's own width (container query units), so the same component works in
    the site section and on the full-size printable page. */
 
-.bizcard-frame { container-type: inline-size; width: 100%; max-width: 640px; margin-top: 1.6rem; }
+/* The card keeps the MSMA print colours and fonts (it is a copy of the real card),
+   so its tokens are scoped here and never leak into the dark site. */
+.bizcard-frame {
+  --ink: #0A2647; --ink-deep: #081C37; --ink-mid: #103D6D; --mute: #43597A; --line: #C7D5E4; --lime: #A6C42B;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  container-type: inline-size; width: 100%; max-width: 640px; margin-top: 1.6rem;
+}
 .bizcard {
   display: grid; grid-template-columns: 38% 62%; aspect-ratio: 1.75;
   border-radius: 2.2cqi; overflow: hidden; background: #fff; color: var(--ink);
@@ -35,6 +42,7 @@
 .bc-contact .bc-url { font-size: 2.2cqi; line-height: 1.35; }
 .bc-contact a > span:first-child { display: inline-block; width: 1.4em; color: var(--ink-mid); }
 .bc-contact a { display: flex; }
+.bc-ic { display: inline-block; width: .95em; height: .95em; vertical-align: -.12em; }
 .bc-qr { position: absolute; right: 5cqi; bottom: 6cqi; width: 14cqi; height: auto; aspect-ratio: 1; border-radius: 1cqi; border: 1px solid var(--line); background: #fff; }
 
 /* Narrow phones: stack the halves so text stays legible. */

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Résumé | {{NAME}}</title>
+    <meta name="description" content="The one-page résumé of Arvin D. Yapliong, full-stack developer in Cebu City." />
+    <meta name="theme-color" content="#111114" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="canonical" href="{{SITE_URL}}resume/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Share preview (LinkedIn, Messenger, Slack, X). URLs must be absolute. -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content="{{NAME}}" />
+    <meta property="og:url" content="{{SITE_URL}}resume/" />
+    <meta property="og:title" content="Résumé | {{NAME}}" />
+    <meta property="og:description" content="The one-page résumé of Arvin D. Yapliong, full-stack developer in Cebu City." />
+    <meta property="og:image" content="{{SITE_URL}}og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{NAME}}, full-stack developer: a dark site with a green headphone bunny in a product window." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Reveal-on-scroll only runs with JS; without it every section stays visible. -->
+    <script>document.documentElement.classList.add("js")</script>
+  </head>
+  <body>
+    <div id="root" data-page="resume"><!--app--></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

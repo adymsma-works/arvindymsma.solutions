@@ -1,4 +1,5 @@
 import { links } from "../data";
+import Icon from "../site/Icon.jsx";
 import { profile } from "../profile";
 
 // Let long URLs wrap after "/" and "." instead of being cut off.
@@ -21,9 +22,9 @@ export default function BizCard({ as: Heading = "p" }) {
           <p className="bc-role">{profile.role}</p>
           <p className="bc-dept">{profile.org}</p>
           <ul className="bc-contact">
-            <li><a href={`mailto:${links.email}`}><span aria-hidden="true">✉</span> {links.email}</a></li>
-            <li><a href={`tel:${links.phone}`}><span aria-hidden="true">☎</span> {links.phoneLocal}</a></li>
-            <li><a className="bc-url" href={links.siteUrl}><span aria-hidden="true">↗</span> <span>{breakable(links.siteDisplay)}</span></a></li>
+            <li><a href={`mailto:${links.email}`}><span aria-hidden="true"><Icon name="mail" className="bc-ic" sw={2} /></span> {links.email}</a></li>
+            <li><a href={`tel:${links.phone}`}><span aria-hidden="true"><Icon name="phone" className="bc-ic" sw={2} /></span> {links.phoneLocal}</a></li>
+            <li><a className="bc-url" href={links.siteUrl}><span aria-hidden="true"><Icon name="arrow-up-right" className="bc-ic" sw={2} /></span> <span>{breakable(links.siteDisplay)}</span></a></li>
           </ul>
           <img className="bc-qr" src={links.qrCode} width="96" height="96" alt={`QR code that opens ${links.siteDisplay}`} />
         </div>

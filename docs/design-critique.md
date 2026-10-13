@@ -1,5 +1,7 @@
 # Design critique: arvindymsma.solutions portfolio
 
+> Note (2026-10-13): this critique reviewed the earlier navy and lime "daily time record" design. The site was redesigned with the Basalt skill; see ADR-002.
+
 **Stage:** refinement → launch. **Audience:** recruiters, hiring managers and SMB clients in Cebu / PH.
 **Reviewed:** desktop 1366 px and mobile 390 px, before and after changes.
 
