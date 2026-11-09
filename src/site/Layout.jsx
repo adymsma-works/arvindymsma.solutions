@@ -209,7 +209,7 @@ function Footer({ openPalette }) {
       <div className="container footer-grid">
         <div className="footer-brand">
           <Brand />
-          <p>Full-stack developer in {SITE.location}. HR, attendance and workflow systems for real businesses.</p>
+          <p>Full-stack developer in {SITE.location}. Well-built systems for businesses. Websites for churches and ministries, built free.</p>
           <div className="footer-actions">
             <a className="btn btn-ghost btn-sm" href={links.vcard} download>
               <Icon name="id-card" />

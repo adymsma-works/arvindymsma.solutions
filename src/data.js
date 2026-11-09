@@ -32,10 +32,10 @@ export const SITE = {
   timeZone: "Philippine time, UTC+8",
   openTo: "Freelance builds, automation, collaboration",
   replyTime: "Usually within a day",
-  bestFit: "HR, attendance and workflow systems",
-  tagline: "HR, attendance and workflow systems for real businesses.",
+  bestFit: "Businesses that have outgrown spreadsheets and paper. Churches and ministries: website design and build, free. Small stores: a free consultation to find the fix.",
+  tagline: "Well-built systems for businesses. Websites for churches and ministries, built free.",
   summary:
-    "Full-stack developer building a cloud HRIS with biometric and face-recognition attendance at MSMA Solutions Department, plus business systems and n8n workflow automation. Comfortable from database design to user documentation.",
+    "Junior developer working toward AI engineering. I use AI coding tools to build faster and I check their code before it goes live. By day I build the payroll and records system of a Cebu professional services firm. On the side I build business systems and workflow automation (for example: a customer fills your website or Facebook form, the details land in your Google Sheet, and you are notified right away, no retyping), design and build websites for churches and ministries for free, and give small stores a free consultation: I study the problem, propose a fix, and can build it.",
   education: [
     ["BS Information Technology", "University of Cebu, 2025"],
     ["TVL Computer Programming", "College of Technological Sciences Cebu, 2019"],
@@ -63,7 +63,7 @@ export const PROJECTS = [
     years: "in progress",
     mock: "hris",
     cover: "images/cover-cloud-hris.webp",
-    summary: "One place for employee records and attendance, with every time-in checked by biometrics and face recognition.",
+    summary: "Payroll and records system I'm building for a professional services firm: employee files, attendance, pay with government contributions and BIR tax forms, hiring, old-system import.",
     intro:
       "At MSMA Solutions Department I am building a cloud HRIS that replaces paper time cards and spreadsheets with one system for employee records and attendance. Every time-in is checked twice: by the biometric device and by face recognition.",
     facts: [
@@ -120,7 +120,7 @@ export const PROJECTS = [
     years: "2025",
     mock: "bail",
     cover: "images/cover-bail-bonds-records.webp",
-    summary: "A records system that moved bail bond encoding from manual entry to one searchable database.",
+    summary: "As lead developer, I replaced hand-typed bail bond records with one searchable system, then kept it running after launch.",
     intro:
       "During my web developer internship at Alpha Insurance & Surety Company, I was the lead developer of a system to manage bail bonds and records, replacing the traditional encoding the team relied on. I built it and kept maintaining it after launch.",
     facts: [
