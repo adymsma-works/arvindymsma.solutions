@@ -188,7 +188,7 @@ export default function Home() {
     <>
       <section className="container hero hero--window" aria-labelledby="home-title">
         <h1 className="hero-title" id="home-title" data-hero style={{ "--i": 0 }}>
-          I'm a full-stack developer whose best feature is <span className="accent">automating the boring&nbsp;parts.</span>
+          I don't just build websites. <span className="accent">I build the systems a business runs on,</span> and I keep them working after&nbsp;launch.
         </h1>
         <div className="hero-row">
           <div className="hero-copy">

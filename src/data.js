@@ -32,10 +32,10 @@ export const SITE = {
   timeZone: "Philippine time, UTC+8",
   openTo: "Freelance builds, automation, collaboration",
   replyTime: "Usually within a day",
-  bestFit: "HR, attendance and workflow systems",
-  tagline: "HR, attendance and workflow systems for real businesses.",
+  bestFit: "Businesses that have outgrown spreadsheets and paper. And churches that need a website: free.",
+  tagline: "Well-built systems for businesses. Free websites for churches.",
   summary:
-    "Full-stack developer building a cloud HRIS with biometric and face-recognition attendance at MSMA Solutions Department, plus business systems and n8n workflow automation. Comfortable from database design to user documentation.",
+    "Junior developer working toward AI engineering. I use AI coding tools to build faster and I check their code before it goes live. By day I build the HR and attendance system of a Cebu company. On the side I offer HR and attendance systems and workflow automation for businesses, and free websites for churches.",
   education: [
     ["BS Information Technology", "University of Cebu, 2025"],
     ["TVL Computer Programming", "College of Technological Sciences Cebu, 2019"],
@@ -63,7 +63,7 @@ export const PROJECTS = [
     years: "in progress",
     mock: "hris",
     cover: "images/cover-cloud-hris.webp",
-    summary: "One place for employee records and attendance, with every time-in checked by biometrics and face recognition.",
+    summary: "A cloud HR and attendance system I build for a Cebu company: employee records and time-ins in one place.",
     intro:
       "At MSMA Solutions Department I am building a cloud HRIS that replaces paper time cards and spreadsheets with one system for employee records and attendance. Every time-in is checked twice: by the biometric device and by face recognition.",
     facts: [
@@ -120,7 +120,7 @@ export const PROJECTS = [
     years: "2025",
     mock: "bail",
     cover: "images/cover-bail-bonds-records.webp",
-    summary: "A records system that moved bail bond encoding from manual entry to one searchable database.",
+    summary: "As lead developer, I replaced hand-typed bail bond records with one searchable system, then kept it running after launch.",
     intro:
       "During my web developer internship at Alpha Insurance & Surety Company, I was the lead developer of a system to manage bail bonds and records, replacing the traditional encoding the team relied on. I built it and kept maintaining it after launch.",
     facts: [
