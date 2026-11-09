@@ -29,7 +29,7 @@
   --soft: #d4d4d8;
   --body: #a4a4ae;
   --muted: #8b8b95;
-  --faint: #6b6b74; /* non-text only (arrows, markers, chart lines): >= 3:1 on every surface. Text uses --muted. */
+  --faint: #6b6b74; /* non-text only (arrows, markers, chart lines): >= 3.1:1 on ground, panel, panel-2 only (2.7 on raised, 2.4 on raised-2). Text uses --muted (fails on raised). */
 
   /* the one accent */
   --accent: #06b6d4;
@@ -254,6 +254,7 @@ dialog::backdrop { background: rgba(8, 8, 10, .66); -webkit-backdrop-filter: blu
 .palette-item .hint { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
 .palette-item[aria-selected="true"] { background: var(--raised); color: var(--ink); }
 .palette-item[aria-selected="true"] .ic { color: var(--accent-text); }
+.palette-item[aria-selected="true"] .hint { color: var(--body); } /* --muted is 4.29:1 on --raised; body 5.85:1 */
 .palette-empty { padding: 2.5rem 1rem; text-align: center; color: var(--muted); font-size: var(--fs-sm); }
 .palette-foot { display: flex; gap: 1.1rem; padding: .7rem 1.1rem; border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
 .palette-foot span { display: inline-flex; align-items: center; gap: .4rem; }
