@@ -31,8 +31,8 @@ export default function About() {
             </p>
             <p>
               Before that I was a web developer intern at Alpha Insurance &amp; Surety, where I led a <a href={url("work/bail-bonds-records/")}>bail bonds and
-              records system</a>, and a software implementor intern at Cebu Innosoft Solutions, rolling out <a href={url("work/pos-implementation/")}>POS
-              systems</a> and training the people who used them. I finished my BS in Information Technology at the University of Cebu in 2025.
+              records system</a>, and a software implementor intern at Cebu Innosoft Solutions, testing <a href={url("work/pos-implementation/")}>POS
+              systems</a> and keeping their implementation and training documents current. I finished my BS in Information Technology at the University of Cebu in 2025.
             </p>
             <p>
               I like work where a manual step can disappear: a form that replaces re-typing, a workflow that sends the email nobody remembers

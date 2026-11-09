@@ -213,8 +213,8 @@ export default function Home() {
                 Selected work
               </h2>
               <p>
-                Three projects, three kinds of work: an HRIS I am building now, a records system I led as an intern, and a POS rollout where
-                the hard part was people, not code.
+                Three projects, three kinds of work: an HRIS I am building now, a records system I led as an intern, and POS software I
+                tested and documented.
               </p>
             </div>
             <ArrowLink href={url("work/")}>All projects</ArrowLink>

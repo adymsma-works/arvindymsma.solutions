@@ -35,7 +35,7 @@ export const SITE = {
   bestFit: "HR, attendance and workflow systems",
   tagline: "HR, attendance and workflow systems for real businesses.",
   summary:
-    "Full-stack developer building a cloud HRIS with biometric and face-recognition attendance at MSMA Solutions Department, plus business systems and n8n workflow automation. Comfortable from database design to user training.",
+    "Full-stack developer building a cloud HRIS with biometric and face-recognition attendance at MSMA Solutions Department, plus business systems and n8n workflow automation. Comfortable from database design to user documentation.",
   education: [
     ["BS Information Technology", "University of Cebu, 2025"],
     ["TVL Computer Programming", "College of Technological Sciences Cebu, 2019"],
@@ -171,46 +171,46 @@ export const PROJECTS = [
     years: "2024",
     mock: "pos",
     cover: "images/cover-pos-implementation.webp",
-    summary: "POS systems for sales, inventory and customers: data reconciliation, user training, reports and support.",
+    summary: "POS systems for sales, inventory and customers: finding bugs and keeping the implementation and training documents current.",
     intro:
-      "As a software implementor intern at Cebu Innosoft Solutions Services, I managed POS systems for sales, inventory and customers. The work was reconciling data, training users, creating reports and providing tech support.",
+      "As a software implementor intern at Cebu Innosoft Solutions Services, I worked on POS systems for sales, inventory and customers. The company's developers built the software; my part was testing it to find bugs and keeping the implementation notes and in-store training documents up to date.",
     facts: [
       ["Role", "Software implementor intern"],
       ["Timeline", "2024"],
       ["Company", "Cebu Innosoft Solutions Services Inc."],
-      ["Scope", "Sales, inventory, customers"],
+      ["Scope", "Testing and documentation"],
     ],
-    card: ["Users trained", "Data reconciled"],
+    card: ["Bugs found", "Docs kept current"],
     outcomes: [],
     problem: [
-      "A POS system only helps when the numbers inside it match the shelf and the people at the counter trust it.",
-      "My job sat between the software and the business: getting the data right, teaching users and fixing what broke.",
+      "A POS system only helps when it works at the counter and the people using it have instructions that match the screen.",
+      "My job sat between the developers and the stores: finding and reporting what broke, and keeping the notes and guides accurate as the software changed.",
     ],
     constraints: [
-      ["Live businesses", "Work happened while the business kept selling."],
-      ["Every comfort level", "Users ranged from confident to first-time, so training had to meet each one."],
-      ["Useful reports", "Reports had to answer the owner's questions, not just export a table."],
+      ["Live businesses", "Stores kept selling while the software changed."],
+      ["Every comfort level", "The guides were read by confident users and first-timers, so they had to be plain."],
+      ["Docs that keep up", "Each change to the software could make a guide wrong."],
     ],
     approach: [
-      ["list", "Reconcile the data", "Sales, inventory and customer records were checked and reconciled so everyone worked from numbers they agreed with."],
-      ["user", "Train the people", "I trained users on the tasks they actually do at the counter and in the back office."],
-      ["file-text", "Reports and support", "I created reports and provided tech support, which is where the next round of fixes came from."],
+      ["list", "Find the bugs", "I tested the sales, inventory and customer features and reported what broke to the developers."],
+      ["file-text", "Keep the notes current", "I maintained the implementation notes used when setting up the system for a store."],
+      ["user", "Keep the training guides current", "I updated the in-store training documents so they matched how the software actually worked."],
     ],
     figure: {
       type: "flow",
       steps: [
-        ["Reconcile", "Match sales, inventory and customer data."],
-        ["Train", "Walk users through their daily tasks."],
-        ["Support", "Reports, fixes and answers after go-live."],
+        ["Test", "Use the features the way a store would."],
+        ["Report", "Send each bug to the developers."],
+        ["Document", "Update the notes and training guides."],
       ],
       caption: "An implementation is mostly the work around the software.",
     },
     gallery: [
-      { piece: "posReceipt", pw: 22, k: 0.6, label: "The counter view: what the cashier sees on every sale." },
-      { piece: "posStock", pw: 22, k: 0.74, label: "Inventory that matches the shelf, so low stock is a fact, not a guess." },
+      { piece: "posReceipt", pw: 22, k: 0.6, label: "The counter view: one of the screens I tested." },
+      { piece: "posStock", pw: 22, k: 0.74, label: "The inventory view: stock screens were part of what I tested." },
     ],
     results: [
-      "Users were trained, data was reconciled and reports went to the people who needed them. Tech support closed the loop when something did not match.",
+      "Bugs I found went to the developers, and the implementation notes and training documents stayed in step with the software.",
     ],
     reflection:
       "Implementation taught me that the hardest week for any software is the first week someone else uses it. I still design screens with that week in mind.",
@@ -223,7 +223,7 @@ export const ARCHIVE = [
   { y: "2026", n: "This portfolio", d: "React and Vite on GitHub Pages, with a printable business card, QR code and contact file.", k: "personal", w: "React, Vite, GitHub Actions", ext: "https://github.com/adymsma-works/arvindymsma.solutions" },
   { y: "2026", n: "Bunny hero loop", d: "The 10-second animated loop on the home page, starring my avatar.", k: "personal", w: "Remotion, React, ffmpeg" },
   { y: "2025", n: "Bail bonds and records system", d: "Replaced manual encoding with searchable bond records.", k: "internship", w: "", slug: "bail-bonds-records" },
-  { y: "2024", n: "POS system implementation", d: "Sales, inventory and customers: reconciliation, training, reports, support.", k: "internship", w: "", slug: "pos-implementation" },
+  { y: "2024", n: "POS system implementation", d: "Sales, inventory and customers: testing, bug reports, implementation and training documents.", k: "internship", w: "", slug: "pos-implementation" },
   { y: "2024", n: "BinBetter", d: "Capstone project. I was one of the programmers.", k: "school", w: "" },
   { y: "2023", n: "eSportsPP", d: "Project manager and programmer: managed the project while building features.", k: "team", w: "" },
 ];
@@ -252,13 +252,13 @@ export const XP = [
   },
   {
     id: "innosoft", co: "Cebu Innosoft Solutions", chip: "CI", role: "Software Implementor Intern", when: "2024", where: "",
-    summary: "Managed POS systems for sales, inventory and customers.",
+    summary: "Tested POS systems for sales, inventory and customers.",
     bullets: [
-      "Reconciled sales, inventory and customer data",
-      "Trained users and created reports",
-      "Provided tech support after go-live",
+      "Found and reported bugs to the developers",
+      "Maintained the implementation notes",
+      "Kept the in-store training documents up to date",
     ],
-    stack: ["POS systems", "Reporting"],
+    stack: ["POS systems", "Testing", "Documentation"],
   },
 ];
 
@@ -310,7 +310,7 @@ export const USES = [
 export const MILESTONES = [
   { y: "Now", p: ["IT Associate | Developer at MSMA Solutions Department", "Building a cloud HRIS with biometric and face-recognition attendance", "Automating HR workflows with n8n"] },
   { y: "2025", p: ["BS Information Technology, University of Cebu", "Web developer intern at Alpha Insurance & Surety: led a bail bonds and records system"] },
-  { y: "2024", p: ["Software implementor intern at Cebu Innosoft Solutions: POS systems, data reconciliation and user training", "Programmer on BinBetter, our capstone project"] },
+  { y: "2024", p: ["Software implementor intern at Cebu Innosoft Solutions: POS testing and documentation", "Programmer on BinBetter, our capstone project"] },
   { y: "2023", p: ["Project manager and programmer on eSportsPP"] },
   { y: "2019", p: ["TVL Computer Programming, College of Technological Sciences Cebu"] },
 ];
