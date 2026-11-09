@@ -1,6 +1,6 @@
 // Shared chrome on every page: skip link, fixed header with the pill nav,
 // mobile menu, command palette (Ctrl/Cmd+K or "/"), footer and toasts.
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Icon from "./Icon.jsx";
 import { ToastProvider } from "./ui.jsx";
 import { useCopy, useRevealAll } from "./hooks.js";
@@ -15,12 +15,25 @@ const NAV = [
 
 function Brand({ onClick }) {
   return (
-    <a className="brand" href={url()} aria-label={`${SITE.short}, home`} onClick={onClick}>
+    // No aria-label: the visible name is the accessible name (voice users say what they see; WCAG 2.5.3).
+    <a className="brand" href={url()} onClick={onClick}>
       <span className="logo-mark" aria-hidden="true">
         {SITE.initials}
       </span>
       <span className="brand-name">{SITE.short}</span>
     </a>
+  );
+}
+
+/* Shortcut hint: "Ctrl K" by default (the prerendered HTML), the Command symbol only on Apple devices. */
+const noSubscribe = () => () => {};
+const isApple = () => /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+function ShortcutHint() {
+  const apple = useSyncExternalStore(noSubscribe, isApple, () => false);
+  return (
+    <span className="kbd" aria-hidden="true">
+      {apple ? <Icon name="command" className="" sw={2} /> : "Ctrl "}K
+    </span>
   );
 }
 
@@ -337,12 +350,10 @@ function Chrome({ current, children }) {
             ))}
           </nav>
           <div className="header-actions">
-            <button className="search-btn" type="button" aria-label="Search the site" onClick={openPalette}>
+            <button className="search-btn" type="button" aria-keyshortcuts="Control+K Meta+K" onClick={openPalette}>
               <Icon name="search" />
               <span className="label">Search</span>
-              <span className="kbd" aria-hidden="true">
-                <Icon name="command" className="" sw={2} />K
-              </span>
+              <ShortcutHint />
             </button>
             <a className="btn btn-primary btn-sm" href={url("contact/")} aria-current={current === "contact" ? "page" : undefined}>
               Get in touch
