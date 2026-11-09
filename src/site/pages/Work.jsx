@@ -25,7 +25,10 @@ export default function Work() {
         </p>
       </header>
 
-      <section className="container" style={{ marginTop: "clamp(2.5rem,5vw,4rem)" }} aria-label="Case studies">
+      <section className="container" style={{ marginTop: "clamp(2.5rem,5vw,4rem)" }} aria-labelledby="cases-h">
+        <h2 className="visually-hidden" id="cases-h">
+          Case studies
+        </h2>
         <div className="work-grid work-grid--index">
           {PROJECTS.map((p, i) => (
             <WorkCard key={p.slug} p={p} i={i} priority={i === 0} />
