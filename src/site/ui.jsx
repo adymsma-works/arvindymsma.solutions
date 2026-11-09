@@ -105,7 +105,7 @@ export function Rail({ dir = "v", className = "" }) {
 }
 
 /* ---------------- product window shot: stone backdrop + HTML product UI ---------------- */
-export function Shot({ p, wf, x, y, piece, pw, k, decorative, eager, cls = "", label }) {
+export function Shot({ p, wf, x, y, piece, pw, k, decorative, eager, priority, cls = "", label }) {
   const style = {};
   if (wf) style["--wf"] = wf;
   if (x != null) style["--x"] = x;
@@ -119,7 +119,18 @@ export function Shot({ p, wf, x, y, piece, pw, k, decorative, eager, cls = "", l
   const Piece = piece && PIECES[piece];
   return (
     <div className={`shot${piece ? " shot--piece" : ""}${cls ? ` ${cls}` : ""}`} {...a11y}>
-      <img className="shot-bg" src={url(p.cover)} alt="" width="1600" height="1067" loading={eager ? "eager" : "lazy"} decoding="async" />
+      <img
+        className="shot-bg"
+        src={url(p.cover)}
+        srcSet={`${url(p.cover.replace(".webp", "-800.webp"))} 800w, ${url(p.cover)} 1600w`}
+        sizes="(max-width: 800px) 100vw, 90vw"
+        alt=""
+        width="1600"
+        height="1067"
+        loading={eager || priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : undefined}
+        decoding="async"
+      />
       <div className="shot-app" aria-hidden="true" style={style}>
         {Piece ? (
           <div className="mk-piece">
@@ -141,12 +152,13 @@ const VARIANTS = {
   index: { wf: 1.12, x: "8%", y: "10%" },
 };
 
-export function WorkCard({ p, variant = "index", i = 0 }) {
+// priority: the first card on /work/ is the largest thing on a phone screen, so it loads first and skips the fade-in.
+export function WorkCard({ p, variant = "index", i = 0, priority = false }) {
   const o = VARIANTS[variant] || VARIANTS.index;
   return (
-    <article className={`work-card glow${variant !== "index" ? ` work-card--${variant}` : ""}`} data-reveal style={{ "--i": i % 2 }}>
+    <article className={`work-card glow${variant !== "index" ? ` work-card--${variant}` : ""}`} data-reveal={priority ? undefined : ""} style={{ "--i": i % 2 }}>
       <a href={url(`work/${p.slug}/`)}>
-        <Shot p={p} wf={o.wf} x={o.x} y={o.y} decorative />
+        <Shot p={p} wf={o.wf} x={o.x} y={o.y} decorative priority={priority} />
         <div className="work-meta">
           <div className="top">
             <h3>{p.name}</h3>

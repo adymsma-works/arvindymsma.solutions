@@ -28,7 +28,7 @@ export default function Work() {
       <section className="container" style={{ marginTop: "clamp(2.5rem,5vw,4rem)" }} aria-label="Case studies">
         <div className="work-grid work-grid--index">
           {PROJECTS.map((p, i) => (
-            <WorkCard key={p.slug} p={p} i={i} />
+            <WorkCard key={p.slug} p={p} i={i} priority={i === 0} />
           ))}
         </div>
       </section>
