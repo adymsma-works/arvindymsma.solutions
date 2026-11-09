@@ -29,7 +29,7 @@
   --soft: #d4d4d8;
   --body: #a4a4ae;
   --muted: #8b8b95;
-  --faint: #5f5f68;
+  --faint: #6b6b74; /* non-text only (arrows, markers, chart lines): >= 3.1:1 on ground, panel, panel-2 only (2.7 on raised, 2.4 on raised-2). Text uses --muted (fails on raised). */
 
   /* the one accent */
   --accent: #06b6d4;
@@ -151,7 +151,7 @@ main { position: relative; z-index: 1; }
 .lead { font-size: var(--fs-lead); line-height: 1.6; color: var(--body); max-width: 40rem; }
 .lead strong { color: var(--soft); font-weight: 500; }
 .muted { color: var(--muted); }
-.two-tone .muted { color: var(--faint); }
+.two-tone .muted { color: var(--muted); }
 .meta { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); letter-spacing: 0; font-feature-settings: "tnum"; }
 .kicker { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); letter-spacing: .02em; }
 
@@ -251,9 +251,10 @@ dialog::backdrop { background: rgba(8, 8, 10, .66); -webkit-backdrop-filter: blu
 .palette-group { padding: .7rem .75rem .35rem; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
 .palette-item { display: flex; align-items: center; gap: .8rem; width: 100%; padding: .7rem .75rem; border-radius: var(--r-sm); text-align: left; color: var(--soft); }
 .palette-item .ic { width: 16px; height: 16px; color: var(--muted); }
-.palette-item .hint { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--faint); }
+.palette-item .hint { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
 .palette-item[aria-selected="true"] { background: var(--raised); color: var(--ink); }
 .palette-item[aria-selected="true"] .ic { color: var(--accent-text); }
+.palette-item[aria-selected="true"] .hint { color: var(--body); } /* --muted is 4.29:1 on --raised; body 5.85:1 */
 .palette-empty { padding: 2.5rem 1rem; text-align: center; color: var(--muted); font-size: var(--fs-sm); }
 .palette-foot { display: flex; gap: 1.1rem; padding: .7rem 1.1rem; border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
 .palette-foot span { display: inline-flex; align-items: center; gap: .4rem; }
@@ -780,7 +781,9 @@ dialog::backdrop { background: rgba(8, 8, 10, .66); -webkit-backdrop-filter: blu
 /* ---------- 30. Responsive ---------- */
 @media (max-width: 1100px) {
   .nav-pill a { padding: .5rem .7rem; }
-  .search-btn .label, .search-btn .kbd { display: none; }
+  .search-btn .kbd { display: none; }
+  /* label stays readable by screen readers: it is the button's name */
+  .search-btn .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .search-btn { width: 38px; padding: 0; justify-content: center; }
 }
 @media (max-width: 1023px) {
