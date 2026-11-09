@@ -29,7 +29,7 @@
   --soft: #d4d4d8;
   --body: #a4a4ae;
   --muted: #8b8b95;
-  --faint: #5f5f68;
+  --faint: #6b6b74; /* non-text only (arrows, markers, chart lines): >= 3:1 on every surface. Text uses --muted. */
 
   /* the one accent */
   --accent: #06b6d4;
@@ -151,7 +151,7 @@ main { position: relative; z-index: 1; }
 .lead { font-size: var(--fs-lead); line-height: 1.6; color: var(--body); max-width: 40rem; }
 .lead strong { color: var(--soft); font-weight: 500; }
 .muted { color: var(--muted); }
-.two-tone .muted { color: var(--faint); }
+.two-tone .muted { color: var(--muted); }
 .meta { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); letter-spacing: 0; font-feature-settings: "tnum"; }
 .kicker { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); letter-spacing: .02em; }
 
@@ -251,7 +251,7 @@ dialog::backdrop { background: rgba(8, 8, 10, .66); -webkit-backdrop-filter: blu
 .palette-group { padding: .7rem .75rem .35rem; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
 .palette-item { display: flex; align-items: center; gap: .8rem; width: 100%; padding: .7rem .75rem; border-radius: var(--r-sm); text-align: left; color: var(--soft); }
 .palette-item .ic { width: 16px; height: 16px; color: var(--muted); }
-.palette-item .hint { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--faint); }
+.palette-item .hint { margin-left: auto; font-family: var(--mono); font-size: .72rem; color: var(--muted); }
 .palette-item[aria-selected="true"] { background: var(--raised); color: var(--ink); }
 .palette-item[aria-selected="true"] .ic { color: var(--accent-text); }
 .palette-empty { padding: 2.5rem 1rem; text-align: center; color: var(--muted); font-size: var(--fs-sm); }

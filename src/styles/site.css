@@ -18,6 +18,7 @@
 .hero-window { margin: 0; }
 .vwin { position: relative; border-radius: var(--r-md); overflow: hidden; background: #0f0f12; border: 1px solid rgba(255, 255, 255, .12); box-shadow: var(--sh-3); }
 .vwin-bar { height: 40px; font-size: .78rem; gap: .75rem; }
+.vwin-bar .mk-muted { color: var(--muted); } /* real text, not part of a mock: 4.5:1 */
 .vwin-bar .mk-dots i { width: 10px; height: 10px; }
 .vwin video, .vwin img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #0c1219; }
 .vwin-btn { position: relative; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: var(--soft); border: 1px solid rgba(255, 255, 255, .09); background: #232329; transition: color var(--d-fast) ease, border-color var(--d-fast) ease, transform var(--d-press) var(--ease-out); }
