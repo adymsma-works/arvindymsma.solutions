@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="en" data-opt="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workbench v2 · final candidate</title>
+<!-- Final candidate for ADR-003 (direction C, round 3: option 2 "Flat Header" + ops-console build log). Not part of the site build.
+     Demo shop and its prices are fake. Receipts in "How I work" are real (roadmap, 10-11 Nov 2026). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const d = document.documentElement, th = localStorage.getItem('theme'); if (th) d.dataset.theme = th; } catch (e) {}</script>
+<style>
+:root{
+  --orange:#FF5A1F; --char:#15181D; --slate:#232830; --white:#FFFFFF; --mist:#F4F4F2;
+  --ink:#15181D; --ink-2:#4A4F57; --ink-3:#6B7079; --line:#E4E4DF; --line-2:#D5D5CF;
+  --d-ink:#FFFFFF; --d-ink-2:#A9AEB6; --d-line:#2E343D; --d-panel:#1B1F25;
+  --ok:#1F8A5B; --r:14px; --mono:"JetBrains Mono",ui-monospace,monospace;
+  --beat:.6s; --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0}
+body{font:400 17px/1.6 Manrope,system-ui,sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.08}
+h1{font-size:clamp(40px,6vw,72px)}
+h2{font-size:clamp(30px,3.6vw,44px)}
+h3{font-size:19px;letter-spacing:-.01em;line-height:1.3}
+.lede{font-size:19px;color:var(--ink-2);max-width:58ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;font-weight:700;text-decoration:none;border:0}
+.btn-main{background:var(--orange);color:var(--char)}
+.btn-ghost{border:1px solid var(--line-2);background:var(--white)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;text-decoration:none}
+.mark{width:32px;height:32px;border-radius:8px;background:var(--char);display:grid;place-items:center}
+.mark i{width:12px;height:12px;border-radius:3px;background:var(--orange)}
+.nav ul{display:flex;gap:28px;list-style:none;padding:0;font-weight:500;font-size:15px}
+.nav ul a{text-decoration:none;color:var(--ink-2)}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* hero */
+.hero{padding:56px 0 48px}
+.who{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+/* avatar: transparent bunny; click = dance like the hero video (bob to the beat, sway, notes), click again = stop */
+.buddy{position:relative;flex:none;width:52px;height:58px;padding:0;border:0;background:none;cursor:pointer;border-radius:12px;outline-offset:4px;-webkit-tap-highlight-color:transparent}
+.buddy-in{position:absolute;inset:0;display:block;transform-origin:50% 100%;transition:transform .2s ease}
+.buddy img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.buddy-shadow{position:absolute;left:18%;right:18%;bottom:-6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px)}
+.buddy .note{position:absolute;top:14px;font-size:14px;line-height:1;color:var(--orange);opacity:0;pointer-events:none}
+.buddy .n1{left:-8px}.buddy .n2{right:-10px}.buddy .n3{left:22px}
+.buddy:hover .buddy-in{transform:translateY(-2px)}
+.buddy.playing .buddy-in{animation:sway 1s ease-in-out infinite}
+.buddy.playing img{animation:bob .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .buddy-shadow{animation:shad .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .n1{animation:note 2s ease-out infinite}
+.buddy.playing .n2{animation:note 2s ease-out .7s infinite}
+.buddy.playing .n3{animation:note 2s ease-out 1.4s infinite}
+@keyframes float{50%{transform:translateY(-3px)}}
+@keyframes bob{from{transform:translateY(0) scale(1.03,.97)}to{transform:translateY(-5px) scale(.98,1.02)}}
+@keyframes shad{to{transform:scaleX(.8);opacity:.6}}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes note{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:1}100%{opacity:0;transform:translateY(-26px) rotate(12deg)}}
+@media (prefers-reduced-motion:reduce){.buddy.playing .note{opacity:1}}
+.who small{display:block;color:var(--ink-2);font-size:14px}
+.hero h1{max-width:16ch}
+.hero .lede{margin-top:24px}
+
+/* ===== workbench ===== */
+.bench{border:1px solid var(--line);border-radius:22px;background:var(--mist);padding:12px;box-shadow:0 1px 2px rgba(21,24,29,.04),0 24px 64px -24px rgba(21,24,29,.18)}
+.bench-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 8px 16px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:#E9E9E4;gap:2px}
+.seg button{border:0;background:none;min-height:36px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ink-2);transition:background .2s,color .2s}
+.seg button[aria-selected=true],.seg button[aria-pressed=true]{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(21,24,29,.12)}
+.seg button[disabled]{opacity:.5;cursor:default}
+.seg .soon{font-weight:500;font-size:11px;margin-left:6px;color:var(--ink-3)}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:12px}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+.ph span{color:var(--ink-3);font-weight:500}
+
+/* chat */
+.chat{flex:1;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:340px;max-height:420px;overflow-y:auto;scrollbar-width:thin}
+.msg{max-width:84%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.45;animation:in var(--beat) var(--ease) both}
+.msg.in{align-self:flex-start;background:#EFEFEB;border-bottom-left-radius:6px}
+.msg.out{align-self:flex-end;background:var(--char);color:#fff;border-bottom-right-radius:6px}
+.msg small{display:block;font-size:12px;color:var(--ink-3);margin-top:4px}
+.msg.out small{color:var(--d-ink-2)}
+.msg.in small{color:var(--ink-2)}
+.typing{align-self:flex-end;display:flex;gap:4px;padding:12px 14px;background:var(--char);border-radius:18px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.4;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+.empty{margin:auto;text-align:center;color:var(--ink-3);font-size:14px;max-width:28ch}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line)}
+.chip{border:1px solid var(--line-2);background:var(--white);border-radius:999px;min-height:36px;padding:0 14px;font-size:14px;font-weight:600}
+.chip:hover{border-color:var(--ink)}
+.chip[disabled]{opacity:.45;cursor:default}
+.chips small{width:100%;color:var(--ink-3);font-size:12px}
+
+/* right side views */
+.views{position:relative}
+.view{display:none;gap:12px}
+.view.on{display:grid}
+.owner{grid-template-columns:1fr 1fr}
+@media (max-width:700px){.owner{grid-template-columns:1fr}}
+.owner .wide{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+#sheet td{white-space:normal}
+th{font-size:12px;color:var(--ink-3);font-weight:600;background:#FAFAF8}
+td.n{color:var(--ink-3);width:1%;font-family:var(--mono);font-size:12px}
+tr{transition:background .4s}
+tr.hit td{background:#FFF1EA}
+tr.hit td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
+tr.new{animation:in var(--beat) var(--ease) both}
+.tablebox{overflow-x:auto;scrollbar-width:thin}
+.mail{padding:16px;font-size:14px;display:grid;gap:6px;min-height:132px}
+.mail .from{font-weight:700}
+.mail .muted,.muted{color:var(--ink-3)}
+.mail.skip{color:var(--ink-3)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2)}
+.badge.on{border-color:var(--orange);color:var(--ink)}
+.badge.on::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange)}
+.sum{padding:16px;font-size:14px;display:grid;gap:8px}
+.sum .big{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.sum dl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sum dt{font-size:12px;color:var(--ink-3)} .sum dd{font-size:22px;font-weight:800}
+
+/* engineer view (dark) */
+.eng{grid-template-columns:1fr;background:var(--char);border-radius:var(--r);padding:12px;color:var(--d-ink)}
+.eng .panel{background:var(--d-panel);border-color:var(--d-line);color:var(--d-ink)}
+.eng .ph{border-color:var(--d-line)} .eng .ph span{color:var(--d-ink-2)}
+.arch{padding:20px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:700px){.arch{grid-template-columns:1fr 1fr}}
+.lane{border:1px dashed var(--d-line);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start}
+.lane > b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2);font-weight:700}
+.node{border:1px solid var(--d-line);background:var(--slate);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;transition:border-color .3s,box-shadow .3s,opacity .3s}
+.node small{display:block;font-family:var(--mono);font-size:11px;color:var(--d-ink-2);font-weight:400}
+.node.act{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,90,31,.18)}
+.node.done{border-color:#4A515C}
+.node{position:relative}
+/* skipped step: full-strength text (passes 4.5:1); it reads as skipped by shape: dashed outline, no fill, struck name, label */
+.node.skip,.eng .node.skip{background:none;border-style:dashed;border-color:rgba(255,255,255,.34);color:var(--d-ink-2);text-decoration:line-through;text-decoration-thickness:1px}
+.node.skip small{display:inline-block;width:100%}
+.node.skip::after{content:"skipped";position:absolute;top:7px;right:8px;font:500 10.5px/1.5 var(--mono);color:var(--d-ink-2);border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:0 6px}
+.eng-split{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+@media (max-width:860px){.eng-split{grid-template-columns:1fr}}
+.trace{padding:8px 0}
+.span{display:grid;grid-template-columns:150px 1fr 64px;align-items:center;gap:10px;padding:6px 16px;font-size:13px;border:0;background:none;width:100%;text-align:left}
+.span:hover,.span.sel{background:#232830}
+.span .bar{height:8px;border-radius:4px;background:#2F3640;position:relative;overflow:hidden}
+.span .bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:#5B6470;transform-origin:left;transform:scaleX(0);transition:transform var(--beat) var(--ease)}
+.span.done .bar i{transform:scaleX(1)}
+.span.act .bar i{background:var(--orange);transform:scaleX(1)}
+.span .st{font-family:var(--mono);font-size:11px;color:var(--d-ink-2);text-align:right}
+.span .st.ok{color:#5BD49A}
+pre{margin:0;padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#D7DAE0;overflow:auto;max-height:280px;white-space:pre-wrap;word-break:break-word;scrollbar-width:thin}
+pre .k{color:#C5CAD1} pre .s{color:#FFB08F} pre .c{color:#6B7079}
+.eng .note{font-size:12px;color:var(--d-ink-2);padding:4px 4px 0}
+
+/* stepper + controls */
+.bottom{display:flex;gap:12px;align-items:center;padding:12px 4px 4px;flex-wrap:wrap}
+.steps{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;list-style:none;padding:0;min-width:280px}
+.steps li{height:4px;border-radius:2px;background:var(--line-2);transition:background .3s}
+.steps li.done{background:var(--ink)} .steps li.act{background:var(--orange)} .steps li.skip{background:repeating-linear-gradient(90deg,var(--line-2) 0 4px,transparent 4px 8px)}
+.ctrl{display:flex;gap:6px}
+.icon{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);background:var(--white);display:grid;place-items:center;font-weight:700;font-size:14px}
+.status{font-size:13px;color:var(--ink-2);min-width:220px}
+.status b{color:var(--ink)}
+
+/* how I work */
+section{padding:112px 0}
+.how{display:grid;grid-template-columns:400px 1fr;gap:64px}
+@media (max-width:980px){.how{grid-template-columns:1fr;gap:40px}}
+.how-left{position:sticky;top:32px;align-self:start}
+@media (max-width:980px){.how-left{position:static}}
+.how-left h2{margin:16px 0 20px}
+.promises{list-style:none;padding:0;margin-top:32px;display:grid;gap:12px}
+.promises li{display:grid;grid-template-columns:24px 1fr;gap:12px;font-size:15px;color:var(--ink-2)}
+.promises b{color:var(--ink);display:block}
+.promises li::before{content:"";width:10px;height:10px;margin-top:8px;border-radius:3px;background:var(--orange)}
+/* how I work: an ops console instead of a timeline. One dark pane in both themes (Charcoal on the peach page,
+   a lifted Charcoal/Slate mix on the Charcoal page); Mist text, Orange only as marks, soft green for pass. */
+:root{--tty:#15181D;--tty-top:#232830;--tty-ring:rgba(21,24,29,.9);--tty-line:rgba(255,255,255,.10);--tty-ink:#F4F4F2;--tty-2:#C5CAD1;--tty-3:#A9AEB6;--tty-ok:#7FE0B0;--tty-h:#FFC2A8}
+html[data-theme=dark]{--tty:#1B1F25;--tty-ring:rgba(255,255,255,.09)}
+.tty{min-width:0;border-radius:14px;background:var(--tty);color:var(--tty-ink);overflow:hidden;box-shadow:0 0 0 1px var(--tty-ring),0 28px 64px -28px var(--shade,rgba(21,24,29,.3))}
+.tty-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;height:44px;padding:0 10px 0 14px;background:var(--tty-top);border-bottom:1px solid var(--tty-line);font:500 12.5px var(--mono);color:var(--tty-2)}
+.tty-ico{width:16px;height:16px;color:var(--orange)}
+.tty-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tty-bar .wc i{background:rgba(255,255,255,.10);color:#fff}
+.tty-body{padding:20px 24px 16px}
+.tty-ps{font:400 13px/1.6 var(--mono);color:var(--tty-3);white-space:nowrap;overflow:hidden}
+.tty-ps>span{display:block}
+.tty-ps b{font-weight:500;color:var(--orange)}
+.tty-ps em{font-style:normal;color:var(--tty-ink)}
+.tty-ps .cmd{color:var(--tty-ink)}
+.cur{display:inline-block;width:.6em;height:1.15em;vertical-align:-.22em;background:var(--tty-ink);animation:cur 1.1s steps(1) infinite}
+@keyframes cur{50%{opacity:0}}
+.tlog{list-style:none;padding:0;margin:14px 0 0}
+.tlog li{padding:18px 0;border-top:1px dashed var(--tty-line)}
+.t-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;font:400 12.5px/1.6 var(--mono);color:var(--tty-3)}
+.t-meta .st{white-space:pre;font-weight:500}
+.t-meta .ok{color:var(--tty-ok)}
+.t-meta .nx{color:var(--orange)}
+.t-tag{color:var(--tty-2)}
+.t-tag::before{content:"# ";color:var(--tty-3)}
+.tlog h3{font-size:17.5px;margin:8px 0 4px;color:var(--tty-ink)}
+.t-p{font-size:14.5px;line-height:1.55;color:var(--tty-2);max-width:60ch}
+.t-rc{display:flex;flex-wrap:wrap;gap:0 20px;margin-top:12px;padding:7px 12px;border-radius:8px;background:rgba(255,255,255,.05);box-shadow:inset 2px 0 0 var(--orange);font:400 12.5px/1.7 var(--mono);color:var(--tty-3)}
+.t-rc b{font-weight:500;color:var(--tty-h)}
+.tlog .next h3{color:var(--tty-2)}
+.tver{margin:2px 0 18px;border:1px solid var(--tty-line);border-radius:10px;overflow:hidden}
+.tver-h{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;padding:8px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--tty-line);font:400 12px/1.6 var(--mono);color:var(--tty-3)}
+.tver-h b{font-weight:500;color:var(--tty-ink)}
+.tver dl{display:grid;grid-template-columns:1.4fr .8fr 1.1fr}
+.tver dl>div{padding:12px 14px;min-width:0}
+.tver dl>div+div{border-left:1px solid var(--tty-line)}
+.tver dt{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tty-3);margin-bottom:4px}
+.tver dd{font:400 12.5px/1.6 var(--mono);color:var(--tty-ink)}
+.tver dd b{font-weight:500}
+.tver dd .ok{color:var(--tty-ok)}
+.tver dd.h{color:var(--tty-h)}
+.tty-foot{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:9px 24px;background:rgba(255,255,255,.04);border-top:1px solid var(--tty-line);font:400 12px/1.6 var(--mono);color:var(--tty-3)}
+.tty-foot .segs{display:inline-flex;gap:3px}
+.tty-foot .segs i{width:14px;height:6px;border-radius:2px;background:var(--tty-ok)}
+.tty-foot .segs .n{background:none;box-shadow:inset 0 0 0 1px var(--orange)}
+.tty-foot .src{margin-left:auto}
+@media (max-width:600px){.tty-body{padding:16px 14px 12px}.tty-foot{padding:9px 14px}.tty-foot .src{margin-left:0}.tver dl{grid-template-columns:1fr}.tver dl>div+div{border-left:0;border-top:1px solid var(--tty-line)}}
+/* type-in, once (the script adds .arm, then .go when the pane is in view; never under reduced motion) */
+.tty.arm .rv{opacity:0}
+.tty.arm.go .rv{opacity:1;animation:in .5s var(--ease) both;animation-delay:calc(.75s + var(--i) * .16s)}
+.tty.arm .cmd{display:inline-block;vertical-align:bottom;overflow:hidden;width:0}
+.tty.arm.go .cmd{width:13ch;animation:type .65s steps(13) both}
+@keyframes type{from{width:0}}
+
+.cta{background:var(--char);color:var(--d-ink);border-radius:28px;padding:64px;display:flex;justify-content:space-between;align-items:center;gap:32px;flex-wrap:wrap}
+.cta p{color:var(--d-ink-2);margin-top:12px}
+.btn-dline{border:1px solid #4A515C;color:#fff}
+footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
+.draft{background:#FFF8E6;border-bottom:1px solid #F0E2B8;font-size:13px;padding:8px 0;color:#5C4A12}
+
+.seg{max-width:100%;overflow-x:auto;scrollbar-width:none}.seg button{white-space:nowrap}
+@media (max-width:600px){.cta{padding:40px 24px;border-radius:20px}.bench{padding:8px}}
+/* ===== round 3: macOS glass ===== */
+.logo{width:32px;height:32px;position:relative;display:block;transition:transform .3s ease}
+/* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
+.logo-wrap{position:relative;display:block;width:32px;height:32px}
+.brand:hover .logo{transform:rotate(30deg)}
+.splash{position:fixed;inset:0;z-index:100;overflow:hidden;visibility:hidden;pointer-events:none}
+.splash.in,.splash.cover,.splash.out{visibility:visible;pointer-events:auto}
+/* diagonal "scratch" wipe: each layer is a band between two diagonal lines; a deep-orange stripe leads, brand orange follows */
+.splash .w{position:absolute;inset:0;clip-path:polygon(0 0,0 0,0 0,0 0);transition:clip-path .5s cubic-bezier(.7,0,.3,1)}
+.splash .w1{background:#E9501A}
+.splash .w2{background:var(--orange);transition-delay:.09s}
+.splash.in .w,.splash.cover .w{clip-path:polygon(0 0,200% 0,0 200%,0 0)}
+.splash.out .w{clip-path:polygon(200% 0,200% 0,0 200%,0 200%);transition:clip-path .7s cubic-bezier(.7,0,.3,1) .22s}
+.splash.out .w1{transition-delay:.31s}
+.splash .roll{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;opacity:0;transform:scale(.25) rotate(-150deg);transition:transform .6s cubic-bezier(.2,.9,.3,1.2) .15s,opacity .2s ease .15s}
+.splash.in .roll,.splash.cover .roll{opacity:1;transform:scale(1) rotate(0deg)}
+.splash.out .roll{opacity:0;transform:scale(12) rotate(80deg);transition:transform .75s cubic-bezier(.6,0,.8,.4),opacity .35s ease .35s}
+.splash.instant .w,.splash.instant .roll{transition:none}
+.bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
+.bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
+.seg{background:rgba(21,24,29,.06)}
+.panel{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);border:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(21,24,29,.06),0 8px 24px -12px rgba(21,24,29,.18)}
+.ph{border-color:rgba(21,24,29,.07)}
+th{background:rgba(21,24,29,.03)}
+.eng{--d-ink-2:#D0D4DA;--d-line:rgba(255,255,255,.12);background:rgba(30,34,41,.86);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 40px -16px rgba(21,24,29,.35);border-radius:18px}
+.eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none;backdrop-filter:none}
+.eng .node{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.eng .span:hover,.eng .span.sel{background:rgba(255,255,255,.07)}
+.eng .span .bar{background:rgba(255,255,255,.10)} .eng .span .bar i{background:#8A929E}
+.eng-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:4px 4px 0}
+.eng-head .mono{color:var(--d-ink-2)}
+.seg-dark{background:rgba(255,255,255,.08)}
+.seg-dark button{color:var(--d-ink-2)}
+.seg-dark button[aria-pressed=true]{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+.emode{display:none;gap:12px}.emode.on{display:grid}
+.sys{display:grid;grid-template-columns:.8fr 24px 1fr 24px 1.3fr 24px 1.2fr;gap:8px;padding:20px 16px;align-items:stretch}
+.zone{border:1px solid var(--d-line);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start}
+.zone>b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2)}
+.zone.trust{border:1.5px dashed var(--orange);background:rgba(255,90,31,.05)}
+.tb{font-size:11px;font-weight:600;color:#FFC2A8}
+.node.route{border-style:dashed}
+.arrow{align-self:center;height:2px;background:rgba(255,255,255,.25);position:relative}
+.arrow::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid rgba(255,255,255,.4)}
+@media (max-width:860px){.sys{grid-template-columns:1fr}.arrow{width:2px;height:20px;justify-self:center}.arrow::after{right:-4px;top:auto;bottom:-6px;border:5px solid transparent;border-top:7px solid rgba(255,255,255,.4)}}
+.adr,.fail{padding:12px 16px 16px;margin:0;display:grid;gap:12px;font-size:14px;color:var(--d-ink-2)}
+.adr{padding-left:36px}.adr b,.fail b{color:#fff}
+.adr .mono,.fail .mono{color:#FFC2A8;font-size:11.5px;white-space:nowrap}
+.fail{list-style:none}
+.fail li{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start}
+.pill{font-size:11px;font-weight:700;text-align:center;padding:2px 0;border-radius:999px;border:1px solid var(--d-line);color:var(--d-ink-2)}
+.pill.ok{border-color:rgba(91,212,154,.5);color:#7FE0B0}
+/* ===== round 4: cover-style top (charcoal + giant faint symbol, like the Facebook cover) ===== */
+.top{position:relative;overflow:hidden;background:var(--char);color:var(--d-ink);padding-bottom:168px}
+.top .wm{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);height:auto;aspect-ratio:1;pointer-events:none;user-select:none;color:var(--wm-c,#232830);transform-origin:50% 41.6%;animation:fan 60s linear infinite}
+@keyframes fan{to{transform:rotate(360deg)}} /* background fan: one slow turn a minute; off under reduced motion */
+.top .wrap{position:relative}
+/* sticky nav: clear over the dark top, charcoal glass once you scroll */
+html{scroll-padding-top:84px}
+.bar{position:sticky;top:0;z-index:50;color:var(--d-ink);transition:background-color .25s ease,box-shadow .25s ease}
+.bar.solid{background:rgba(21,24,29,.92);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.bar .nav ul a{color:var(--d-ink-2);transition:color .15s}
+.bar .nav ul a:hover{color:#fff}
+.top{margin-top:-72px;padding-top:72px}
+.top .who small{color:var(--d-ink-2)}
+.top .lede{color:#C5CAD1}
+.top h1 .o{color:var(--orange)}
+.pull{margin-top:-136px;position:relative}
+@media (max-width:600px){.top{padding-bottom:120px}.pull{margin-top:-96px}.top .wm{right:-45%;top:-4%;width:115vw;opacity:.7}}
+/* ===== dark mode (logo click): Yapliong palette only: Charcoal page, Deep Slate surfaces, white text, orange accents ===== */
+html[data-theme=dark]{color-scheme:dark;--ink:#FFFFFF;--ink-2:#C5CAD1;--ink-3:#A9AEB6;--line:#2E343D;--line-2:#3A414C;--white:#232830;--mist:#1B1F25}
+html[data-theme=dark] body{background:var(--char)}
+html[data-theme=dark] .bench{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#232830,#1B1F25);border-color:rgba(255,255,255,.08);box-shadow:0 24px 64px -24px rgba(0,0,0,.6)}
+html[data-theme=dark] .seg{background:rgba(255,255,255,.06)}
+html[data-theme=dark] .seg button[aria-selected=true],html[data-theme=dark] .seg button[aria-pressed=true]{background:#3A414C;color:#fff;box-shadow:none}
+html[data-theme=dark] .panel{background:rgba(35,40,48,.82);border-color:rgba(255,255,255,.08);box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}
+html[data-theme=dark] .ph{border-color:rgba(255,255,255,.07)}
+html[data-theme=dark] th{background:rgba(255,255,255,.03)}
+html[data-theme=dark] .msg.in{background:#2E343D;color:#fff}
+html[data-theme=dark] .msg.out,html[data-theme=dark] .typing{background:var(--char);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+html[data-theme=dark] tr.hit td{background:rgba(255,90,31,.14)}
+html[data-theme=dark] .chip:hover{border-color:#fff}
+html[data-theme=dark] .eng{background:rgba(21,24,29,.7)}
+html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== colour options A/B/C (designed by the Fable helper, 11 Nov) ===== */
+/* =====================================================================================
+   THEME OPTIONS for phase3-workbench.html  (paste AFTER the existing dark block)
+   Use: <html data-opt="a"> (A picked by Arvin, 11 Nov; B and C removed)  +  the existing data-theme="dark" toggle (logo click).
+   Brand hues only: Orange #FF5A1F, Charcoal #15181D, Deep Slate #232830, White, Mist #F4F4F2.
+   Every other colour is a mix of those (recipe in the comment beside it).
+
+   How it is built: each option only sets VARIABLES (light, then dark). One shared rule
+   block at the bottom paints hero, nav, bench, panels, timeline, CTA and footer from those
+   variables, so both modes of every option follow the same colour logic by construction.
+   Dark variables are restated in full on purpose: `html[data-opt=x]` has the same
+   specificity as the old `html[data-theme=dark]` and comes later, so it would otherwise
+   leak light tokens into dark mode.
+
+   Contrast: WCAG 2.x ratios, computed (sRGB relative luminance), alpha layers flattened first.
+   Targets: body text >= 4.5, large text >= 3, borders ~1.3.  "FLAG" marks anything under.
+   ===================================================================================== */
+
+/* -------------------------------------------------------------------------------------
+   OPTION A — "Peach Paper": one barely-there peach sheet, hero included.
+   Orange is 5% of the page colour; the hero is the same sheet as the body (no band), so
+   the page reads like one calm macOS window. Charcoal is the ink, orange only marks things
+   (underline, dots, button). The single dark block is the CTA.
+   Suits: clients who read long, and anyone worried about "too orange". Safest for eyes.
+
+   LIGHT  text / background                                   ratio
+   ink   #15181D on page  #FFF7F4 (hero, body, footer, nav)   16.83
+   ink   #15181D on card  #FFFFFF                             17.79
+   ink   #15181D on panel #FFFBFA (white 78% over bench)      17.31
+   ink   #15181D on bench #FFEDE6                             15.68
+   ink   #15181D on sunk  #FFF0EB (chat bubble, receipt, tag) 16.03
+   ink   #15181D on hit   #FFE8E0 (highlighted table row)     15.14
+   ink-2 #44464A on page 8.94 | card 9.46 | panel 9.20 | bench 8.33 | sunk 8.52
+   ink-3 #5B5D61 on page 6.24 | card 6.60 | panel 6.42 | bench 5.81 | sunk 5.94
+   CTA: white on Charcoal 17.79 | #C5CAD1 on Charcoal 10.80 | Charcoal on Orange button 5.71
+   hero accent word: Charcoal text (16.83) + Orange underline (shape only)
+   line  #E3DCDA on page 1.28 (FLAG, just under 1.3; the old #E4E4DF on white was the same) | on card 1.35
+   line-2 #C7C1C0 on page 1.68 | on card 1.78
+   Orange as a SHAPE on page 2.95 (FLAG under 3: decoration only, never text; focus ring too)
+   surfaces: bench vs page 1.07, card vs page 1.06 (separated by the border + shadow, not by fill)
+
+   DARK   white on Charcoal 17.79 | on Slate card 14.81 | on panel #22272F 15.01
+   ink-2 #C5CAD1 on Charcoal 10.80 | Slate 8.99      ink-3 #A9AEB6 on Charcoal 7.98 | Slate 6.64
+   Orange on Charcoal 5.71 (text OK)   line #2E343D on Charcoal 1.42   line-2 #3A414C on Slate 1.44
+   chat bubble: white on #2E343D 12.54 (same in B and C dark)
+   ------------------------------------------------------------------------------------- */
+html[data-opt=a]{
+  --page:#FFF7F4;                 /* Orange 5% + White */
+  --white:#FFFFFF; --mist:#FFF0EB;/* Orange 9% + White */
+  --ink:#15181D; --ink-2:#44464A; --ink-3:#5B5D61;   /* Charcoal 100 / 80 / 70% + White */
+  --line:#E3DCDA; --line-2:#C7C1C0;                  /* Charcoal 12 / 24% over the page */
+  --sunk:#FFF0EB; --hit:#FFE8E0;                     /* Orange 9% / 14% + White */
+  --bench:#FFEDE6; --dot:rgba(21,24,29,.08);         /* Orange 11% + White */
+  --panel:rgba(255,255,255,.78); --panel-edge:rgba(255,255,255,.9); --shade:rgba(21,24,29,.16);
+  --hero:var(--page); --hero-ink:#15181D; --hero-ink-2:#44464A; --hero-o:#15181D; --hero-u:#FF5A1F;
+  --wm:1; --wm-f:none; --wm-c:#FFE6DC;              /* Orange 14% + White: tone-on-tone on the peach page */
+  --bar:rgba(255,247,244,.86); --bar-edge:rgba(21,24,29,.08);
+  --cta:#15181D; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --foot:transparent; --foot-ink:#44464A;
+}
+html[data-opt=a][data-theme=dark]{
+  --page:#15181D; --white:#232830; --mist:#1B1F25;
+  --ink:#FFFFFF; --ink-2:#C5CAD1; --ink-3:#A9AEB6; --line:#2E343D; --line-2:#3A414C;
+  --sunk:#2E343D; --hit:rgba(255,90,31,.14);
+  --bench:#1F242B; --dot:rgba(255,255,255,.05);      /* Charcoal/Slate midpoint */
+  --panel:rgba(35,40,48,.82); --panel-edge:rgba(255,255,255,.08); --shade:rgba(0,0,0,.55);
+  --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:1; --wm-f:none; --wm-c:#232830;              /* Deep Slate on Charcoal */
+  --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
+  --cta:#232830; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C;
+  --foot:transparent; --foot-ink:#C5CAD1;
+}
+
+/* -------------------------------------------------------------------------------------
+   SHARED PAINT — the only rules; they read the variables above. Needed once, for all options.
+   `header.bar` (not `.bar`) because the trace rows also use a `.bar` class.
+   ------------------------------------------------------------------------------------- */
+html[data-opt] body{background:var(--page)}
+/* hero + nav */
+html[data-opt] .top{background:var(--hero);color:var(--hero-ink)}
+html[data-opt] .top .wm{opacity:var(--wm);filter:var(--wm-f)}
+html[data-opt] .top .lede,html[data-opt] .top .who small{color:var(--hero-ink-2)}
+html[data-opt] .top h1 .o{color:var(--hero-o);text-decoration:underline var(--hero-u);text-decoration-thickness:.07em;text-underline-offset:.14em}
+html[data-opt] header.bar{color:var(--hero-ink)}
+html[data-opt] header.bar.solid{background:var(--bar);box-shadow:0 1px 0 var(--bar-edge)}
+html[data-opt] header.bar .nav ul a{color:var(--hero-ink-2)}
+html[data-opt] header.bar .nav ul a:hover{color:var(--hero-ink)}
+/* light hero (light mode only): the white logo would vanish, so show the dark one */
+html[data-opt=a]:not([data-theme=dark]) header.bar .logo{content:url(assets/yapliong-symbol-dark.svg)}
+/* demo area */
+html[data-opt] .bench{background:radial-gradient(var(--dot) 1px,transparent 1.2px) 0 0/16px 16px,var(--bench);border-color:var(--line);box-shadow:0 1px 2px var(--dot),0 24px 64px -24px var(--shade)}
+html[data-opt] .panel{background:var(--panel);border-color:var(--panel-edge);box-shadow:0 0 0 1px var(--dot),0 8px 24px -12px var(--shade)}
+html[data-opt] .eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none} /* keep the engineer glass as it is */
+html[data-opt] .msg.in{background:var(--sunk);color:var(--ink)}
+html[data-opt] tr.hit td{background:var(--hit)}
+/* CTA + footer */
+html[data-opt] .cta{background:var(--cta);color:var(--cta-ink)}
+html[data-opt] .cta p{color:var(--cta-ink-2)}
+html[data-opt] .cta .btn-main{background:var(--cta-btn);color:var(--cta-btn-ink)}
+html[data-opt] .cta .btn-dline{border-color:var(--cta-edge);color:var(--cta-ink)}
+html[data-opt] footer{background:var(--foot);color:var(--foot-ink)}
+
+/* =====================================================================================
+   CLAUDE BAR RECREATION (shared by both options). My own Windows tool, redrawn in HTML/CSS.
+   Honesty: every figure is a sample number and says so; no logos; independent personal tool.
+   The frosted capsule is the real tool's look (Windows 11 Acrylic), not decoration.
+   ===================================================================================== */
+html[data-opt=a]{--cb-bg:rgba(246,246,248,.74);--cb-edge:rgba(255,255,255,.85);--cb-well:rgba(21,24,29,.06);--cb-on:#FFFFFF}
+html[data-opt=a][data-theme=dark]{--cb-bg:rgba(46,52,61,.78);--cb-edge:rgba(255,255,255,.10);--cb-well:rgba(255,255,255,.07);--cb-on:#4A515C}
+.tools h2{margin:16px 0 20px;max-width:22ch}
+.tnote{font-size:13px;color:var(--ink-2);max-width:72ch}
+.taud{font-size:15px;color:var(--ink-2);margin-top:16px;max-width:58ch}
+.taud b{color:var(--ink)}
+.cbs{position:relative;display:flex;flex-direction:column;gap:12px;padding:14px 12px 12px;border-radius:16px;background:var(--bench);border:1px solid var(--line);overflow:hidden}
+.cb-col{align-self:center;display:flex;flex-direction:column;gap:8px;width:max-content;max-width:100%}
+/* terminal under the bar: takes whatever height is left, so the frame never has an empty area */
+.cb-term{flex:1 1 auto;min-height:104px;display:flex;flex-direction:column;border-radius:10px;background:var(--tty);box-shadow:0 0 0 1px var(--tty-ring);padding:10px 14px 12px;font:400 12.5px/1.75 var(--mono);color:var(--tty-ink)}
+.cbt-h{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;padding-bottom:6px;margin-bottom:6px;border-bottom:1px solid var(--tty-line);font:500 11.5px/1.5 var(--mono);color:var(--tty-3)}
+.cbt-h b{font-weight:500;color:var(--tty-2)}
+.cbt-lines{flex:1 1 0;min-height:44px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 16px);mask-image:linear-gradient(transparent,#000 16px)} /* older lines fade out at the top instead of being cut */
+.cbt-lines p{overflow-wrap:anywhere}
+.cbt-lines .ps{color:var(--tty-3)}
+.cbt-lines .old{color:var(--tty-2)}
+.cbt-lines .new{animation:in .35s var(--ease) both}
+.cbt-lines .hint{color:var(--tty-3);margin-left:8px}
+.cb{position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:100%;min-height:48px;padding:6px 8px;border-radius:24px;font-size:13px;line-height:1.3;color:var(--ink);
+  background:var(--cb-bg);border:1px solid var(--cb-edge);box-shadow:0 0 0 1px var(--dot),0 10px 28px -10px var(--shade);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  }
+.cb-grip{flex:none;width:24px;height:36px;border-radius:12px;background:radial-gradient(circle,var(--ink-3) 1.2px,transparent 1.7px) center/6px 6px;background-clip:content-box;padding:9px 6px}
+.cb-usage{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 10px;border:0;border-radius:18px;background:none;white-space:nowrap;transition:background .15s}
+.cb-usage:hover,.cb-usage[aria-expanded=true]{background:var(--cb-well)}
+.cb-usage b{font-weight:700;font-variant-numeric:tabular-nums}
+.cb-usage span{color:var(--ink-3)}
+.cb-usage .sep{margin:0 3px}
+.cb-usage svg{width:10px;height:10px;margin-left:2px;color:var(--ink-3);transition:transform .2s}
+.cb-usage[aria-expanded=true] svg{transform:rotate(180deg)}
+.cb-tag{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;padding:1px 7px;margin-left:4px;white-space:nowrap}
+.cb-search{flex:1 1 130px;min-width:130px;display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:18px;background:var(--cb-well)}
+.cb-search:focus-within{outline:2px solid var(--orange);outline-offset:1px}
+.cb-search svg{flex:none;width:13px;height:13px;color:var(--ink-3)}
+.cb-search input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);outline:0}
+.cb-search input::placeholder{color:var(--ink-3);opacity:1}
+.cb-seg{display:inline-flex;gap:2px;padding:3px;border-radius:18px;background:var(--cb-well)}
+.cb-seg button{border:0;background:none;height:30px;padding:0 12px;border-radius:15px;font-size:12.5px;font-weight:700;color:var(--ink-2);transition:background .2s,color .2s}
+.cb-seg button[aria-pressed=true]{background:var(--cb-on);color:var(--ink);box-shadow:0 1px 2px rgba(21,24,29,.14)}
+.cb-pop{width:0;min-width:100%;max-height:312px;overflow:auto;scrollbar-width:thin;background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -18px var(--shade);padding:14px 16px;animation:in .3s var(--ease) both}
+.cb-pop[hidden]{display:none}
+.cb-pop h3{font-size:14px}
+.cb-sub{font-size:12px;color:var(--ink-2);margin-top:2px}
+.cb-pop table{font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
+.cb-pop th,.cb-pop td{padding:6px 10px;text-align:right}
+.cb-pop th:first-child,.cb-pop td:first-child{text-align:left;font-weight:700}
+.cb-pop tfoot td{font-weight:700;border-bottom:0}
+.cb-foot{font-size:12px;color:var(--ink-3);margin-top:8px}
+.cb-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.cb-apps{display:inline-flex;gap:4px;flex-wrap:wrap}
+.cb-apps[hidden]{display:none}
+.cb-apps button{border:1px solid var(--line-2);background:none;border-radius:999px;height:26px;padding:0 10px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.cb-apps button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--page)}
+.cb-list{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:2px}
+.cb-list li{display:flex;justify-content:space-between;align-items:center;gap:4px 16px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:600}
+.cb-list li code{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--ink-2)}
+.cb-list li[aria-selected=true]{background:var(--sunk);box-shadow:inset 3px 0 0 var(--orange)}
+.cb-list li.none{cursor:default;font-weight:400;color:var(--ink-2)}
+.cb-list li.copied code{color:var(--ink);font-weight:500}
+@media (max-width:600px){.cb-col,.cb{width:100%}.cb-usage{flex:1 1 calc(100% - 40px);min-width:0;flex-wrap:wrap;height:auto;min-height:36px;padding:4px 10px;row-gap:2px}.cb-usage svg{margin-left:auto}.cb-search input{font-size:16px}.cb-pop{padding:12px}.cb-pop table{font-size:12px}.cb-pop th,.cb-pop td{padding:6px 4px}}
+
+/* =====================================================================================
+   OPTION 2 — "Flat Header"
+   Motion: an engine. The big symbol breathes and sways in a slow loop, idles at a slow turn,
+   spins up when the pointer moves or the page scrolls, coasts back down, and leans toward the pointer.
+   Chrome: GNOME libadwaita language: one window, a flat header bar with the view switcher in
+   the centre and round symbolic window buttons on the right, a tab bar under it, cards inside.
+   No dot board: the window is one flat sheet.
+   ===================================================================================== */
+.top .wm-p{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);aspect-ratio:1;pointer-events:none;user-select:none;will-change:transform}
+.top .wm-s{width:100%;height:100%;animation:wm-s 17s cubic-bezier(.37,0,.63,1) infinite alternate}
+.top .wm-b{width:100%;height:100%;transform-origin:50% 41.6%;animation:wm-b 9s cubic-bezier(.37,0,.63,1) infinite alternate}
+.top .wm-r{width:100%;height:100%;transform-origin:50% 41.6%;will-change:transform}
+.top .wm-p .wm{position:static;display:block;width:100%;height:100%;will-change:transform;animation:fan 120s linear infinite}
+.top .wm-p.live .wm{animation:none}           /* the engine script turns .wm-r instead */
+.top .wm-p.off *{animation-play-state:paused} /* hero off screen or tab hidden */
+@keyframes wm-s{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
+@keyframes wm-b{from{transform:translate3d(0,-2.5%,0) scale(.97)}to{transform:translate3d(0,2.5%,0) scale(1.045)}}
+@media (max-width:600px){.top .wm-p{right:-45%;top:-4%;width:115vw}}
+
+/* one flat window */
+html[data-opt=a]{--ctl:rgba(21,24,29,.09);--card-ring:0 0 0 1px rgba(21,24,29,.07),0 1px 3px rgba(21,24,29,.08)}
+html[data-opt=a][data-theme=dark]{--ctl:rgba(255,255,255,.10);--card-ring:0 0 0 1px rgba(255,255,255,.08)}
+html[data-opt] .bench{background:var(--bench);border-radius:14px;padding:0;border-color:var(--line-2);overflow:hidden}
+.bench-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:48px;padding:6px 10px}
+html[data-opt] .bench .vs{grid-column:2;background:none;padding:0;gap:4px;border-radius:0}
+.bench .vs button{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:0 14px;border-radius:9px}
+.bench .vs svg{width:16px;height:16px;flex:none}
+html[data-opt] .bench .vs button[aria-pressed=true]{background:var(--ctl);color:var(--ink);box-shadow:none}
+.wc{grid-column:3;justify-self:end;display:flex;gap:8px}
+.wc i{position:relative;width:24px;height:24px;border-radius:50%;background:var(--ctl);color:var(--ink)}
+.wc i::before,.wc i::after{content:"";position:absolute;left:50%;top:50%;background:currentColor;border-radius:1px}
+.wc .min::before{width:9px;height:1.5px;margin:3px 0 0 -4.5px}
+.wc .max::before{width:8px;height:8px;margin:-4px 0 0 -4px;background:none;border:1.5px solid currentColor;border-radius:2px}
+.wc .cls::before,.wc .cls::after{width:11px;height:1.5px;margin:-.75px 0 0 -5.5px;transform:rotate(45deg)}
+.wc .cls::after{transform:rotate(-45deg)}
+html[data-opt] .bench .tabs{display:flex;gap:4px;padding:0 10px 8px;background:none;border-radius:0;border-bottom:1px solid var(--line)}
+.bench .tabs button{flex:1 0 auto;min-height:34px;border-radius:9px;font-size:13.5px}
+html[data-opt] .bench .tabs button[aria-selected=true]{background:var(--ctl);color:var(--ink);box-shadow:none}
+.bench>.grid{padding:12px}
+html[data-opt] .panel{background:var(--white);border:0;border-radius:12px;box-shadow:var(--card-ring);-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-opt] .eng{background:#15181D;border:0;border-radius:12px;box-shadow:0 0 0 1px rgba(255,255,255,.07);-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-opt] .eng .panel{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.bottom{padding:10px 14px;border-top:1px solid var(--line)}
+@media (max-width:600px){.bench-top{grid-template-columns:1fr}html[data-opt] .bench .vs{grid-column:1;justify-self:center}.wc{display:none}html[data-opt] .bench{padding:0}.bench>.grid{padding:8px}}
+
+/* Claude Bar band, right under the demo: text and rows left, the bar right */
+.tools{padding:96px 0 0}
+.tools2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:980px){.tools2{grid-template-columns:minmax(0,1fr);gap:32px}}
+.rows{list-style:none;padding:0;margin:28px 0 16px;border-radius:12px;background:var(--white);box-shadow:var(--card-ring)}
+.rows li{padding:12px 16px;font-size:14px;color:var(--ink-2)}
+.rows li+li{border-top:1px solid var(--line)}
+.rows b{display:block;color:var(--ink);font-size:15px}
+/* lockup: my own bar icon + the name in type. No third-party logo or colours; "Claude Code" is plain text. */
+.lockup{display:flex;align-items:center;gap:16px;margin:18px 0 22px}
+.lk-ico{flex:none;width:56px;height:56px;filter:drop-shadow(0 8px 14px var(--shade))}
+.lk-ico .t{fill:#15181D}.lk-ico .c{fill:none;stroke:#F4F4F2;stroke-width:1.6}.lk-ico .u{fill:#FF5A1F}.lk-ico .d{fill:#F4F4F2;opacity:.75}
+html[data-theme=dark] .lk-ico{filter:none}html[data-theme=dark] .lk-ico .t{fill:#232830;stroke:rgba(255,255,255,.12)}
+.tools .lockup h2{margin:0;max-width:none;font-size:clamp(30px,3.2vw,38px);line-height:1.05}
+.lk-sub{margin-top:8px;padding-top:7px;border-top:1px solid var(--line-2);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
+.cbs{border-radius:14px;border-color:var(--line-2)}
+.cbs:has(.cb-pop:not([hidden])){min-height:504px} /* open: fixed height, the terminal takes the slack; closed: the frame fits the bar + terminal */
+@media (max-width:600px){.cbs,.cbs:has(.cb-pop:not([hidden])){min-height:0}.cbs{padding:10px 8px 8px}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash" aria-hidden="true"><div class="w w1"></div><div class="w w2"><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div></div>
+<script>
+// came back from a logo click? start covered in orange at the top, then the logo zooms past and the orange fades
+try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
+  const s = document.getElementById('splash'); s.className = 'splash instant cover'; scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant');
+    setTimeout(() => { s.className = 'splash out';
+      setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 1150); }, 220); })); } } catch (e) {}
+</script>
+<div class="draft"><div class="wrap">Final candidate (direction C, round 3). Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words. Colours: Peach Paper (logo click = light/dark). Design: option 2, Flat Header. Claude Bar section: a recreation with sample numbers.</div></div>
+
+<header class="bar" id="bar"><div class="wrap">
+  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home. Also switches light and dark mode"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
+    <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#tools">Tools</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+</div></header>
+<div class="top"><div class="wm-p"><div class="wm-s"><div class="wm-b"><div class="wm-r"><svg class="wm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="translate(102.4,114.7) scale(8.1920)"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div></div></div></div>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="who"><button class="buddy" id="buddy" type="button" aria-pressed="false" aria-label="Play my bunny&#39;s dance"><span class="buddy-in"><img src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"></span><span class="buddy-shadow" aria-hidden="true"></span><span class="note n1" aria-hidden="true">♪</span><span class="note n2" aria-hidden="true">♫</span><span class="note n3" aria-hidden="true">♪</span></button><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
+    <h1>See the work <span class="o">before</span> you message me.</h1>
+    <p class="lede">Tap a customer message below. Watch what the owner sees, then what the system does behind it. Fake shop, real workflow.</p>
+  </header>
+
+</div></div>
+<div class="wrap pull">
+  <!-- ================= WORKBENCH ================= -->
+  <div class="bench" id="bench">
+    <div class="bench-top">
+      <div class="seg vs" aria-label="View">
+        <button type="button" aria-pressed="true" data-view="owner"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>Owner view</button>
+        <button type="button" aria-pressed="false" data-view="eng"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Engineer view</button>
+      </div>
+      <span class="wc" aria-hidden="true"><i class="min"></i><i class="max"></i><i class="cls"></i></span>
+    </div>
+    <div class="seg tabs" role="tablist" aria-label="Demos">
+      <button role="tab" aria-selected="true">Shop inquiry desk</button>
+      <button role="tab" aria-selected="false" disabled>Clinic reminder<span class="soon">soon</span></button>
+      <button role="tab" aria-selected="false" disabled>Pageant scoring<span class="soon">soon</span></button>
+    </div>
+    <div class="grid">
+      <!-- customer side -->
+      <div class="panel">
+        <div class="ph">Messenger <span>Sample Bakery · fake Page</span></div>
+        <div class="chat" id="chat" aria-live="polite"><p class="empty">Pick a message below. Typos included.</p></div>
+        <div class="chips" id="chips"><small>Send as the customer</small></div>
+      </div>
+
+      <div class="views">
+        <!-- OWNER VIEW -->
+        <div class="view owner on" data-v="owner">
+          <div class="panel">
+            <div class="ph">Google Sheet · Menu & Hours <span>you edit this</span></div>
+            <div class="tablebox"><table id="sheet"><thead><tr><th></th><th>Item</th><th>Answer</th></tr></thead><tbody></tbody></table></div>
+          </div>
+          <div class="panel">
+            <div class="ph">Your inbox <span id="mailState" class="badge">quiet</span></div>
+            <div class="mail skip" id="mail">Nothing yet. You only get an email when someone wants to order.</div>
+          </div>
+          <div class="panel wide">
+            <div class="ph">Google Sheet · Log <span>every message, nothing lost</span></div>
+            <div class="tablebox"><table id="log"><thead><tr><th></th><th>Time</th><th>Customer said</th><th>Topic</th><th>Lang</th><th>Owner told</th></tr></thead><tbody></tbody></table></div>
+          </div>
+          <div class="panel wide">
+            <div class="ph">6:00 pm summary <span>emailed every day</span></div>
+            <div class="sum"><dl><div><dt>Messages</dt><dd id="sMsg">0</dd></div><div><dt>Answered by the Sheet</dt><dd id="sAuto">0</dd></div><div><dt>Orders for you</dt><dd id="sOrd">0</dd></div></dl>
+              <p class="muted" style="font-size:13px">Counted from what you did in this demo.</p></div>
+          </div>
+        </div>
+
+        <!-- ENGINEER VIEW -->
+        <div class="view eng" data-v="eng">
+          <div class="eng-head">
+            <div class="seg seg-dark" aria-label="Engineer view">
+              <button type="button" aria-pressed="true" data-em="trace">Run trace</button>
+              <button type="button" aria-pressed="false" data-em="arch">System design</button>
+            </div>
+            <span class="mono" id="runId">no run yet</span>
+          </div>
+
+          <div class="emode on" data-m="trace">
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Run trace <span>click a step</span></div><div class="trace" id="trace"></div></div>
+              <div class="panel"><div class="ph">Inspector <span id="inspName">pick a step</span></div>
+                <pre id="insp"><span class="c">// Send a message, then click a step in the trace.</span></pre></div>
+            </div>
+            <p class="note">Bar lengths show order and overlap, not measured times. Request bodies are trimmed and use fake data.</p>
+          </div>
+
+          <div class="emode" data-m="arch">
+            <div class="panel">
+              <div class="ph">System design <span>one message, left to right</span></div>
+              <div class="sys">
+                <div class="zone"><b>Customer</b><div class="node">Messenger<small>phone or laptop</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Meta platform</b><div class="node" data-n="0">Page webhook<small>POST · signed</small></div><div class="node" data-n="4">Send API<small>reply out</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone trust"><b>n8n workflow</b><span class="tb">Trust boundary · signed requests only</span>
+                  <div class="node" data-n="1">Verify signature<small>HMAC SHA-256 · fail → 403</small></div>
+                  <div class="node" data-n="2">Rules engine<small>normalise · typos · keywords</small></div>
+                  <div class="node route">Route<small>hours · price · order · other</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Owner's tools</b><div class="node" data-n="3">Menu &amp; Hours<small>Google Sheet · read</small></div><div class="node" data-n="5">Log<small>Google Sheet · append</small></div><div class="node" data-n="6">Gmail<small>order or other only</small></div><div class="node">6 pm summary<small>schedule · Asia/Manila</small></div></div>
+              </div>
+            </div>
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Design decisions <span>and why</span></div>
+                <ol class="adr">
+                  <li><b>Rules first, AI optional.</b> Every answer points to a Sheet row, so it can be tested and explained. <span class="mono">48 tests</span></li>
+                  <li><b>The owner's Sheet is the database.</b> No new app; a price edit applies on the next reply.</li>
+                  <li><b>Verify at the edge.</b> Nothing is read or stored before Meta's signature matches. <span class="mono">167739e</span></li>
+                  <li><b>Quiet by default.</b> The owner is emailed for orders and unknown questions, plus one summary at 6 pm. <span class="mono">run #48, #49</span></li>
+                </ol></div>
+              <div class="panel"><div class="ph">When something goes wrong <span>failure paths</span></div>
+                <ul class="fail">
+                  <li><span class="pill ok">built</span><span>Unsigned or tampered request: dropped with 403, nothing stored.</span></li>
+                  <li><span class="pill ok">built</span><span>Question no rule knows: routed as "other", owner emailed to answer it.</span></li>
+                  <li><span class="pill ok">built</span><span>Workflow export going public: the cleaner refuses any email address. <span class="mono">383a06d</span></span></li>
+                  <li><span class="pill">planned</span><span>Price left blank in the Sheet: "message us" instead of a guess.</span></li>
+                </ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="ctrl">
+        <button class="icon" type="button" id="pp" aria-label="Pause the run">II</button>
+        <button class="icon" type="button" id="stepBtn" aria-label="Next step">›</button>
+      </div>
+      <ol class="steps" id="steps" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+      <p class="status" id="status" aria-live="polite">Ready.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MY OWN TOOLS: CLAUDE BAR (recreation, sample numbers) ================= -->
+<section id="tools" class="tools"><div class="wrap tools2">
+  <div>
+    <p class="eyebrow">My own tools</p>
+    <div class="lockup">
+      <svg class="lk-ico" viewBox="0 0 56 56" aria-hidden="true"><rect class="t" width="56" height="56" rx="16"/><rect class="c" x="9.5" y="20.5" width="37" height="15" rx="7.5"/><rect class="u" x="13" y="24" width="15" height="8" rx="4"/><circle class="d" cx="34" cy="28" r="1.5"/><circle class="d" cx="39.5" cy="28" r="1.5"/></svg>
+      <div><h2>Claude Bar</h2><p class="lk-sub">Built for Claude Code</p></div>
+    </div>
+    <p class="lede">A slim bar at the top of my Windows screen: Claude Code tokens today and this week, per model, and a search over my saved commands. This is a recreation you can click and type in.</p>
+    <ul class="rows">
+      <li><b>Reads local files only</b>The session logs Claude Code already writes on my PC.</li>
+      <li><b>Sends nothing</b>The numbers stay on the machine they came from.</li>
+      <li><b>Never reads credentials</b>Suggestions use only the active window's name and title, in memory. No shell history.</li>
+    </ul>
+    <p class="tnote">Built with Claude Code. An independent personal tool, not made or endorsed by Anthropic. Every figure in this recreation is a sample number, not real usage.</p>
+  </div>
+  <div class="cbs" id="cbStage" data-pin data-open="usage">
+    <div class="cb-col">
+    <div class="cb" id="cb">
+      <span class="cb-grip" id="cbGrip" aria-hidden="true"></span>
+      <button class="cb-usage" id="cbUsage" type="button" aria-expanded="false" aria-controls="cbDrop" aria-label="Token use, sample numbers: 1.24M today, 8.61M this week. Show every model"><b>1.24M</b><span>today</span><span class="sep" aria-hidden="true">·</span><b>8.61M</b><span>week</span><em class="cb-tag">sample numbers</em><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <label class="cb-search"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="6" cy="6" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m9.2 9.2 3.3 3.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="sr">Search commands</span><input id="cbQ" type="text" placeholder="Search commands" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="cbList" aria-autocomplete="list"></label>
+      <div class="cb-seg" role="group" aria-label="Commands for"><button type="button" aria-pressed="true" data-os="win">Windows</button><button type="button" aria-pressed="false" data-os="ub">Ubuntu</button></div>
+      </div>
+      <div class="cb-pop" id="cbDrop" hidden>
+        <h3>Claude Code usage</h3>
+        <p class="cb-sub">Sample numbers, not real usage · Windows + Ubuntu sessions</p>
+        <div class="tablebox"><table>
+          <thead><tr><th>Model</th><th>Today</th><th>This week</th><th>Replies</th><th>Written</th></tr></thead>
+          <tbody>
+            <tr><td>Opus</td><td>0.82M</td><td>5.90M</td><td>412</td><td>96K</td></tr>
+            <tr><td>Sonnet</td><td>0.36M</td><td>2.40M</td><td>655</td><td>141K</td></tr>
+            <tr><td>Haiku</td><td>0.06M</td><td>0.31M</td><td>208</td><td>22K</td></tr>
+          </tbody>
+          <tfoot><tr><td>All models</td><td>1.24M</td><td>8.61M</td><td>1,275</td><td>259K</td></tr></tfoot>
+        </table></div>
+        <p class="cb-foot">Sample numbers. Tokens count input, output and cache; the week starts Monday.</p>
+      </div>
+      <div class="cb-pop" id="cbDeck" hidden>
+        <div class="cb-hint"><span id="cbHint">Suggested for the window you were last in:</span><span class="cb-apps" id="cbApps" role="group" aria-label="Last window (demo)"><button type="button" aria-pressed="true" data-app="terminal">Terminal</button><button type="button" aria-pressed="false" data-app="vscode">VS Code</button><button type="button" aria-pressed="false" data-app="docker">Docker Desktop</button><button type="button" aria-pressed="false" data-app="explorer">Explorer</button></span></div>
+        <ul class="cb-list" id="cbList" role="listbox" aria-label="Commands"></ul>
+        <p class="cb-foot">Enter or a click copies the command.</p>
+      </div>
+    </div>
+    <div class="cb-term">
+      <p class="cbt-h"><b>Terminal</b><span>last window · demo, nothing runs</span></p>
+      <div class="cbt-lines" id="cbTermLines" aria-hidden="true"></div>
+      <p class="sr" id="cbTerm" aria-live="polite"></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= HOW I WORK ================= -->
+<section id="how"><div class="wrap how">
+  <div class="how-left">
+    <p class="eyebrow">How I work</p>
+    <h2>Not five steps on a slide. One real build, with the receipts.</h2>
+    <p class="lede">The inquiry desk above runs on my own Facebook Page first. Here is how it was built, in order. Your project gets the same order.</p>
+    <ul class="promises">
+      <li><div><b>The risky part first.</b>If it can't work, you hear it in week 1, not week 4.</div></li>
+      <li><div><b>Tested on my business before yours.</b>I find the mistakes, not your customers.</div></li>
+      <li><div><b>You own it.</b>Your Page, your Sheet, your accounts. Nothing locked to me.</div></li>
+    </ul>
+  </div>
+  <div class="tty" id="tty" role="group" aria-label="Build log, shown as a terminal">
+    <div class="tty-bar" aria-hidden="true">
+      <svg class="tty-ico" viewBox="0 0 16 16"><path d="m3 4.5 3.5 3.5L3 11.5M8.5 11.5H13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="tty-title">arvin@cebu: ~/inquiry-desk</span>
+      <span class="wc"><i class="min"></i><i class="max"></i><i class="cls"></i></span>
+    </div>
+    <div class="tty-body">
+      <p class="tty-ps" aria-hidden="true"><span>┌──(<b>arvin@cebu</b>)-[<em>~/inquiry-desk</em>]</span><span>└─<b>$</b> <span class="cmd">cat build.log</span></span></p>
+      <ol class="tlog">
+        <li class="rv" style="--i:0">
+          <p class="t-meta"><span class="st ok">[PASS]</span><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Risky part first</span></p>
+          <h3>Connected to a real Facebook Page before writing any replies</h3>
+          <p class="t-p">Meta's connection is where projects like this usually stall, so it came first. A real message on my Page reached the workflow.</p>
+          <p class="t-rc"><span>run <b>#34</b></span><span>Meta verify <b>passed</b></span></p>
+        </li>
+        <li class="rv" style="--i:1">
+          <p class="t-meta"><span class="st ok">[PASS]</span><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Safety</span></p>
+          <h3>Only Meta can talk to it</h3>
+          <p class="t-p">Every incoming message is checked for Meta's signature. Fake requests are dropped before they touch your Sheet.</p>
+          <p class="t-rc"><span>commit <b>167739e</b></span><span>Meta test + real message <b>pass</b></span></p>
+        </li>
+        <li class="rv" style="--i:2">
+          <p class="t-meta"><span class="st ok">[ OK ]</span><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Tested</span></p>
+          <h3>Rules you can read, in your customers' words</h3>
+          <p class="t-p">Answers come from plain keyword rules and your Google Sheet, so you can see why it said what it said. Typos were added on 11 Nov. Today it understands English and Bisaya; another language, like Tagalog, is a rules update with tests.</p>
+          <p class="t-rc"><span>tests <b>38</b></span><span>commits <b>ae7b25b</b>, <b>cf5a424</b></span></p>
+        </li>
+        <li class="rv" style="--i:3">
+          <p class="t-meta"><span class="st ok">[ OK ]</span><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Your tools</span></p>
+          <h3>Prices from your Sheet, every message in a log</h3>
+          <p class="t-p">No new app to learn. Change a price in the Sheet and the next reply uses it.</p>
+          <p class="t-rc"><span>commit <b>484c6ed</b></span><span>live runs <b>#43–45</b></span></p>
+        </li>
+        <li class="rv" style="--i:4">
+          <p class="t-meta"><span class="st ok">[ OK ]</span><time datetime="2026-11-11">11 Nov 2026</time><span class="t-tag">Quiet by default</span></p>
+          <h3>It bothers the owner only for orders</h3>
+          <p class="t-p">An order sends you an email. A price question doesn't. At 6 pm you get one summary of the day.</p>
+          <p class="t-rc"><span>order → email <b>run #48</b></span><span>price → none <b>run #49</b></span><span>summary <b>e146aea</b></span></p>
+        </li>
+        <li class="rv next" style="--i:5">
+          <p class="t-meta"><span class="st nx">[NEXT]</span><span>Next</span><span class="t-tag">Real use</span></p>
+          <h3>A real week on my Page, then yours</h3>
+          <p class="t-p">Real messages for a week, then the numbers go here, unedited.</p>
+        </li>
+      </ol>
+      <div class="tver rv" style="--i:6" role="group" aria-labelledby="tverH">
+        <p class="tver-h" id="tverH"><b>Integrity</b><span>the receipts above, in one place</span></p>
+        <dl>
+          <div><dt>Signature check</dt><dd><b class="ok">pass</b> · Meta test + real message</dd><dd class="h">commit 167739e</dd></div>
+          <div><dt>Tests</dt><dd><b>38</b></dd><dd class="h">commits ae7b25b, cf5a424</dd></div>
+          <div><dt>Runs</dt><dd>#34 · #43–45 · #48 · #49</dd><dd class="h">live runs #43–45</dd></div>
+        </dl>
+      </div>
+      <p class="tty-ps rv" style="--i:7" aria-hidden="true"><span>└─<b>$</b> <i class="cur"></i></span></p>
+    </div>
+    <p class="tty-foot"><span class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i class="n"></i></span><span>5 done · 1 next</span><span class="src">receipts: roadmap, 10–11 Nov 2026</span></p>
+  </div>
+</div></section>
+
+<div class="wrap" id="contact"><div class="cta">
+  <div><h2>Tell me what slows your day down.</h2><p>Usually reply within a day.</p></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-main" href="#">I want this for my shop</a><a class="btn btn-dline" href="#">[Your Facebook Page]</a></div>
+</div></div>
+<footer><div class="wrap">Offers, proof and sign-up sections: same as mockup v1, restyled to this page. · Open for sideline projects (outside HR and payroll)</div></footer>
+
+<script>
+/* ---------- fake shop data ---------- */
+const SHEET = [
+  ['Hours', 'Mon–Sat, 7 am–7 pm'],
+  ['Ensaymada', '₱35 each'],
+  ['Ube cheese pandesal', '₱180 per box of 10'],
+  ['Delivery', 'Cebu City only'],
+];
+const SCEN = {
+  hours: {chip:'What time do you open?', text:'What time do you open?', lang:'en', norm:'what time do you open', rule:'hours', kw:'what time + open', row:0,
+          reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
+  price: {chip:'Pila ang ensaymada?', text:'Pila ang ensaymada?', lang:'ceb', norm:'pila ang ensaymada', rule:'price', kw:'pila + ensaymada', row:1,
+          reply:'Ensaymada: ₱35 matag usa. Gusto ka mo-order?', order:false},
+  typo:  {chip:'wat time u open tmrw', text:'wat time u open tmrw', lang:'en', norm:'what time you open tomorrow', rule:'hours', kw:'what time + open', row:0,
+          reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
+  order: {chip:'Order 2 boxes ube pandesal', text:'Order 2 boxes ube pandesal', lang:'en', norm:'order 2 boxes ube pandesal', rule:'order', kw:'order', row:2,
+          reply:'Thank you! The owner has your order and will message you shortly.', order:true},
+};
+const STEPS = ['Page message','Verify signature','Read the words','Look up the Sheet','Send reply','Write the log','Tell the owner'];
+// relative start/length on a 0-100 track (illustrative order, not timings)
+const BARS = [[0,8],[8,6],[14,14],[28,26],[54,18],[54,22],[72,20]];
+
+/* ---------- elements ---------- */
+const $ = s => document.querySelector(s);
+const chat = $('#chat'), chips = $('#chips'), sheetBody = $('#sheet tbody'), logBody = $('#log tbody');
+const trace = $('#trace'), insp = $('#insp'), status = $('#status');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const BEAT = 600;
+let run = null, timer = null, paused = false, runNo = 100, totals = {msg:0, auto:0, ord:0};
+
+SHEET.forEach(([a,b],i) => sheetBody.insertAdjacentHTML('beforeend', `<tr data-r="${i}"><td class="n">${i+2}</td><td><b>${a}</b></td><td>${b}</td></tr>`));
+Object.entries(SCEN).forEach(([k,s]) => chips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-s="${k}">${s.chip}</button>`));
+STEPS.forEach((n,i) => trace.insertAdjacentHTML('beforeend',
+  `<button class="span" type="button" data-i="${i}"><span>${n}</span><span class="bar"><i style="left:${BARS[i][0]}%;width:${BARS[i][1]}%"></i></span><span class="st">—</span></button>`));
+
+/* ---------- view switch ---------- */
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.dataset.v === b.dataset.view));
+});
+
+document.querySelectorAll('[data-em]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-em]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.emode').forEach(m => m.classList.toggle('on', m.dataset.m === b.dataset.em));
+});
+
+/* ---------- payloads for the inspector ---------- */
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const J = o => esc(JSON.stringify(o, null, 2)).replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:').replace(/: "([^"]*)"/g,': <span class="s">"$1"</span>');
+function payload(i, s) {
+  const t = run.time;
+  return [
+    {in:{object:'page', entry:[{messaging:[{sender:{id:'PSID…'}, message:{text:s.text}, timestamp:t}]}]}},
+    {header:'X-Hub-Signature-256: sha256=…', check:'HMAC(app secret, raw body)', result:'match', on_mismatch:'drop, 403, nothing stored'},
+    {text:s.text, normalised:s.norm, lang:s.lang, matched_rule:s.rule, keyword:s.kw, ai_used:false},
+    {sheet:'Menu & Hours', row:s.row+2, item:SHEET[s.row][0], answer:SHEET[s.row][1]},
+    {recipient:{id:'PSID…'}, message:{text:s.reply}, messaging_type:'RESPONSE'},
+    {sheet:'Log', append:[t, s.text, s.rule, s.lang, s.order ? 'yes' : 'no']},
+    s.order ? {to:'owner (Gmail)', subject:'New order from Messenger', body:s.text} : {skipped:true, reason:`topic "${s.rule}" is not an order`},
+  ][i];
+}
+function inspect(i) {
+  if (!run) return;
+  trace.querySelectorAll('.span').forEach(x => x.classList.toggle('sel', +x.dataset.i === i));
+  $('#inspName').textContent = STEPS[i];
+  insp.innerHTML = J(payload(i, run.s));
+}
+trace.onclick = e => { const b = e.target.closest('.span'); if (b && run && +b.dataset.i < run.i) inspect(+b.dataset.i); };
+
+/* ---------- the run ---------- */
+const now = () => { const d = new Date(); return d.toLocaleTimeString('en-PH',{hour:'numeric',minute:'2-digit'}); };
+function setChips(on) { chips.querySelectorAll('.chip').forEach(c => c.disabled = !on); }
+function start(key) {
+  const s = SCEN[key];
+  chat.querySelector('.empty')?.remove();
+  run = {s, i:0, time:now()}; runNo++;
+  $('#runId').textContent = `synthetic run #${runNo}`;
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('act','done','skip'));
+  document.querySelectorAll('#steps li').forEach(l => l.className = '');
+  trace.querySelectorAll('.span').forEach(x => { x.className = 'span'; x.querySelector('.st').textContent = '—'; x.querySelector('.st').className = 'st'; });
+  sheetBody.querySelectorAll('tr').forEach(r => r.classList.remove('hit'));
+  chat.insertAdjacentHTML('beforeend', `<div class="msg in">${esc(s.text)}<small>Customer · ${run.time}</small></div>`);
+  chat.scrollTop = chat.scrollHeight;
+  setChips(false); paused = false; $('#pp').textContent = 'II';
+  tick();
+}
+function advance() {
+  const {s, i} = run;
+  const node = document.querySelector(`.node[data-n="${i}"]`);
+  const li = document.querySelectorAll('#steps li')[i];
+  const sp = trace.querySelectorAll('.span')[i];
+  document.querySelectorAll('.node.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  document.querySelectorAll('#steps li.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  trace.querySelectorAll('.span.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  const skip = i === 6 && !s.order;
+  node?.classList.add(skip ? 'skip' : 'act'); li.classList.add(skip ? 'skip' : 'act'); sp.classList.add(skip ? 'done' : 'act');
+  const st = sp.querySelector('.st'); st.textContent = skip ? 'skipped' : 'ok'; if (!skip) st.classList.add('ok');
+  status.innerHTML = `<b>${STEPS[i]}</b> · ${['Message arrives from Meta','Signature matches, request is real','Rule "'+s.rule+'" matched','Answer found in row '+(s.row+2),'Reply sent to the customer','Row added to the log', s.order?'Order email sent to the owner':'Not an order, owner not disturbed'][i]}`;
+  if (i === 2 && s.norm !== s.text.toLowerCase().replace(/[?!.]/g,'')) status.innerHTML += ' · typos fixed';
+  if (i === 3) { sheetBody.querySelector(`[data-r="${s.row}"]`).classList.add('hit'); }
+  if (i === 4) { chat.insertAdjacentHTML('beforeend', `<div class="msg out">${esc(s.reply)}<small>Auto-reply from the Sheet · ${run.time}</small></div>`); chat.scrollTop = chat.scrollHeight; }
+  if (i === 3) { chat.insertAdjacentHTML('beforeend', `<div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>`); chat.scrollTop = chat.scrollHeight; }
+  if (i === 4) chat.querySelector('.typing')?.remove();
+  if (i === 5) {
+    totals.msg++; if (!s.order) totals.auto++;
+    logBody.insertAdjacentHTML('afterbegin', `<tr class="new"><td class="n">${totals.msg+1}</td><td>${run.time}</td><td>${esc(s.text)}</td><td>${s.rule}</td><td>${s.lang}</td><td>${s.order?'yes':'no'}</td></tr>`);
+  }
+  if (i === 6) {
+    const m = $('#mail'), b = $('#mailState');
+    if (s.order) { totals.ord++; m.className = 'mail'; m.innerHTML = `<span class="from">Inquiry desk · ${run.time}</span><span>New order from Messenger</span><span class="muted">“${esc(s.text)}” · reply to the customer when ready</span>`; b.className = 'badge on'; b.textContent = '1 new'; }
+    else { b.className = 'badge'; b.textContent = 'quiet'; }
+    $('#sMsg').textContent = totals.msg; $('#sAuto').textContent = totals.auto; $('#sOrd').textContent = totals.ord;
+  }
+  inspect(i);
+  if (window.onStep) window.onStep(i);
+  run.i++;
+  if (run.i === STEPS.length) {
+    document.querySelectorAll('.node.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    document.querySelectorAll('#steps li.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    trace.querySelectorAll('.span.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    setChips(true);
+  }
+}
+function tick() {
+  clearTimeout(timer);
+  if (!run || run.i >= STEPS.length) return;
+  if (reduce) { while (run.i < STEPS.length) advance(); return; }
+  advance();
+  if (!paused && run.i < STEPS.length) timer = setTimeout(tick, BEAT * 2);
+}
+chips.onclick = e => { const c = e.target.closest('.chip'); if (c && !c.disabled) start(c.dataset.s); };
+$('#pp').onclick = () => {
+  paused = !paused; $('#pp').textContent = paused ? '▶' : 'II';
+  $('#pp').setAttribute('aria-label', paused ? 'Play the run' : 'Pause the run');
+  if (!paused) timer = setTimeout(tick, BEAT);
+  else clearTimeout(timer);
+};
+$('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; clearTimeout(timer); if (run && run.i < STEPS.length) advance(); };
+
+/* auto-play one run when the bench scrolls into view (once) */
+new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
+
+// home logo: orange splash covers the page, then a real reload (like opening the home page fresh)
+(() => {
+  const a = document.getElementById('home'), s = document.getElementById('splash');
+  a.addEventListener('click', e => {
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
+    e.preventDefault();
+    s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash in';
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    setTimeout(() => {
+      try { localStorage.setItem('theme', next); sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
+      catch (err) { document.documentElement.dataset.theme = next; scrollTo(0, 0); s.className = 'splash out'; setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 1150); } // storage blocked: same feel, no reload
+    }, reduce ? 150 : 720);
+  });
+  const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
+  addEventListener('scroll', solid, { passive: true }); solid();
+})();
+
+// bunny: click plays the dance for one loop of the hero video (10 s); click again stops it
+(() => {
+  const b = document.getElementById('buddy'); let t;
+  const set = on => { b.classList.toggle('playing', on); b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', on ? "Stop my bunny's dance" : "Play my bunny's dance"); clearTimeout(t); if (on) t = setTimeout(() => set(false), 10000); };
+  b.addEventListener('click', () => set(!b.classList.contains('playing')));
+})();
+</script>
+<script>
+// Claude Bar recreation: usage dropdown, command search with suggestions, Windows | Ubuntu switch, a terminal the copied command lands in.
+// All figures are sample numbers written in the HTML; nothing is read, stored or sent.
+(() => {
+  const cb = document.getElementById('cb'), stage = document.getElementById('cbStage'); if (!cb || !stage) return;
+  const q = document.getElementById('cbQ'), drop = document.getElementById('cbDrop'), deck = document.getElementById('cbDeck');
+  const list = document.getElementById('cbList'), usage = document.getElementById('cbUsage'), hint = document.getElementById('cbHint');
+  const apps = document.getElementById('cbApps'), term = document.getElementById('cbTerm');
+  const h = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const CMDS = [
+    ['win','terminal','Show listening ports','netstat -ano | findstr LISTENING'],
+    ['win','terminal','Shut down WSL','wsl --shutdown'],
+    ['win','terminal','Open this folder in Explorer','explorer .'],
+    ['win','vscode','Open this folder in VS Code','code .'],
+    ['win','vscode','List installed extensions','code --list-extensions'],
+    ['win','docker','List running containers','docker ps'],
+    ['win','docker','Follow the container logs','docker compose logs -f'],
+    ['win','explorer','Open a terminal in this folder','wt -d .'],
+    ['win','explorer','Copy this folder path','(Get-Location).Path | Set-Clipboard'],
+    ['ub','terminal','Pull the latest work','git pull --rebase'],
+    ['ub','terminal','Branch status','git status -sb'],
+    ['ub','terminal','Last ten commits','git log --oneline -10'],
+    ['ub','terminal','What is on port 3000','ss -ltnp | grep :3000'],
+    ['ub','vscode','Open this folder in VS Code','code .'],
+    ['ub','vscode','Run the tests','npm test'],
+    ['ub','docker','Start the containers','docker compose up -d'],
+    ['ub','docker','Last 100 log lines','docker compose logs --tail=100'],
+    ['ub','explorer','Open this folder in Explorer','explorer.exe .'],
+  ].map(([os, app, label, cmd]) => ({os, app, label, cmd}));
+  let os = 'win', app = 'terminal', active = 0, shown = [];
+
+  function open(which) {
+    drop.hidden = which !== 'usage'; deck.hidden = which !== 'deck';
+    usage.setAttribute('aria-expanded', which === 'usage'); q.setAttribute('aria-expanded', which === 'deck');
+  }
+  function render() {
+    const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    shown = CMDS.filter(c => c.os === os && (words.length ? words.every(w => (c.label + ' ' + c.cmd).toLowerCase().includes(w)) : c.app === app));
+    active = Math.max(0, Math.min(active, shown.length - 1));
+    apps.hidden = words.length > 0;
+    hint.textContent = words.length ? (shown.length === 1 ? '1 command' : shown.length + ' commands') + ' in the ' + (os === 'win' ? 'Windows' : 'Ubuntu') + ' deck' : 'Suggested for the window you were last in:';
+    list.innerHTML = shown.length
+      ? shown.map((c, i) => `<li role="option" id="cbo${i}" data-i="${i}" aria-selected="${i === active}"><span>${h(c.label)}</span><code>${h(c.cmd)}</code></li>`).join('')
+      : '<li class="none">Try a shorter word, like log, port or branch.</li>';
+    if (shown.length) q.setAttribute('aria-activedescendant', 'cbo' + active); else q.removeAttribute('aria-activedescendant');
+  }
+  function copy(i) {
+    const c = shown[i]; if (!c) return;
+    try { navigator.clipboard && navigator.clipboard.writeText(c.cmd).catch(() => {}); } catch (e) {}
+    const li = list.children[i]; li.classList.add('copied'); li.querySelector('code').textContent = 'Copied';
+    paste(c);
+    setTimeout(render, 1100);
+  }
+  usage.addEventListener('click', () => open(drop.hidden ? 'usage' : null));
+  q.addEventListener('focus', () => { render(); open('deck'); });
+  q.addEventListener('input', () => { active = 0; render(); open('deck'); });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!shown.length) return; active = (active + (e.key === 'ArrowDown' ? 1 : shown.length - 1)) % shown.length; render(); }
+    else if (e.key === 'Enter') { e.preventDefault(); copy(active); }
+    else if (e.key === 'Escape') { open(null); q.blur(); }
+  });
+  list.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) { active = +li.dataset.i; copy(active); } });
+  apps.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; app = b.dataset.app; active = 0;
+    apps.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); render(); });
+  cb.querySelectorAll('[data-os]').forEach(b => b.addEventListener('click', () => { os = b.dataset.os; active = 0;
+    cb.querySelectorAll('[data-os]').forEach(x => x.setAttribute('aria-pressed', x === b)); render(); if (deck.hidden) open('deck'); }));
+  if (!('pin' in stage.dataset)) document.addEventListener('pointerdown', e => { if (!cb.contains(e.target)) open(null); });
+  render(); if (stage.dataset.open) open(stage.dataset.open);
+  // the terminal under the bar: a copied command lands on the prompt, as if pasted. Demo only: nothing runs.
+  const lines = document.getElementById('cbTermLines'), PS = {win: 'PS C:\\dev>', ub: 'arvin@cebu:~/dev$'};
+  const hist = [{os: 'win', cmd: 'docker ps'}, {os: 'win', cmd: 'code .'}]; let pasted = false;
+  function drawTerm() {
+    if (!lines) return;
+    lines.innerHTML = hist.map(l => `<p class="old"><span class="ps">${h(PS[l.os])}</span> ${h(l.cmd)}</p>`).join('')
+      + `<p><span class="ps">${h(PS[os])}</span> <i class="cur"></i>${pasted ? '' : '<span class="hint">copied commands land here</span>'}</p>`;
+  }
+  function paste(c) {
+    hist.push({os: c.os, cmd: c.cmd}); if (hist.length > 14) hist.shift(); pasted = true; drawTerm();
+    if (lines && lines.lastElementChild.previousElementSibling) lines.lastElementChild.previousElementSibling.className = 'new';
+    if (term) term.textContent = 'Copied: ' + c.cmd;
+  }
+  cb.querySelectorAll('[data-os]').forEach(b => b.addEventListener('click', drawTerm));
+  drawTerm();
+
+  // phone: the search field is narrow, so the placeholder is one word (the label still says "Search commands")
+  const narrow = matchMedia('(max-width: 600px)'), ph = () => { q.placeholder = narrow.matches ? 'Search' : 'Search commands'; };
+  ph(); narrow.addEventListener('change', ph);
+})();
+</script>
+<script>
+// Hero blade: an engine. It always idles; pointer movement (or scrolling) spins it up, then it coasts back down.
+// It also leans a little toward the pointer. One requestAnimationFrame loop, transform only; stops when the tab is
+// hidden or the hero is off screen. Touch: idle spin + scroll. Reduced motion: nothing runs, the blade is still.
+(() => {
+  const top = document.querySelector('.top'), p = top && top.querySelector('.wm-p'), r = top && top.querySelector('.wm-r');
+  if (!p || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  p.classList.add('live'); // JS owns the rotation now (the CSS turn is only the no-script fallback)
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const IDLE = 9, MAX = 150;                       // degrees per second
+  let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, sc = scrollY, lastY = scrollY, lx = null, ly = 0;
+  let last = 0, raf = 0, seen = true;
+  const ease = (dt, tau) => 1 - Math.exp(-dt / tau);
+  const frame = t => {
+    const dt = Math.min(.05, Math.max(0, (t - last) / 1000)); last = t;
+    boost *= Math.exp(-dt / 1.5);                  // coast down slowly, like a flywheel
+    om += (IDLE + boost - om) * ease(dt, .25);     // spin up quickly
+    ang = (ang + om * dt) % 360;
+    px += (tx - px) * ease(dt, .3); py += (ty - py) * ease(dt, .3);
+    sc += (scrollY - sc) * ease(dt, .18);
+    r.style.transform = 'rotate(' + ang.toFixed(2) + 'deg)';
+    p.style.transform = 'perspective(1200px) translate3d(' + (px * 22).toFixed(1) + 'px,' + (py * 16 + sc * .18).toFixed(1) + 'px,0) rotateX(' + (-py * 5).toFixed(2) + 'deg) rotateY(' + (px * 6).toFixed(2) + 'deg)';
+    raf = requestAnimationFrame(frame);
+  };
+  const sync = () => {
+    const on = seen && !document.hidden;
+    p.classList.toggle('off', !on);
+    if (on && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    else if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
+  };
+  const rev = d => { boost = Math.min(MAX, boost + d); };
+  if (fine) {
+    addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse' || !raf) return;
+      if (lx !== null) rev(Math.hypot(e.clientX - lx, e.clientY - ly) * .16);
+      lx = e.clientX; ly = e.clientY;
+      tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; });
+  }
+  addEventListener('scroll', () => { rev(Math.abs(scrollY - lastY) * .22); lastY = scrollY; }, { passive: true });
+  document.addEventListener('visibilitychange', sync);
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync(); }).observe(top);
+  sync();
+})();
+
+// How I work console: the log lines come in once, when the pane scrolls into view. The text is in the page from the
+// start; without scripting, or with reduced motion, nothing is hidden and nothing moves.
+(() => {
+  const t = document.getElementById('tty');
+  if (!t || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  t.classList.add('arm');
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { t.classList.add('go'); o.disconnect(); } }, { rootMargin: '0px 0px -18% 0px' }).observe(t);
+})();
+</script>
+</body>
+</html>
