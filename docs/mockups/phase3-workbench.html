@@ -47,7 +47,15 @@ h3{font-size:19px;letter-spacing:-.01em;line-height:1.3}
 /* hero */
 .hero{padding:56px 0 48px}
 .who{display:flex;align-items:center;gap:14px;margin-bottom:32px}
-.avatar{width:64px;height:64px;border-radius:50%;flex:none;background:#4A90D9 url(../../public/hero/bunny-loop-still.webp) -80px -24px/224px auto no-repeat;box-shadow:0 0 0 2px var(--char),0 0 0 4px var(--orange)}
+/* avatar: transparent bunny, 3D tilt on drag (springs back) */
+.buddy{position:relative;flex:none;width:52px;height:58px;perspective:260px;cursor:grab;touch-action:none;border-radius:12px;outline-offset:4px}
+.buddy:active{cursor:grabbing}
+.buddy-in{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.34,1.56,.64,1);will-change:transform}
+.buddy.drag .buddy-in{transition:none}
+.buddy img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.buddy-shadow{position:absolute;left:18%;right:18%;bottom:-6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px);transition:transform .55s cubic-bezier(.34,1.56,.64,1)}
+.buddy.drag .buddy-shadow{transition:none}
+@keyframes float{50%{transform:translateY(-3px)}}
 .who small{display:block;color:var(--ink-2);font-size:14px}
 .hero h1{max-width:16ch}
 .hero .lede{margin-top:24px}
@@ -246,7 +254,7 @@ th{background:rgba(21,24,29,.03)}
     <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#contact">Contact</a></li></ul></nav>
 
   <header class="hero">
-    <div class="who"><span class="avatar" role="img" aria-label="My avatar: a teal bunny with headphones"></span><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
+    <div class="who"><span class="buddy" id="buddy" tabindex="0" role="img" aria-label="My avatar: a teal bunny with headphones. Drag it, or use the arrow keys, to tilt it."><span class="buddy-in"><img src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"></span><span class="buddy-shadow" aria-hidden="true"></span></span><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
     <h1>See the work <span class="o">before</span> you message me.</h1>
     <p class="lede">Tap a customer message below. Watch what the owner sees, then what the system does behind it. Fake shop, real workflow.</p>
   </header>
@@ -561,6 +569,24 @@ $('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; cle
 
 /* auto-play one run when the bench scrolls into view (once) */
 new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
+
+// bunny: drag tilts it in 3D inside its spot, release springs it back
+(() => {
+  const el = document.getElementById('buddy'), inner = el.querySelector('.buddy-in'), sh = el.querySelector('.buddy-shadow');
+  const MAX = 8, TILT = 30; let sx = 0, sy = 0, on = false;
+  const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+  function set(dx, dy) {
+    dx = clamp(dx, MAX); dy = clamp(dy, MAX);
+    inner.style.transform = `translate(${dx}px,${dy}px) rotateY(${dx / MAX * TILT}deg) rotateX(${-dy / MAX * TILT}deg) scale(${dx || dy ? 1.06 : 1})`;
+    sh.style.transform = `translateX(${dx * .6}px) scaleX(${1 - Math.abs(dy) / 60})`;
+  }
+  el.addEventListener('pointerdown', e => { on = true; sx = e.clientX; sy = e.clientY; el.classList.add('drag'); el.setPointerCapture(e.pointerId); });
+  el.addEventListener('pointermove', e => { if (on) set((e.clientX - sx) / 2, (e.clientY - sy) / 2); });
+  const end = () => { if (!on) return; on = false; el.classList.remove('drag'); set(0, 0); };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  const K = { ArrowLeft: [-MAX, 0], ArrowRight: [MAX, 0], ArrowUp: [0, -MAX], ArrowDown: [0, MAX] };
+  el.addEventListener('keydown', e => { const k = K[e.key]; if (!k) return; e.preventDefault(); set(...k); clearTimeout(el._t); el._t = setTimeout(() => set(0, 0), 350); });
+})();
 </script>
 </body>
 </html>
