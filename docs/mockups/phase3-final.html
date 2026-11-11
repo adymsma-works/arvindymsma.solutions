@@ -1097,7 +1097,7 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
   if (!p || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   p.classList.add('live'); // JS owns the rotation now (the CSS turn is only the no-script fallback)
   const IDLE = 9, MAX = 150;                       // degrees per second
-  const PULL = .45, REACH = 260;                   // follow: share of the gap to the pointer, max px
+  const PULL = .7, REACH = 900;                    // follow: share of the gap to the pointer, max px
   let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, sc = scrollY, lastY = scrollY, lx = null, ly = 0;
   let last = 0, raf = 0, seen = true;
   const ease = (dt, tau) => 1 - Math.exp(-dt / tau);
@@ -1121,9 +1121,9 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
   };
   const rev = d => { boost = Math.min(MAX, boost + d); };
   // Follow: the blade's centre drifts toward the mouse (PULL of the gap, at most REACH px), then glides home
-  // when the mouse leaves the hero. Mouse only; touch keeps the idle spin + scroll.
+  // when the mouse leaves the window. Mouse only; touch keeps the idle spin + scroll.
   const clamp = v => Math.max(-REACH, Math.min(REACH, v));
-  top.addEventListener('pointermove', e => {
+  addEventListener('pointermove', e => {        // anywhere in the window, not only over the hero
     if (e.pointerType !== 'mouse' || !raf) return;
     if (lx !== null) rev(Math.hypot(e.clientX - lx, e.clientY - ly) * .16);
     lx = e.clientX; ly = e.clientY;
@@ -1131,7 +1131,7 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     const cx = b.left + p.offsetLeft + p.offsetWidth / 2, cy = b.top + p.offsetTop + p.offsetHeight * .416;
     tx = clamp((e.clientX - cx) * PULL); ty = clamp((e.clientY - cy) * PULL);
   }, { passive: true });
-  top.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; });
+  document.documentElement.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; }); // mouse left the window
   addEventListener('scroll', () => { rev(Math.abs(scrollY - lastY) * .22); lastY = scrollY; }, { passive: true });
   document.addEventListener('visibilitychange', sync);
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync(); }).observe(top);
