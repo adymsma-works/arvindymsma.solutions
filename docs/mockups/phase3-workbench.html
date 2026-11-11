@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch (e) {}</script>
+<script>try { const d = document.documentElement, th = localStorage.getItem('theme'); if (th) d.dataset.theme = th; d.dataset.opt = localStorage.getItem('opt') || 'a'; } catch (e) { document.documentElement.dataset.opt = 'a'; }</script>
 <style>
 :root{
   --orange:#FF5A1F; --char:#15181D; --slate:#232830; --white:#FFFFFF; --mist:#F4F4F2;
@@ -199,6 +199,7 @@ section{padding:112px 0}
 .btn-dline{border:1px solid #4A515C;color:#fff}
 footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 .draft{background:#FFF8E6;border-bottom:1px solid #F0E2B8;font-size:13px;padding:8px 0;color:#5C4A12}
+.optpick{display:inline-flex;gap:4px;margin-left:8px;vertical-align:middle}.optpick button{font:600 12px/1 inherit;font-family:inherit;padding:5px 9px;border-radius:7px;border:1px solid #E0CF9C;background:#fff;color:#5C4A12;cursor:pointer}.optpick button[aria-pressed=true]{background:#5C4A12;border-color:#5C4A12;color:#fff}
 
 .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}.seg button{white-space:nowrap}
 @media (max-width:600px){.cta{padding:40px 24px;border-radius:20px}.bench{padding:8px}}
@@ -212,13 +213,10 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 .splash.in,.splash.cover{opacity:1;transition:opacity .25s ease}
 .splash.out{opacity:0;transition:opacity .4s ease .32s}
 /* zoom-through: big tone-on-tone blade drawing settles in, white symbol pops in, then rushes past the viewer */
-.splash .zwm{position:absolute;right:-14%;top:-20%;width:min(900px,95vw);height:auto;opacity:0;transform:scale(.7) rotate(-35deg);transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
-.splash.in .zwm,.splash.cover .zwm{opacity:1;transform:none}
-.splash.out .zwm{opacity:1;transform:scale(1.3) rotate(18deg);transition:transform .8s cubic-bezier(.5,0,.3,1)}
-.splash .roll{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;opacity:0;transform:scale(.2) rotate(-200deg);transition:transform .6s cubic-bezier(.2,.9,.3,1.25),opacity .2s ease}
-.splash.in .roll,.splash.cover .roll{opacity:1;transform:none}
-.splash.out .roll{opacity:0;transform:scale(16) rotate(110deg);transition:transform .7s cubic-bezier(.7,0,.85,.35),opacity .45s ease .25s}
-.splash.instant,.splash.instant .zwm,.splash.instant .roll{transition:none}
+.splash .roll{position:absolute;left:0;top:0;width:132px;height:132px;opacity:0;transform:translate(var(--x0,-30px),var(--y0,-40px)) scale(.22) rotate(-160deg);transition:transform .75s cubic-bezier(.2,.8,.2,1),opacity .15s ease}
+.splash.in .roll,.splash.cover .roll{opacity:1;transform:translate(calc(50vw - 66px),calc(50vh - 66px)) scale(1) rotate(0deg)}
+.splash.out .roll{opacity:0;transform:translate(calc(100vw - 66px),calc(100vh - 66px)) scale(14) rotate(140deg);transition:transform .75s cubic-bezier(.6,0,.8,.4),opacity .4s ease .3s}
+.splash.instant,.splash.instant .roll{transition:none}
 .bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
 .bench-top .lights{display:flex;gap:8px;margin-right:8px}.bench-top .lights i{width:12px;height:12px;border-radius:50%;background:#FF5F57}.bench-top .lights i+i{background:#FEBC2E}.bench-top .lights i+i+i{background:#28C840}
 .bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
@@ -295,10 +293,233 @@ html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(25
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes blink{50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== colour options A/B/C (designed by the Fable helper, 11 Nov) ===== */
+/* =====================================================================================
+   THEME OPTIONS for phase3-workbench.html  (paste AFTER the existing dark block)
+   Use: <html data-opt="a|b|c">  +  the existing data-theme="dark" toggle (logo click).
+   Brand hues only: Orange #FF5A1F, Charcoal #15181D, Deep Slate #232830, White, Mist #F4F4F2.
+   Every other colour is a mix of those (recipe in the comment beside it).
+
+   How it is built: each option only sets VARIABLES (light, then dark). One shared rule
+   block at the bottom paints hero, nav, bench, panels, timeline, CTA and footer from those
+   variables, so both modes of every option follow the same colour logic by construction.
+   Dark variables are restated in full on purpose: `html[data-opt=x]` has the same
+   specificity as the old `html[data-theme=dark]` and comes later, so it would otherwise
+   leak light tokens into dark mode.
+
+   Contrast: WCAG 2.x ratios, computed (sRGB relative luminance), alpha layers flattened first.
+   Targets: body text >= 4.5, large text >= 3, borders ~1.3.  "FLAG" marks anything under.
+   ===================================================================================== */
+
+/* -------------------------------------------------------------------------------------
+   OPTION A — "Peach Paper": one barely-there peach sheet, hero included.
+   Orange is 5% of the page colour; the hero is the same sheet as the body (no band), so
+   the page reads like one calm macOS window. Charcoal is the ink, orange only marks things
+   (underline, dots, button). The single dark block is the CTA.
+   Suits: clients who read long, and anyone worried about "too orange". Safest for eyes.
+
+   LIGHT  text / background                                   ratio
+   ink   #15181D on page  #FFF7F4 (hero, body, footer, nav)   16.83
+   ink   #15181D on card  #FFFFFF                             17.79
+   ink   #15181D on panel #FFFBFA (white 78% over bench)      17.31
+   ink   #15181D on bench #FFEDE6                             15.68
+   ink   #15181D on sunk  #FFF0EB (chat bubble, receipt, tag) 16.03
+   ink   #15181D on hit   #FFE8E0 (highlighted table row)     15.14
+   ink-2 #44464A on page 8.94 | card 9.46 | panel 9.20 | bench 8.33 | sunk 8.52
+   ink-3 #5B5D61 on page 6.24 | card 6.60 | panel 6.42 | bench 5.81 | sunk 5.94
+   CTA: white on Charcoal 17.79 | #C5CAD1 on Charcoal 10.80 | Charcoal on Orange button 5.71
+   hero accent word: Charcoal text (16.83) + Orange underline (shape only)
+   line  #E3DCDA on page 1.28 (FLAG, just under 1.3; the old #E4E4DF on white was the same) | on card 1.35
+   line-2 #C7C1C0 on page 1.68 | on card 1.78
+   Orange as a SHAPE on page 2.95 (FLAG under 3: decoration only, never text; focus ring too)
+   surfaces: bench vs page 1.07, card vs page 1.06 (separated by the border + shadow, not by fill)
+
+   DARK   white on Charcoal 17.79 | on Slate card 14.81 | on panel #22272F 15.01
+   ink-2 #C5CAD1 on Charcoal 10.80 | Slate 8.99      ink-3 #A9AEB6 on Charcoal 7.98 | Slate 6.64
+   Orange on Charcoal 5.71 (text OK)   line #2E343D on Charcoal 1.42   line-2 #3A414C on Slate 1.44
+   chat bubble: white on #2E343D 12.54 (same in B and C dark)
+   ------------------------------------------------------------------------------------- */
+html[data-opt=a]{
+  --page:#FFF7F4;                 /* Orange 5% + White */
+  --white:#FFFFFF; --mist:#FFF0EB;/* Orange 9% + White */
+  --ink:#15181D; --ink-2:#44464A; --ink-3:#5B5D61;   /* Charcoal 100 / 80 / 70% + White */
+  --line:#E3DCDA; --line-2:#C7C1C0;                  /* Charcoal 12 / 24% over the page */
+  --sunk:#FFF0EB; --hit:#FFE8E0;                     /* Orange 9% / 14% + White */
+  --bench:#FFEDE6; --dot:rgba(21,24,29,.08);         /* Orange 11% + White */
+  --panel:rgba(255,255,255,.78); --panel-edge:rgba(255,255,255,.9); --shade:rgba(21,24,29,.16);
+  --hero:var(--page); --hero-ink:#15181D; --hero-ink-2:#44464A; --hero-o:#15181D; --hero-u:#FF5A1F;
+  --wm:.05; --wm-f:none;
+  --bar:rgba(255,247,244,.86); --bar-edge:rgba(21,24,29,.08);
+  --cta:#15181D; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --foot:transparent; --foot-ink:#44464A;
+}
+html[data-opt=a][data-theme=dark]{
+  --page:#15181D; --white:#232830; --mist:#1B1F25;
+  --ink:#FFFFFF; --ink-2:#C5CAD1; --ink-3:#A9AEB6; --line:#2E343D; --line-2:#3A414C;
+  --sunk:#2E343D; --hit:rgba(255,90,31,.14);
+  --bench:#1F242B; --dot:rgba(255,255,255,.05);      /* Charcoal/Slate midpoint */
+  --panel:rgba(35,40,48,.82); --panel-edge:rgba(255,255,255,.08); --shade:rgba(0,0,0,.55);
+  --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:1; --wm-f:none;
+  --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
+  --cta:#232830; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C;
+  --foot:transparent; --foot-ink:#C5CAD1;
+}
+
+/* -------------------------------------------------------------------------------------
+   OPTION B — "Sand and Apricot band": warm sand page, soft apricot hero + CTA bands.
+   The most orange of the three: the hero is a 30% orange tint (not the raw brand orange),
+   the page is sand (orange 8% into Mist), cards are cream. Rule: bands = apricot,
+   page = sand, cards = cream, ink = charcoal. Dark mirrors it: bands = Deep Slate on Charcoal.
+   Suits: owner's literal request ("orange, but not eye-hurting") and small-shop clients
+   who like a warm, friendly page. Least "developer", most "brand".
+
+   LIGHT  text / background                                   ratio
+   ink   #15181D on hero/CTA band #F7C6B3                     11.59
+   hero-2 #3E3738 (lede, nav links, CTA text) on band #F7C6B3  7.57
+   ink   #15181D on page  #F5E8E1                             14.84
+   ink   #15181D on card  #FFFBF9                             17.30
+   ink   #15181D on panel #FDF5F1 (cream 80% over bench)      16.53
+   ink   #15181D on bench #F6DBD0                             13.52
+   ink   #15181D on sunk  #F5E0D7                             14.00
+   ink   #15181D on hit   #FFE5DB                             14.81
+   ink-2 #3F4246 on page 8.42 | card 9.82 | panel 9.38 | bench 7.68 | sunk 7.95
+   ink-3 #57595C on page 5.86 | card 6.83 | panel 6.53 | bench 5.34 | sunk 5.53
+   CTA button: white on Charcoal 17.79 (the button is charcoal here: an orange button on an
+     apricot band is only 2.03 as a shape, so it would not stand out)
+   CTA outline button border: Charcoal 45% on band = #91786F on #F7C6B3   2.67
+   hero accent word: Charcoal text (11.59) + Orange underline, 2.03 vs band (FLAG: decoration only)
+   line  #DACFCA on page 1.27 (FLAG, just under 1.3) | on card 1.48      line-2 #BFB6B2 on page 1.66 | card 1.94
+   Orange as a SHAPE on page 2.60, on bench 2.37 (FLAG under 3: never text; weakest of the three)
+   band vs page 1.28, card vs page 1.17, bench vs page 1.10
+
+   DARK   white on Slate band 14.81 | on Charcoal page 17.79 | on Slate card 14.81
+   ink-2 #C5CAD1 on Slate 8.99 | Charcoal 10.80      ink-3 #A9AEB6 on Slate 6.64 | Charcoal 7.98
+   Orange accent word on Slate band 4.75 (large text only: it is the h1, OK; FLAG if reused small)
+   Slate band vs Charcoal page 1.20 (FLAG: subtle; a hairline is added under the nav)
+   ------------------------------------------------------------------------------------- */
+html[data-opt=b]{
+  --page:#F5E8E1;                 /* Orange 8% + Mist */
+  --white:#FFFBF9; --mist:#F5E0D7;/* Orange 2.5% + White ; Orange 13% + Mist */
+  --ink:#15181D; --ink-2:#3F4246; --ink-3:#57595C;   /* Charcoal 100 / 82 / 72% + White */
+  --line:#DACFCA; --line-2:#BFB6B2;                  /* Charcoal 12 / 24% over the page */
+  --sunk:#F5E0D7; --hit:#FFE5DB;                     /* Orange 16% + White */
+  --bench:#F6DBD0; --dot:rgba(21,24,29,.09);         /* Orange 16% + Mist */
+  --panel:rgba(255,251,249,.8); --panel-edge:rgba(255,255,255,.85); --shade:rgba(21,24,29,.18);
+  --hero:#F7C6B3;                 /* Orange 30% + Mist */
+  --hero-ink:#15181D; --hero-ink-2:#3E3738; --hero-o:#15181D; --hero-u:#FF5A1F;
+  --wm:.07; --wm-f:none;
+  --bar:rgba(247,198,179,.9); --bar-edge:rgba(21,24,29,.10);
+  --cta:#F7C6B3; --cta-ink:#15181D; --cta-ink-2:#3E3738; --cta-edge:rgba(21,24,29,.45); --cta-btn:#15181D; --cta-btn-ink:#FFFFFF;
+  --foot:transparent; --foot-ink:#3F4246;
+}
+html[data-opt=b][data-theme=dark]{
+  --page:#15181D; --white:#232830; --mist:#1B1F25;
+  --ink:#FFFFFF; --ink-2:#C5CAD1; --ink-3:#A9AEB6; --line:#2E343D; --line-2:#3A414C;
+  --sunk:#2E343D; --hit:rgba(255,90,31,.14);
+  --bench:#1B1F25; --dot:rgba(255,255,255,.05);
+  --panel:rgba(35,40,48,.9); --panel-edge:rgba(255,255,255,.08); --shade:rgba(0,0,0,.55);
+  --hero:#232830; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:.6; --wm-f:brightness(.55);                   /* watermark art is Slate: darken it so it shows on a Slate band */
+  --bar:rgba(35,40,48,.92); --bar-edge:rgba(255,255,255,.10);
+  --cta:#232830; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --foot:transparent; --foot-ink:#C5CAD1;
+}
+
+/* -------------------------------------------------------------------------------------
+   OPTION C — "Charcoal frame, peach body": keep today's charcoal cover hero, warm the rest.
+   The hero, nav, CTA and footer stay Charcoal in both modes (the Facebook-cover look, and
+   the only place orange text is legal, 5.71:1). The body between them is peach (orange 9%),
+   cards white. Rule: Charcoal frames, peach holds the content. Dark keeps the same frame
+   and drops the body to a lifted charcoal, so the two modes differ only in the middle.
+   Suits: keeping the brand cover and the orange headline word; smallest change from today.
+
+   LIGHT  text / background                                   ratio
+   white on Charcoal hero / CTA / nav                         17.79
+   #C5CAD1 (lede, nav links, CTA text, footer) on Charcoal    10.80
+   Orange accent word on Charcoal hero                         5.71
+   Charcoal on Orange button                                   5.71
+   ink   #15181D on page  #FFF0EB                             16.03
+   ink   #15181D on card  #FFFFFF                             17.79
+   ink   #15181D on panel #FFF9F7 (white 80% over bench)      17.07
+   ink   #15181D on bench #FFE3D9                             14.61
+   ink   #15181D on sunk  #FFE8E0                             15.14
+   ink   #15181D on hit   #FFE1D7                             14.41
+   ink-2 #44464A on page 8.52 | card 9.46 | panel 9.07 | bench 7.76 | sunk 8.05
+   ink-3 #57595C on page 6.33 | card 7.03 | panel 6.74 | bench 5.77 | sunk 5.98
+   line  #E3D6D2 on page 1.28 (FLAG, just under 1.3) | on card 1.42      line-2 #C7BCB9 on page 1.67 | card 1.85
+   Orange as a SHAPE on page 2.81 (FLAG under 3: decoration only, never text)
+   bench vs page 1.10, card vs page 1.11
+
+   DARK   white on body #1B1F25 16.54 | on Slate card 14.81 | on Charcoal frame 17.79
+   ink-2 #C5CAD1 on body 10.04 | Slate 8.99      ink-3 #A9AEB6 on body 7.42 | Slate 6.64
+   Orange on Charcoal frame 5.71    line #2E343D on body 1.32 | on Charcoal bench 1.42
+   Charcoal frame vs body #1B1F25 1.08 (FLAG: very subtle; the frame is carried by hairlines)
+   ------------------------------------------------------------------------------------- */
+html[data-opt=c]{
+  --page:#FFF0EB;                 /* Orange 9% + White */
+  --white:#FFFFFF; --mist:#FFE8E0;/* Orange 14% + White */
+  --ink:#15181D; --ink-2:#44464A; --ink-3:#57595C;   /* Charcoal 100 / 80 / 72% + White */
+  --line:#E3D6D2; --line-2:#C7BCB9;                  /* Charcoal 12 / 24% over the page */
+  --sunk:#FFE8E0; --hit:#FFE1D7;                     /* Orange 18% + White */
+  --bench:#FFE3D9; --dot:rgba(21,24,29,.09);         /* Orange 17% + White */
+  --panel:rgba(255,255,255,.8); --panel-edge:rgba(255,255,255,.9); --shade:rgba(21,24,29,.18);
+  --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:1; --wm-f:none;
+  --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
+  --cta:#15181D; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --foot:#15181D; --foot-ink:#C5CAD1;
+}
+html[data-opt=c][data-theme=dark]{
+  --page:#1B1F25;                 /* Charcoal/Slate midpoint: the body is lifted, the frame stays Charcoal */
+  --white:#232830; --mist:#232830;
+  --ink:#FFFFFF; --ink-2:#C5CAD1; --ink-3:#A9AEB6; --line:#2E343D; --line-2:#3A414C;
+  --sunk:#2E343D; --hit:rgba(255,90,31,.14);
+  --bench:#15181D; --dot:rgba(255,255,255,.05);
+  --panel:rgba(35,40,48,.92); --panel-edge:rgba(255,255,255,.08); --shade:rgba(0,0,0,.55);
+  --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:1; --wm-f:none;
+  --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
+  --cta:#15181D; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --foot:#15181D; --foot-ink:#C5CAD1;
+}
+
+/* -------------------------------------------------------------------------------------
+   SHARED PAINT — the only rules; they read the variables above. Needed once, for all options.
+   `header.bar` (not `.bar`) because the trace rows also use a `.bar` class.
+   ------------------------------------------------------------------------------------- */
+html[data-opt] body{background:var(--page)}
+/* hero + nav */
+html[data-opt] .top{background:var(--hero);color:var(--hero-ink)}
+html[data-opt] .top .wm{opacity:var(--wm);filter:var(--wm-f)}
+html[data-opt] .top .lede,html[data-opt] .top .who small{color:var(--hero-ink-2)}
+html[data-opt] .top h1 .o{color:var(--hero-o);text-decoration:underline var(--hero-u);text-decoration-thickness:.07em;text-underline-offset:.14em}
+html[data-opt] header.bar{color:var(--hero-ink)}
+html[data-opt] header.bar.solid{background:var(--bar);box-shadow:0 1px 0 var(--bar-edge)}
+html[data-opt] header.bar .nav ul a{color:var(--hero-ink-2)}
+html[data-opt] header.bar .nav ul a:hover{color:var(--hero-ink)}
+/* light hero (A and B, light mode only): the white logo would vanish, so show the dark one */
+html[data-opt=a]:not([data-theme=dark]) header.bar .logo,
+html[data-opt=b]:not([data-theme=dark]) header.bar .logo{content:url(assets/yapliong-symbol-dark.svg)}
+/* demo area */
+html[data-opt] .bench{background:radial-gradient(var(--dot) 1px,transparent 1.2px) 0 0/16px 16px,var(--bench);border-color:var(--line);box-shadow:0 1px 2px var(--dot),0 24px 64px -24px var(--shade)}
+html[data-opt] .panel{background:var(--panel);border-color:var(--panel-edge);box-shadow:0 0 0 1px var(--dot),0 8px 24px -12px var(--shade)}
+html[data-opt] .eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none} /* keep the engineer glass as it is */
+html[data-opt] .msg.in{background:var(--sunk);color:var(--ink)}
+html[data-opt] tr.hit td{background:var(--hit)}
+/* timeline */
+html[data-opt] .entry::before,html[data-opt] .entry.next::before{background-color:var(--white)}
+html[data-opt] .receipt{background:var(--sunk)}
+/* CTA + footer */
+html[data-opt] .cta{background:var(--cta);color:var(--cta-ink)}
+html[data-opt] .cta p{color:var(--cta-ink-2)}
+html[data-opt] .cta .btn-main{background:var(--cta-btn);color:var(--cta-btn-ink)}
+html[data-opt] .cta .btn-dline{border-color:var(--cta-edge);color:var(--cta-ink)}
+html[data-opt] footer{background:var(--foot);color:var(--foot-ink)}
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><img class="zwm" src="assets/yapliong-symbol-orange-tone.svg" alt=""><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div>
+<div class="splash" id="splash" aria-hidden="true"><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div>
 <script>
 // came back from a logo click? start covered in orange at the top, then the logo zooms past and the orange fades
 try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
@@ -307,7 +528,7 @@ try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'
     setTimeout(() => { s.className = 'splash out';
       setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 900); }, 220); })); } } catch (e) {}
 </script>
-<div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
+<div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words. <b>Colour option:</b><span class="optpick" id="optpick"><button type="button" data-o="a">A</button><button type="button" data-o="b">B</button><button type="button" data-o="c">C</button></span> (logo click = light/dark)</div></div>
 
 <header class="bar" id="bar"><div class="wrap">
   <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home. Also switches light and dark mode"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
@@ -633,12 +854,20 @@ $('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; cle
 /* auto-play one run when the bench scrolls into view (once) */
 new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
 
+// review-only: pick colour option A/B/C (remembered per browser)
+{ const pick = document.getElementById('optpick'), d = document.documentElement;
+  const sync = () => pick.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.o === d.dataset.opt)));
+  pick.addEventListener('click', e => { const o = e.target.closest('button')?.dataset.o; if (!o) return; d.dataset.opt = o; try { localStorage.setItem('opt', o); } catch (err) {} sync(); });
+  sync(); }
 // home logo: orange splash covers the page, then a real reload (like opening the home page fresh)
 (() => {
   const a = document.getElementById('home'), s = document.getElementById('splash');
   a.addEventListener('click', e => {
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
-    e.preventDefault(); s.className = 'splash in';
+    e.preventDefault();
+    const r = a.querySelector('.logo').getBoundingClientRect();
+    s.style.setProperty('--x0', (r.left + r.width / 2 - 66) + 'px'); s.style.setProperty('--y0', (r.top + r.height / 2 - 66) + 'px');
+    s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash in';
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     setTimeout(() => {
       try { localStorage.setItem('theme', next); sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
