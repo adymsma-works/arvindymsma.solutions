@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 3 mockups</title>
+<!-- Draft for choosing a direction (ADR-003). Not part of the site build. Copy = live site + placeholders in [brackets]. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF5A1F; --char:#15181D; --slate:#232830; --white:#FFFFFF; --mist:#F4F4F2;
+  --ink:#15181D; --ink-2:#4A4F57; --line:#DEDED9;
+  --on-dark:#FFFFFF; --on-dark-2:#A9AEB6; --line-dark:#2E343D;
+  --r:12px; --gap:24px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:120px}
+body{font:400 17px/1.6 Manrope,system-ui,sans-serif;color:var(--ink);background:var(--mist);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.1}
+h1{font-size:clamp(36px,5.2vw,64px)}
+h2{font-size:clamp(28px,3.4vw,40px)}
+h3{font-size:20px;line-height:1.3}
+.lede{font-size:19px;color:var(--ink-2);max-width:60ch}
+.k{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.note{font-size:13px;color:var(--ink-2);font-style:italic}
+section{padding:96px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent}
+.btn-main{background:var(--orange);color:var(--char)}
+.btn-line{border-color:currentColor}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+
+/* review bar (not part of the design) */
+.review{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);font-size:14px}
+.review .wrap{display:flex;gap:8px;align-items:center;min-height:56px;flex-wrap:wrap;padding-block:8px}
+.review strong{margin-right:8px}
+.review button{font:inherit;font-weight:700;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.review button[aria-pressed=true]{background:var(--char);color:#fff;border-color:var(--char)}
+.review .w{margin-left:auto;color:var(--ink-2)}
+
+/* site nav */
+.nav{display:flex;align-items:center;justify-content:space-between;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;text-decoration:none}
+.mark{width:32px;height:32px;border-radius:8px;background:var(--char);display:grid;place-items:center}
+.mark i{width:12px;height:12px;border-radius:3px;background:var(--orange)}
+.nav ul{display:flex;gap:24px;list-style:none;padding:0;font-weight:500;font-size:15px}
+.nav ul a{text-decoration:none}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* bunny placeholder */
+.bunny{aspect-ratio:16/10;border-radius:var(--r);background:var(--slate);color:var(--on-dark-2);display:grid;place-items:center;text-align:center;font-size:14px;position:relative;overflow:hidden}
+.bunny::before{content:"";position:absolute;width:38%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 60%,#2F3640 0 60%,transparent 61%)}
+.bunny span{position:relative}
+.pause{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line-dark);background:var(--char);color:#fff;font:700 14px Manrope;cursor:pointer}
+
+/* window chrome (calm, macOS-like) */
+.win{background:var(--white);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(21,24,29,.06),0 12px 32px rgba(21,24,29,.08);overflow:hidden}
+.win-bar{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#D5D5D0}
+.dark .win{background:var(--slate);border-color:var(--line-dark);box-shadow:none}
+.dark .win-bar{border-color:var(--line-dark);color:var(--on-dark-2)}
+.dark .dots i{background:#3A414B}
+
+/* chat demo */
+.chat{padding:20px;display:flex;flex-direction:column;gap:12px;min-height:300px}
+.msg{max-width:80%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.45;opacity:0;transform:translateY(6px);transition:opacity .3s ease-out,transform .3s ease-out}
+.msg.on{opacity:1;transform:none}
+.msg.in{align-self:flex-start;background:#ECECE8;color:var(--ink);border-bottom-left-radius:6px}
+.msg.out{align-self:flex-end;background:var(--char);color:#fff;border-bottom-right-radius:6px}
+.dark .msg.in{background:#2F3640;color:#fff}
+.dark .msg.out{background:var(--orange);color:var(--char)}
+.msg small{display:block;font-size:12px;opacity:.8;margin-top:4px}
+.dark .msg.out small{opacity:1}
+.chat-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.dark .chat-foot{border-color:var(--line-dark);color:var(--on-dark-2)}
+.chat-foot button{font:700 13px Manrope;min-height:32px;padding:0 12px;border-radius:999px;border:1px solid currentColor;background:none;color:inherit;cursor:pointer}
+
+/* flow strip (owner-words node names) */
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;list-style:none;padding:0;counter-reset:f}
+.flow li{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--white);font-size:14px;font-weight:600;position:relative;transition:border-color .3s,box-shadow .3s}
+.flow li::before{counter-increment:f;content:counter(f,decimal-leading-zero);display:block;font-size:12px;color:var(--ink-2);font-weight:700;margin-bottom:4px}
+.flow li.lit{border-color:var(--orange);box-shadow:inset 0 -3px 0 var(--orange)}
+.dark .flow li{background:var(--slate);border-color:var(--line-dark);color:#fff}
+.dark .flow li::before{color:var(--on-dark-2)}
+@media (max-width:860px){.flow{grid-template-columns:repeat(2,1fr)}}
+
+/* dark band */
+.dark{background:var(--char);color:var(--on-dark)}
+.dark .lede,.dark .k,.dark p.sub{color:var(--on-dark-2)}
+.dark .accent{color:var(--orange)}
+
+/* shared lower sections */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+@media (max-width:860px){.grid3{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:12px}
+.card .tag{align-self:flex-start;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--mist);border:1px solid var(--line)}
+.card a{font-weight:700;margin-top:auto}
+.dark .card{background:var(--slate);border-color:var(--line-dark)}
+.dark .card .tag{background:transparent;border-color:var(--line-dark);color:var(--on-dark-2)}
+.head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.steps li{border-top:3px solid var(--char);padding-top:16px}
+.steps li:first-child{border-color:var(--orange)}
+.steps b{display:block;font-size:13px;color:var(--ink-2)}
+@media (max-width:860px){.steps{grid-template-columns:1fr}}
+.signup{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+@media (max-width:860px){.signup{grid-template-columns:1fr}}
+.field{display:flex;gap:8px;flex-wrap:wrap}
+.field input{flex:1;min-width:200px;min-height:48px;padding:0 16px;border-radius:999px;border:1px solid var(--line);font:inherit;background:#fff}
+.dark .field input{background:var(--slate);border-color:var(--line-dark);color:#fff}
+.dark .field input::placeholder{color:var(--on-dark-2)}
+footer{padding:40px 0;font-size:14px;color:var(--ink-2);border-top:1px solid var(--line)}
+
+/* ===== Direction A: calm Mist ===== */
+.a-hero{padding:72px 0 96px}
+.a-hero .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center}
+@media (max-width:860px){.a-hero .grid{grid-template-columns:1fr}}
+.a-hero h1 .u{background:linear-gradient(var(--orange),var(--orange)) 0 92%/100% 6px no-repeat}
+.a-demo .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start;margin-bottom:40px}
+@media (max-width:860px){.a-demo .grid{grid-template-columns:1fr}}
+
+/* ===== Direction B: desk in the hero ===== */
+.b-hero{padding:56px 0 96px}
+.b-hero .grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+@media (max-width:860px){.b-hero .grid{grid-template-columns:1fr}}
+.b-hero .live{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--on-dark-2)}
+.b-hero .live i{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.b-about{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:center}
+@media (max-width:860px){.b-about{grid-template-columns:1fr}}
+
+/* ===== Direction C: workbench ===== */
+.c-body{background:var(--white)}
+.c-hero{padding:64px 0 40px;text-align:left}
+.c-hero .who{display:flex;align-items:center;gap:16px;margin-bottom:32px}
+.c-hero .avatar{width:56px;height:56px;border-radius:50%;background:var(--slate);display:grid;place-items:center;color:var(--on-dark-2);font-size:11px;text-align:center;line-height:1.1}
+.c-bench{background:var(--mist);border:1px solid var(--line);border-radius:20px;padding:32px;display:grid;gap:24px}
+.c-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.c-tabs button{font:700 14px Manrope;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.c-tabs button[aria-selected=true]{background:var(--char);color:#fff;border-color:var(--char)}
+.c-bench .split{display:grid;grid-template-columns:1.3fr 1fr;gap:24px}
+@media (max-width:860px){.c-bench .split{grid-template-columns:1fr}}
+.c-why{font-size:15px;color:var(--ink-2)}
+.c-why li{margin:0 0 8px 18px}
+.c-body section:not(.dark) .card{background:var(--mist);border-color:transparent}
+
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.msg,.flow li{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="review" role="region" aria-label="Mockup switcher (not part of the design)">
+  <div class="wrap">
+    <strong>Phase 3 mockups</strong>
+    <button type="button" data-dir="a" aria-pressed="true">A · Calm Mist</button>
+    <button type="button" data-dir="b" aria-pressed="false">B · Desk in the hero</button>
+    <button type="button" data-dir="c" aria-pressed="false">C · Workbench</button>
+    <span class="w">Draft. [Brackets] = your words go here.</span>
+  </div>
+</div>
+
+<!-- ============ A ============ -->
+<div data-mock="a">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main"><a class="brand" href="#"><span class="mark"><i></i></span>Arvin Dy</a>
+      <ul><li><a href="#">Demos</a></li><li><a href="#">Work</a></li><li><a href="#">How I work</a></li><li><a href="#">Contact</a></li></ul></nav>
+  </div>
+  <header class="a-hero"><div class="wrap grid">
+    <div>
+      <p class="k">Cebu · English and Bisaya</p>
+      <h1 style="margin:16px 0 24px">I don't just build websites. I build <span class="u">the systems a business runs on</span>, and I keep them working after launch.</h1>
+      <p class="lede">Well-built systems for businesses. Websites for churches and ministries, built free.</p>
+      <div class="row" style="margin-top:32px"><a class="btn btn-main" href="#">Try the inquiry desk</a><a class="btn btn-line" href="#">Message me on Facebook</a></div>
+    </div>
+    <div class="bunny"><span>Bunny loop<br>recoloured to the brand kit</span><button class="pause" aria-label="Pause the animation">II</button></div>
+  </div></header>
+
+  <section class="dark a-demo"><div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="k">Demo 1 of 3 · runs on my own Facebook Page</p>
+        <h2 style="margin:16px 0">A customer asks at 10 pm. <span class="accent">The answer goes out at 10 pm.</span></h2>
+        <p class="sub">The inquiry desk reads the Page message, finds the answer in your Google Sheet, replies in the customer's language, logs it, and tells you only when someone wants to order.</p>
+        <p class="note" style="color:var(--on-dark-2);margin-top:16px">Synthetic run. Real numbers after the real-run week.</p>
+      </div>
+      <div class="win" data-chat><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Messenger · [your Page]</div><div class="chat"></div><div class="chat-foot"><span>Replies from the Sheet</span><button type="button" data-play>Pause</button></div></div>
+    </div>
+    <ol class="flow" data-flow><li>New message</li><li>Read the words</li><li>Look up the Sheet</li><li>Reply</li><li>Write it in the log</li><li>Tell the owner</li></ol>
+  </div></section>
+
+  <div data-shared></div>
+</div>
+
+<!-- ============ B ============ -->
+<div data-mock="b" hidden>
+  <div class="dark">
+    <div class="wrap"><nav class="nav" aria-label="Main"><a class="brand" href="#"><span class="mark" style="background:var(--slate)"><i></i></span>Arvin Dy</a>
+      <ul><li><a href="#">Demos</a></li><li><a href="#">Work</a></li><li><a href="#">How I work</a></li><li><a href="#">Contact</a></li></ul></nav></div>
+    <header class="b-hero"><div class="wrap grid">
+      <div>
+        <span class="live"><i></i>Running on my Facebook Page now</span>
+        <h1 style="margin:16px 0 24px">The systems a business runs on, <span class="accent">built and kept working.</span></h1>
+        <p class="lede">I'm Arvin, a developer in Cebu. Shops, clinics and offices: I take the copy-paste out of your day. Churches and ministries: your website, built free.</p>
+        <div class="row" style="margin-top:32px"><a class="btn btn-main" href="#">Send it a test message</a><a class="btn btn-line" href="#" style="color:#fff">See what I build</a></div>
+      </div>
+      <div class="win" data-chat><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Messenger · [your Page]</div><div class="chat"></div><div class="chat-foot"><span>Synthetic run · Sheet answers</span><button type="button" data-play>Pause</button></div></div>
+    </div>
+    <div class="wrap" style="padding:24px 24px 72px"><ol class="flow" data-flow><li>New message</li><li>Read the words</li><li>Look up the Sheet</li><li>Reply</li><li>Write it in the log</li><li>Tell the owner</li></ol></div>
+    </header>
+  </div>
+  <div data-shared></div>
+  <section style="padding-top:0"><div class="wrap b-about">
+    <div class="bunny"><span>Bunny loop<br>(moves here, smaller)</span><button class="pause" aria-label="Pause the animation">II</button></div>
+    <div><h2>The one with the headphones.</h2><p class="lede" style="margin-top:16px">[Two lines about you, in your words: day job, church, why you build.]</p></div>
+  </div></section>
+</div>
+
+<!-- ============ C ============ -->
+<div data-mock="c" class="c-body" hidden>
+  <div class="wrap">
+    <nav class="nav" aria-label="Main"><a class="brand" href="#"><span class="mark"><i></i></span>Arvin Dy</a>
+      <ul><li><a href="#">Demos</a></li><li><a href="#">Work</a></li><li><a href="#">How I work</a></li><li><a href="#">Contact</a></li></ul></nav>
+    <header class="c-hero">
+      <div class="who"><span class="avatar">bunny<br>still</span><div><strong>Arvin Dy</strong><br><span style="color:var(--ink-2);font-size:15px">Developer · Cebu · English and Bisaya</span></div></div>
+      <h1 style="max-width:18ch">See the work before you message me.</h1>
+      <p class="lede" style="margin:24px 0 40px">Three small systems you can try right here, with fake data. Each one is a version of something I build for real businesses.</p>
+    </header>
+    <div class="c-bench">
+      <div class="c-tabs" role="tablist" aria-label="Demos">
+        <button role="tab" aria-selected="true">Shop inquiry desk</button>
+        <button role="tab" aria-selected="false">Clinic reminder</button>
+        <button role="tab" aria-selected="false">Pageant tabulator</button>
+      </div>
+      <div class="split">
+        <div class="win" data-chat><div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Messenger · [your Page]</div><div class="chat"></div><div class="chat-foot"><span>Synthetic run</span><button type="button" data-play>Pause</button></div></div>
+        <div>
+          <p class="k">What the owner gets</p>
+          <ul class="c-why" style="margin-top:16px;padding:0">
+            <li>Prices and hours answered from a Google Sheet you already know how to edit.</li>
+            <li>Every message in one log, nothing lost in the inbox.</li>
+            <li>An email only when someone wants to order.</li>
+            <li>A 6 pm summary of the day.</li>
+          </ul>
+          <a class="btn btn-main" href="#" style="margin-top:24px">I want this for my shop</a>
+        </div>
+      </div>
+      <ol class="flow" data-flow><li>New message</li><li>Read the words</li><li>Look up the Sheet</li><li>Reply</li><li>Write it in the log</li><li>Tell the owner</li></ol>
+    </div>
+  </div>
+  <div data-shared></div>
+</div>
+
+<!-- shared lower half, cloned into each mockup -->
+<template id="shared">
+  <section><div class="wrap">
+    <div class="head"><div><p class="k">What I do</p><h2 style="margin-top:12px">Three ways I can help</h2></div></div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Businesses</span><h3>Systems and automation</h3><p>For businesses that have outgrown spreadsheets and paper. A form fills your Sheet and you get told right away, no retyping.</p><a href="#">See the inquiry desk demo</a></article>
+      <article class="card"><span class="tag">Free</span><h3>Church and ministry websites</h3><p>Designed and built free, and kept up so the schedule is never out of date.</p><a href="#">Ask about a church site</a></article>
+      <article class="card"><span class="tag">Free</span><h3>Small store consultation</h3><p>I study the problem, propose a fix, and can build it.</p><a href="#">Book a consultation</a></article>
+    </div>
+  </div></section>
+  <section class="dark"><div class="wrap">
+    <div class="head"><div><p class="k">Proof</p><h2 style="margin-top:12px">Work that runs, with the receipts</h2></div><a class="btn btn-line" href="#" style="color:#fff">All case studies</a></div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Live on my Page</span><h3>Messenger inquiry desk</h3><p>Built with n8n. Keyword rules in Bisaya and English, covered by 38 tests.</p><a href="#">Read how it's built</a></article>
+      <article class="card"><span class="tag">Offline network</span><h3>Pageant scoring</h3><p>[Your case study line. Photo only with permission.]</p><a href="#">Read the pageant case study</a></article>
+      <article class="card"><span class="tag">Day job</span><h3>Payroll and records system</h3><p>Shown only with the PM's OK on the exact text.</p><a href="#">Read the HRIS case study</a></article>
+    </div>
+  </div></section>
+  <section><div class="wrap">
+    <div class="head"><div><p class="k">How I work</p><h2 style="margin-top:12px">Five steps, in this order, on every system</h2></div></div>
+    <ol class="steps">
+      <li><b>01</b><h3>Understand</h3><p>How the work is done today.</p></li>
+      <li><b>02</b><h3>Design</h3><p>Plan it before writing it.</p></li>
+      <li><b>03</b><h3>Develop</h3><p>Build it layer by layer.</p></li>
+      <li><b>04</b><h3>Automate</h3><p>Remove the manual steps.</p></li>
+      <li><b>05</b><h3>Improve</h3><p>Keep refining after launch.</p></li>
+    </ol>
+  </div></section>
+  <section style="padding-top:0"><div class="wrap signup">
+    <div><p class="k">Community</p><h2 style="margin-top:12px">[Sign-up line, your words]</h2><p class="lede" style="margin-top:12px">[What people get and how often. No spam promise.]</p></div>
+    <form class="field" onsubmit="return false"><label class="visually" for="em" style="position:absolute;left:-9999px">Email</label><input id="em" type="email" placeholder="you@email.com"><button class="btn btn-main" type="submit" style="border:0;font:inherit;font-weight:700;cursor:pointer">Sign me up</button></form>
+  </div></section>
+  <section class="dark"><div class="wrap signup">
+    <div><h2>Tell me what slows your day down.</h2><p class="lede" style="margin-top:12px">Usually reply within a day. English or Bisaya.</p></div>
+    <div class="row"><a class="btn btn-main" href="#">Write me a message</a><a class="btn btn-line" href="#" style="color:#fff">Facebook Page</a></div>
+  </div></section>
+  <footer><div class="wrap row" style="justify-content:space-between"><span>Arvin Dy · Cebu City</span><span>Open for sideline projects (outside HR and payroll) · <a href="#">Uses</a></span></div></footer>
+</template>
+
+<script>
+// Fill each mockup's lower half from the shared template.
+document.querySelectorAll('[data-shared]').forEach(s => s.replaceWith(document.getElementById('shared').content.cloneNode(true)));
+
+// Switcher
+const btns = document.querySelectorAll('.review button');
+btns.forEach(b => b.addEventListener('click', () => {
+  btns.forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('[data-mock]').forEach(m => m.hidden = m.dataset.mock !== b.dataset.dir);
+  start();
+}));
+
+// Synthetic chat run. Bisaya lines are samples: Arvin checks the wording.
+const SCRIPT = [
+  ['in', 'Hi! Unsa inyong oras karon?', 'Customer · 10:02 pm', 1],
+  ['out', 'Open mi Lunes hangtod Sabado, 9 am to 6 pm. Salamat sa message!', 'Auto-reply from the Sheet · 10:02 pm', 4],
+  ['in', 'Pila ang [item]?', 'Customer · 10:03 pm', 2],
+  ['out', '[Item]: [price]. Gusto ka mo-order?', 'Auto-reply from the Sheet · 10:03 pm', 4],
+  ['in', 'Oo, order ko 2', 'Customer · 10:04 pm', 2],
+  ['out', 'Sige! Na-notify na ang owner. Mo-message siya nimo ugma sa buntag.', 'Owner emailed · logged · 10:04 pm', 6],
+];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let timer = null, paused = false;
+function start() {
+  clearTimeout(timer);
+  const mock = document.querySelector('[data-mock]:not([hidden])');
+  const chat = mock.querySelector('[data-chat] .chat');
+  const flow = [...mock.querySelectorAll('[data-flow] li')];
+  const btn = mock.querySelector('[data-play]');
+  chat.innerHTML = '';
+  SCRIPT.forEach(([who, text, meta]) => {
+    const d = document.createElement('div');
+    d.className = 'msg ' + who; d.innerHTML = text + '<small>' + meta + '</small>';
+    chat.append(d);
+  });
+  const msgs = [...chat.children];
+  if (reduce) { msgs.forEach(m => m.classList.add('on')); flow.forEach(f => f.classList.add('lit')); btn.hidden = true; return; }
+  let i = 0;
+  const step = () => {
+    if (paused) return;
+    if (i === msgs.length) { timer = setTimeout(() => { msgs.forEach(m => m.classList.remove('on')); flow.forEach(f => f.classList.remove('lit')); i = 0; step(); }, 2400); return; }
+    msgs[i].classList.add('on');
+    flow.forEach((f, k) => f.classList.toggle('lit', k < SCRIPT[i][3]));
+    i++; timer = setTimeout(step, 1200);
+  };
+  btn.onclick = () => { paused = !paused; btn.textContent = paused ? 'Play' : 'Pause'; if (!paused) step(); };
+  paused = false; btn.textContent = 'Pause'; step();
+}
+start();
+</script>
+</body>
+</html>
