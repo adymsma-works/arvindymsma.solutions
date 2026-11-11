@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Workbench v2</title>
-<!-- Draft for ADR-003 (direction C, round 2). Not part of the site build.
+<!-- Draft for ADR-003 (direction C, round 3). Not part of the site build.
      Demo shop and its prices are fake. Receipts in "How I work" are real (roadmap, 10-11 Nov 2026). -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -181,20 +181,61 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 
 .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}.seg button{white-space:nowrap}
 @media (max-width:600px){.cta{padding:40px 24px;border-radius:20px}.bench{padding:8px}}
+/* ===== round 3: macOS glass ===== */
+.logo{width:32px;height:32px}
+.bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
+.bench-top .lights{display:flex;gap:8px;margin-right:8px}.bench-top .lights i{width:12px;height:12px;border-radius:50%;background:#FF5F57}.bench-top .lights i+i{background:#FEBC2E}.bench-top .lights i+i+i{background:#28C840}
+.bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
+.seg{background:rgba(21,24,29,.06)}
+.panel{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);border:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(21,24,29,.06),0 8px 24px -12px rgba(21,24,29,.18)}
+.ph{border-color:rgba(21,24,29,.07)}
+th{background:rgba(21,24,29,.03)}
+.eng{--d-ink-2:#D0D4DA;--d-line:rgba(255,255,255,.12);background:rgba(30,34,41,.86);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 40px -16px rgba(21,24,29,.35);border-radius:18px}
+.eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none;backdrop-filter:none}
+.eng .node{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.eng .span:hover,.eng .span.sel{background:rgba(255,255,255,.07)}
+.eng .span .bar{background:rgba(255,255,255,.10)} .eng .span .bar i{background:#8A929E}
+.eng-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:4px 4px 0}
+.eng-head .mono{color:var(--d-ink-2)}
+.seg-dark{background:rgba(255,255,255,.08)}
+.seg-dark button{color:var(--d-ink-2)}
+.seg-dark button[aria-pressed=true]{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+.emode{display:none;gap:12px}.emode.on{display:grid}
+.sys{display:grid;grid-template-columns:.8fr 24px 1fr 24px 1.3fr 24px 1.2fr;gap:8px;padding:20px 16px;align-items:stretch}
+.zone{border:1px solid var(--d-line);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start}
+.zone>b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2)}
+.zone.trust{border:1.5px dashed var(--orange);background:rgba(255,90,31,.05)}
+.tb{font-size:11px;font-weight:600;color:#FFC2A8}
+.node.route{border-style:dashed}
+.arrow{align-self:center;height:2px;background:rgba(255,255,255,.25);position:relative}
+.arrow::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid rgba(255,255,255,.4)}
+@media (max-width:860px){.sys{grid-template-columns:1fr}.arrow{width:2px;height:20px;justify-self:center}.arrow::after{right:-4px;top:auto;bottom:-6px;border:5px solid transparent;border-top:7px solid rgba(255,255,255,.4)}}
+.adr,.fail{padding:12px 16px 16px;margin:0;display:grid;gap:12px;font-size:14px;color:var(--d-ink-2)}
+.adr{padding-left:36px}.adr b,.fail b{color:#fff}
+.adr .mono,.fail .mono{color:#FFC2A8;font-size:11.5px;white-space:nowrap}
+.fail{list-style:none}
+.fail li{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start}
+.pill{font-size:11px;font-weight:700;text-align:center;padding:2px 0;border-radius:999px;border:1px solid var(--d-line);color:var(--d-ink-2)}
+.pill.ok{border-color:rgba(91,212,154,.5);color:#7FE0B0}
+/* timeline: Yapliong symbol in a circle */
+.log::before{left:15px}
+.entry{padding-left:56px}
+.entry::before{left:0;top:0;width:32px;height:32px;border:1px solid var(--line-2);background:#fff url(assets/yapliong-symbol-dark.svg) center/18px no-repeat;box-shadow:0 1px 2px rgba(21,24,29,.08)}
+.entry.next::before{background:#fff;border:1.5px dashed var(--ink-3)}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes blink{50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="draft"><div class="wrap">Draft, direction C round 2. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
+<div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
 
 <div class="wrap">
-  <nav class="nav" aria-label="Main"><a class="brand" href="#"><span class="mark"><i></i></span>Arvin Dy</a>
+  <nav class="nav" aria-label="Main"><a class="brand" href="#"><img class="logo" src="assets/yapliong-symbol-dark.svg" alt="" width="32" height="32">Arvin Dy</a>
     <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#contact">Contact</a></li></ul></nav>
 
   <header class="hero">
-    <div class="who"><span class="avatar">bunny<br>still</span><div><strong>Arvin Dy</strong><small>Developer · Cebu · English and Bisaya</small></div></div>
+    <div class="who"><span class="avatar">bunny<br>still</span><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
     <h1>See the work before you message me.</h1>
     <p class="lede">Tap a customer message below. Watch what the owner sees, then what the system does behind it. Fake shop, real workflow.</p>
   </header>
@@ -202,11 +243,11 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
   <!-- ================= WORKBENCH ================= -->
   <div class="bench" id="bench">
     <div class="bench-top">
-      <div class="seg" role="tablist" aria-label="Demos">
+      <div><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><div class="seg" role="tablist" aria-label="Demos">
         <button role="tab" aria-selected="true">Shop inquiry desk</button>
         <button role="tab" aria-selected="false" disabled>Clinic reminder<span class="soon">soon</span></button>
         <button role="tab" aria-selected="false" disabled>Pageant scoring<span class="soon">soon</span></button>
-      </div>
+      </div></div>
       <div class="seg" aria-label="View">
         <button type="button" aria-pressed="true" data-view="owner">Owner view</button>
         <button type="button" aria-pressed="false" data-view="eng">Engineer view</button>
@@ -217,7 +258,7 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
       <!-- customer side -->
       <div class="panel">
         <div class="ph">Messenger <span>Sample Bakery · fake Page</span></div>
-        <div class="chat" id="chat" aria-live="polite"><p class="empty">Pick a message below. Same answers in Bisaya or English, typos included.</p></div>
+        <div class="chat" id="chat" aria-live="polite"><p class="empty">Pick a message below. Typos included.</p></div>
         <div class="chips" id="chips"><small>Send as the customer</small></div>
       </div>
 
@@ -245,26 +286,56 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 
         <!-- ENGINEER VIEW -->
         <div class="view eng" data-v="eng">
-          <div class="panel">
-            <div class="ph">Architecture <span>where each step runs</span></div>
-            <div class="arch">
-              <div class="lane"><b>Meta</b><div class="node" data-n="0">Page message<small>webhook POST</small></div><div class="node" data-n="4">Send reply<small>Send API</small></div></div>
-              <div class="lane"><b>n8n workflow</b><div class="node" data-n="1">Verify signature<small>HMAC SHA-256</small></div><div class="node" data-n="2">Read the words<small>rules · lang · typos</small></div></div>
-              <div class="lane"><b>Google Sheets</b><div class="node" data-n="3">Menu & Hours<small>lookup</small></div><div class="node" data-n="5">Log<small>append row</small></div></div>
-              <div class="lane"><b>Owner</b><div class="node" data-n="6">Email if order<small>Gmail</small></div><div class="node" style="opacity:.7">6 pm summary<small>schedule · Asia/Manila</small></div></div>
+          <div class="eng-head">
+            <div class="seg seg-dark" aria-label="Engineer view">
+              <button type="button" aria-pressed="true" data-em="trace">Run trace</button>
+              <button type="button" aria-pressed="false" data-em="arch">System design</button>
+            </div>
+            <span class="mono" id="runId">no run yet</span>
+          </div>
+
+          <div class="emode on" data-m="trace">
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Run trace <span>click a step</span></div><div class="trace" id="trace"></div></div>
+              <div class="panel"><div class="ph">Inspector <span id="inspName">pick a step</span></div>
+                <pre id="insp"><span class="c">// Send a message, then click a step in the trace.</span></pre></div>
+            </div>
+            <p class="note">Bar lengths show order and overlap, not measured times. Request bodies are trimmed and use fake data.</p>
+          </div>
+
+          <div class="emode" data-m="arch">
+            <div class="panel">
+              <div class="ph">System design <span>one message, left to right</span></div>
+              <div class="sys">
+                <div class="zone"><b>Customer</b><div class="node">Messenger<small>phone or laptop</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Meta platform</b><div class="node" data-n="0">Page webhook<small>POST · signed</small></div><div class="node" data-n="4">Send API<small>reply out</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone trust"><b>n8n workflow</b><span class="tb">Trust boundary · signed requests only</span>
+                  <div class="node" data-n="1">Verify signature<small>HMAC SHA-256 · fail → 403</small></div>
+                  <div class="node" data-n="2">Rules engine<small>normalise · typos · keywords</small></div>
+                  <div class="node route">Route<small>hours · price · order · other</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Owner's tools</b><div class="node" data-n="3">Menu &amp; Hours<small>Google Sheet · read</small></div><div class="node" data-n="5">Log<small>Google Sheet · append</small></div><div class="node" data-n="6">Gmail<small>order or other only</small></div><div class="node">6 pm summary<small>schedule · Asia/Manila</small></div></div>
+              </div>
+            </div>
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Design decisions <span>and why</span></div>
+                <ol class="adr">
+                  <li><b>Rules first, AI optional.</b> Every answer points to a Sheet row, so it can be tested and explained. <span class="mono">48 tests</span></li>
+                  <li><b>The owner's Sheet is the database.</b> No new app; a price edit applies on the next reply.</li>
+                  <li><b>Verify at the edge.</b> Nothing is read or stored before Meta's signature matches. <span class="mono">167739e</span></li>
+                  <li><b>Quiet by default.</b> The owner is emailed for orders and unknown questions, plus one summary at 6 pm. <span class="mono">run #48, #49</span></li>
+                </ol></div>
+              <div class="panel"><div class="ph">When something goes wrong <span>failure paths</span></div>
+                <ul class="fail">
+                  <li><span class="pill ok">built</span><span>Unsigned or tampered request: dropped with 403, nothing stored.</span></li>
+                  <li><span class="pill ok">built</span><span>Question no rule knows: routed as "other", owner emailed to answer it.</span></li>
+                  <li><span class="pill ok">built</span><span>Workflow export going public: the cleaner refuses any email address. <span class="mono">383a06d</span></span></li>
+                  <li><span class="pill">planned</span><span>Price left blank in the Sheet: "message us" instead of a guess.</span></li>
+                </ul></div>
             </div>
           </div>
-          <div class="eng-split">
-            <div class="panel">
-              <div class="ph">Run trace <span id="runId">no run yet</span></div>
-              <div class="trace" id="trace"></div>
-            </div>
-            <div class="panel">
-              <div class="ph">Inspector <span id="inspName">pick a step</span></div>
-              <pre id="insp"><span class="c">// Send a message, then click a step in the trace.</span></pre>
-            </div>
-          </div>
-          <p class="note">Bar lengths show order and overlap, not measured times. Request bodies are trimmed and use fake data.</p>
         </div>
       </div>
     </div>
@@ -307,8 +378,8 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
     </li>
     <li class="entry">
       <div class="when"><span class="mono">10 Nov 2026</span><span class="rule">Tested</span></div>
-      <h3>Rules you can read, in Bisaya and English</h3>
-      <p>Answers come from plain keyword rules and your Google Sheet, so you can see why it said what it said. Typos were added on 11 Nov.</p>
+      <h3>Rules you can read, in your customers' words</h3>
+      <p>Answers come from plain keyword rules and your Google Sheet, so you can see why it said what it said. Typos were added on 11 Nov. Today it understands English and Bisaya; another language, like Tagalog, is a rules update with tests.</p>
       <div class="receipt mono"><span>tests <b>38</b></span><span>commits <b>ae7b25b</b>, <b>cf5a424</b></span></div>
     </li>
     <li class="entry">
@@ -332,7 +403,7 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 </div></section>
 
 <div class="wrap" id="contact"><div class="cta">
-  <div><h2>Tell me what slows your day down.</h2><p>Usually reply within a day. English or Bisaya.</p></div>
+  <div><h2>Tell me what slows your day down.</h2><p>Usually reply within a day.</p></div>
   <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-main" href="#">I want this for my shop</a><a class="btn btn-dline" href="#">[Your Facebook Page]</a></div>
 </div></div>
 <footer><div class="wrap">Offers, proof and sign-up sections: same as mockup v1, restyled to this page. · Open for sideline projects (outside HR and payroll)</div></footer>
@@ -340,20 +411,20 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 <script>
 /* ---------- fake shop data ---------- */
 const SHEET = [
-  ['Hours', 'Lunes–Sabado, 7 am–7 pm / Mon–Sat, 7 am–7 pm'],
-  ['Ensaymada', '₱35 matag usa / ₱35 each'],
-  ['Ube cheese pandesal', '₱180 kada box (10) / ₱180 per box of 10'],
-  ['Delivery', 'Cebu City lang / Cebu City only'],
+  ['Hours', 'Mon–Sat, 7 am–7 pm'],
+  ['Ensaymada', '₱35 each'],
+  ['Ube cheese pandesal', '₱180 per box of 10'],
+  ['Delivery', 'Cebu City only'],
 ];
 const SCEN = {
-  hours: {chip:'Unsa inyong oras?', text:'Unsa inyong oras?', lang:'ceb', norm:'unsa inyong oras', rule:'hours', kw:'oras', row:0,
-          reply:'Open mi Lunes hangtod Sabado, 7 am–7 pm.', order:false},
+  hours: {chip:'What time do you open?', text:'What time do you open?', lang:'en', norm:'what time do you open', rule:'hours', kw:'what time + open', row:0,
+          reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
   price: {chip:'Pila ang ensaymada?', text:'Pila ang ensaymada?', lang:'ceb', norm:'pila ang ensaymada', rule:'price', kw:'pila + ensaymada', row:1,
           reply:'Ensaymada: ₱35 matag usa. Gusto ka mo-order?', order:false},
   typo:  {chip:'wat time u open tmrw', text:'wat time u open tmrw', lang:'en', norm:'what time you open tomorrow', rule:'hours', kw:'what time + open', row:0,
           reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
-  order: {chip:'Mo-order ko 2 box ube pandesal', text:'Mo-order ko 2 box ube pandesal', lang:'ceb', norm:'mo-order ko 2 box ube pandesal', rule:'order', kw:'order', row:2,
-          reply:'Salamat! Nadawat na sa owner imong order. Mo-message siya nimo dayon.', order:true},
+  order: {chip:'Order 2 boxes ube pandesal', text:'Order 2 boxes ube pandesal', lang:'en', norm:'order 2 boxes ube pandesal', rule:'order', kw:'order', row:2,
+          reply:'Thank you! The owner has your order and will message you shortly.', order:true},
 };
 const STEPS = ['Page message','Verify signature','Read the words','Look up the Sheet','Send reply','Write the log','Tell the owner'];
 // relative start/length on a 0-100 track (illustrative order, not timings)
@@ -376,6 +447,11 @@ STEPS.forEach((n,i) => trace.insertAdjacentHTML('beforeend',
 document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
   document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.dataset.v === b.dataset.view));
+});
+
+document.querySelectorAll('[data-em]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-em]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.emode').forEach(m => m.classList.toggle('on', m.dataset.m === b.dataset.em));
 });
 
 /* ---------- payloads for the inspector ---------- */
@@ -429,8 +505,8 @@ function advance() {
   const skip = i === 6 && !s.order;
   node?.classList.add(skip ? 'skip' : 'act'); li.classList.add(skip ? 'skip' : 'act'); sp.classList.add(skip ? 'done' : 'act');
   const st = sp.querySelector('.st'); st.textContent = skip ? 'skipped' : 'ok'; if (!skip) st.classList.add('ok');
-  status.innerHTML = `<b>${STEPS[i]}</b> · ${['Message arrives from Meta','Signature matches, request is real','Rule "'+s.rule+'" matched ('+(s.lang==='ceb'?'Bisaya':'English')+')','Answer found in row '+(s.row+2),'Reply sent to the customer','Row added to the log', s.order?'Order email sent to the owner':'Not an order, owner not disturbed'][i]}`;
-  if (i === 2 && s.rule === 'hours' && s.norm !== s.text.toLowerCase()) status.innerHTML += ' · typos fixed';
+  status.innerHTML = `<b>${STEPS[i]}</b> · ${['Message arrives from Meta','Signature matches, request is real','Rule "'+s.rule+'" matched','Answer found in row '+(s.row+2),'Reply sent to the customer','Row added to the log', s.order?'Order email sent to the owner':'Not an order, owner not disturbed'][i]}`;
+  if (i === 2 && s.norm !== s.text.toLowerCase().replace(/[?!.]/g,'')) status.innerHTML += ' · typos fixed';
   if (i === 3) { sheetBody.querySelector(`[data-r="${s.row}"]`).classList.add('hit'); }
   if (i === 4) { chat.insertAdjacentHTML('beforeend', `<div class="msg out">${esc(s.reply)}<small>Auto-reply from the Sheet · ${run.time}</small></div>`); chat.scrollTop = chat.scrollHeight; }
   if (i === 3) { chat.insertAdjacentHTML('beforeend', `<div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>`); chat.scrollTop = chat.scrollHeight; }
