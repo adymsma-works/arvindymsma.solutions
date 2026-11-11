@@ -581,7 +581,10 @@ html[data-opt] .eng .panel{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px
 /* lockup: my own Yapliong mark + the tool's name in type. No third-party logo or colours; "Claude Code" is plain text. */
 .lockup{display:flex;align-items:center;gap:14px;margin:18px 0 22px}
 .lk-mark{flex:none;width:52px;height:52px;display:block}
-html[data-theme=dark] .lk-mark{content:url(assets/yapliong-symbol-white.svg)}
+/* the engine: my blade mark's hub without the blades; turns like an idling engine on hover */
+.lk-mark{width:52px;height:52px;flex:none;color:var(--orange);overflow:visible}
+.lk-mark g{transform-origin:50px 38px;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.lockup:hover .lk-mark g{transform:rotate(120deg)}
 .tools .lockup h2{margin:0;max-width:none;font-size:clamp(30px,3.2vw,38px);line-height:1.05}
 .lk-sub{margin-top:8px;padding-top:7px;border-top:1px solid var(--line-2);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
 .cbs{border-radius:16px;border:0;padding:0 12px 12px;background-color:var(--desk);background-image:var(--desk-img);box-shadow:0 0 0 1px var(--desk-ring),0 28px 64px -32px var(--shade)}
@@ -734,7 +737,7 @@ try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'
   <div>
     <p class="eyebrow">My own tools</p>
     <div class="lockup">
-      <img class="lk-mark" src="assets/yapliong-symbol-dark.svg" alt="" width="52" height="52">
+      <svg class="lk-mark" viewBox="30 18 40 40" aria-hidden="true" focusable="false"><g><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg>
       <div><h2>Claude Bar</h2><p class="lk-sub">Built for Claude Code</p></div>
     </div>
     <p class="lede">A slim bar at the top of my Windows screen: Claude Code tokens today and this week, per model, and a search over my saved commands. This is a recreation you can click and type in.</p>
