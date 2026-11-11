@@ -1096,8 +1096,8 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
   const top = document.querySelector('.top'), p = top && top.querySelector('.wm-p'), r = top && top.querySelector('.wm-r');
   if (!p || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   p.classList.add('live'); // JS owns the rotation now (the CSS turn is only the no-script fallback)
-  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const IDLE = 9, MAX = 150;                       // degrees per second
+  const PULL = .45, REACH = 260;                   // follow: share of the gap to the pointer, max px
   let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, sc = scrollY, lastY = scrollY, lx = null, ly = 0;
   let last = 0, raf = 0, seen = true;
   const ease = (dt, tau) => 1 - Math.exp(-dt / tau);
@@ -1106,10 +1106,11 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     boost *= Math.exp(-dt / 1.5);                  // coast down slowly, like a flywheel
     om += (IDLE + boost - om) * ease(dt, .25);     // spin up quickly
     ang = (ang + om * dt) % 360;
-    px += (tx - px) * ease(dt, .3); py += (ty - py) * ease(dt, .3);
+    px += (tx - px) * ease(dt, .55); py += (ty - py) * ease(dt, .55); // heavy, smooth follow
+    const tilt = Math.max(-1, Math.min(1, (tx - px) / 120));
     sc += (scrollY - sc) * ease(dt, .18);
     r.style.transform = 'rotate(' + ang.toFixed(2) + 'deg)';
-    p.style.transform = 'perspective(1200px) translate3d(' + (px * 22).toFixed(1) + 'px,' + (py * 16 + sc * .18).toFixed(1) + 'px,0) rotateX(' + (-py * 5).toFixed(2) + 'deg) rotateY(' + (px * 6).toFixed(2) + 'deg)';
+    p.style.transform = 'perspective(1200px) translate3d(' + px.toFixed(1) + 'px,' + (py + sc * .18).toFixed(1) + 'px,0) rotateY(' + (tilt * 8).toFixed(2) + 'deg)';
     raf = requestAnimationFrame(frame);
   };
   const sync = () => {
@@ -1119,15 +1120,18 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     else if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
   };
   const rev = d => { boost = Math.min(MAX, boost + d); };
-  if (fine) {
-    addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse' || !raf) return;
-      if (lx !== null) rev(Math.hypot(e.clientX - lx, e.clientY - ly) * .16);
-      lx = e.clientX; ly = e.clientY;
-      tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
-    }, { passive: true });
-    document.documentElement.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; });
-  }
+  // Follow: the blade's centre drifts toward the mouse (PULL of the gap, at most REACH px), then glides home
+  // when the mouse leaves the hero. Mouse only; touch keeps the idle spin + scroll.
+  const clamp = v => Math.max(-REACH, Math.min(REACH, v));
+  top.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse' || !raf) return;
+    if (lx !== null) rev(Math.hypot(e.clientX - lx, e.clientY - ly) * .16);
+    lx = e.clientX; ly = e.clientY;
+    const b = top.getBoundingClientRect();         // rest centre from offsets (offsets ignore transforms)
+    const cx = b.left + p.offsetLeft + p.offsetWidth / 2, cy = b.top + p.offsetTop + p.offsetHeight * .416;
+    tx = clamp((e.clientX - cx) * PULL); ty = clamp((e.clientY - cy) * PULL);
+  }, { passive: true });
+  top.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; });
   addEventListener('scroll', () => { rev(Math.abs(scrollY - lastY) * .22); lastY = scrollY; }, { passive: true });
   document.addEventListener('visibilitychange', sync);
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync(); }).observe(top);
