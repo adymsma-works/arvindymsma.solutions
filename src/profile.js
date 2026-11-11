@@ -27,6 +27,9 @@ export const profile = {
   tagline: "Building solutions. Driving progress.",
   summary:
     "Full-stack developer in Cebu City building a cloud HRIS with biometric and face-recognition attendance, plus business systems and n8n workflow automation.",
+  // Home page share preview only (Facebook, Messenger, search result). Written for shop owners; each claim is shown on the home page.
+  homeSummary:
+    "I build small workflows for shops in Cebu. Try the demo: a customer asks on Messenger, your Google Sheet answers, and orders are emailed to you.",
   resumeFile: "Arvin_Yapliong_Developer_Resume.pdf",
   vcardFile: "arvin-yapliong.vcf",
 };

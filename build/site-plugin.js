@@ -130,6 +130,7 @@ export default function sitePlugin() {
           EMAIL: profile.email,
           FACEBOOK: profile.facebook,
           SUMMARY: profile.summary,
+          HOME_SUMMARY: profile.homeSummary,
           JSON_LD: jsonLd(site.siteUrl),
           QR_CODE: await qrDataUri(),
         };
