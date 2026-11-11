@@ -205,15 +205,18 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 /* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
 .logo-wrap{position:relative;display:block;width:32px;height:32px}
 .brand:hover .logo{transform:rotate(30deg)}
-.splash{position:fixed;inset:0;z-index:100;background:var(--orange);display:grid;place-items:center;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility 0s .28s}
-.splash.show{opacity:1;visibility:visible;transition:opacity .28s ease}
-.splash.instant{transition:none}
-.splash .swm{position:absolute;right:-14%;top:-20%;width:min(900px,95vw);height:auto}
-.splash .smark{position:relative;display:grid;justify-items:center;gap:18px}
-.splash .smark img{width:148px;height:148px}
-.splash .smark b{font-weight:800;font-size:28px;letter-spacing:-.01em;color:var(--char)}
-.splash.show .smark img{animation:spin 1s cubic-bezier(.45,0,.2,1)}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.splash{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;visibility:hidden}
+.splash.in,.splash.cover,.splash.out{visibility:visible;pointer-events:auto}
+.splash .wave{position:absolute;top:0;bottom:0;left:-120px;width:calc(100% + 240px);transform:translateX(-100%);transition:transform .6s cubic-bezier(.7,0,.25,1)}
+.splash .back{background:linear-gradient(#E9501A,#E9501A) center/calc(100% - 238px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23E9501A' d='M100 0H50Q0 125 50 250T50 500T50 750T50 1000H100Z'/%3E%3C/svg%3E") left/120px 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23E9501A' d='M0 0H50Q100 125 50 250T50 500T50 750T50 1000H0Z'/%3E%3C/svg%3E") right/120px 100% no-repeat}
+.splash .front{background:linear-gradient(#FF5A1F,#FF5A1F) center/calc(100% - 238px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23FF5A1F' d='M100 0H50Q0 125 50 250T50 500T50 750T50 1000H100Z'/%3E%3C/svg%3E") left/120px 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23FF5A1F' d='M0 0H50Q100 125 50 250T50 500T50 750T50 1000H0Z'/%3E%3C/svg%3E") right/120px 100% no-repeat;transition-delay:.07s}
+.splash .roll{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;transform:translateX(-75vw) rotate(-720deg);transition:transform .62s cubic-bezier(.6,0,.2,1) .05s}
+.splash.in .wave,.splash.cover .wave{transform:translateX(0)}
+.splash.in .roll,.splash.cover .roll{transform:none}
+.splash.out .wave{transform:translateX(100%)}
+.splash.out .back{transition-delay:.07s}.splash.out .front{transition-delay:0s}
+.splash.out .roll{transform:translateX(75vw) rotate(720deg);transition-timing-function:cubic-bezier(.6,0,.4,1);transition-delay:0s}
+.splash.instant .wave,.splash.instant .roll{transition:none}
 .bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
 .bench-top .lights{display:flex;gap:8px;margin-right:8px}.bench-top .lights i{width:12px;height:12px;border-radius:50%;background:#FF5F57}.bench-top .lights i+i{background:#FEBC2E}.bench-top .lights i+i+i{background:#28C840}
 .bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
@@ -275,13 +278,14 @@ html{scroll-padding-top:84px}
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><img class="swm" src="assets/yapliong-symbol-orange-wm.svg" alt=""><div class="smark"><img src="assets/yapliong-symbol-on-orange.svg" alt=""><b>Arvin Dy</b></div></div>
+<div class="splash" id="splash" aria-hidden="true"><div class="wave back"></div><div class="wave front"></div><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div>
 <script>
-// came back from a logo click? start fully orange, at the top, then fade into the page
+// came back from a logo click? start covered in orange at the top, then the wave rolls off to the right
 try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
-  const s = document.getElementById('splash'); s.classList.add('instant', 'show'); scrollTo(0, 0);
-  requestAnimationFrame(() => requestAnimationFrame(() => s.classList.remove('instant')));
-  setTimeout(() => s.classList.remove('show'), 700); } } catch (e) {}
+  const s = document.getElementById('splash'); s.className = 'splash instant cover'; scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant');
+    setTimeout(() => { s.className = 'splash out';
+      setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 800); }, 200); })); } } catch (e) {}
 </script>
 <div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
 
@@ -614,11 +618,11 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
   const a = document.getElementById('home'), s = document.getElementById('splash');
   a.addEventListener('click', e => {
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
-    e.preventDefault(); s.classList.add('show');
+    e.preventDefault(); s.className = 'splash in';
     setTimeout(() => {
       try { sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
-      catch (err) { scrollTo(0, 0); s.classList.remove('show'); } // storage blocked: same feel, no reload
-    }, reduce ? 150 : 650);
+      catch (err) { scrollTo(0, 0); s.className = 'splash out'; setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 800); } // storage blocked: same feel, no reload
+    }, reduce ? 150 : 720);
   });
   const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
   addEventListener('scroll', solid, { passive: true }); solid();
