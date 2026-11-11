@@ -2,7 +2,7 @@
 //
 //  - SITE_URL is set automatically by GitHub Actions (actions/configure-pages)
 //    to wherever GitHub Pages is serving the site: the github.io address today,
-//    or https://arvindymsma.solutions/ once a custom domain is connected.
+//    or your own domain (e.g. https://arvindy.com/) once one is connected.
 //  - The Vite `base` (the sub-folder assets load from) is derived from it,
 //    so the blank-page / 404-assets problem can't come back.
 //  - The QR code, the .vcf contact file, robots.txt and sitemap.xml are
@@ -12,7 +12,7 @@ import QRCode from "qrcode";
 import { profile } from "../src/profile.js";
 import { findPages } from "./pages.js";
 
-export const DEFAULT_SITE_URL = "https://adymsma-works.github.io/arvindymsma.solutions/";
+export const DEFAULT_SITE_URL = "https://adymsma-works.github.io/arvindy/";
 
 /** Normalise SITE_URL and derive the base path from it. */
 export function resolveSite(env = process.env) {

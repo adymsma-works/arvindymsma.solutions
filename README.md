@@ -1,4 +1,4 @@
-# arvindymsma.solutions
+# arvindy
 
 Portfolio of Arvin D. Yapliong. React 19 + Vite 8, plain CSS, self-hosted fonts.
 Designed with the **Basalt Dev Portfolio** skill: a near-black zinc ground, one cyan accent, Geist type,
@@ -6,7 +6,7 @@ a floating pill nav and a falling light beam. The home page plays a 10-second lo
 headphone bunny) inside a product window.
 Deployed to GitHub Pages by GitHub Actions on every push to `main`.
 
-**Live:** https://adymsma-works.github.io/arvindymsma.solutions/
+**Live:** https://adymsma-works.github.io/arvindy/ (repo renamed from `arvindymsma.solutions` on 11 Nov 2026; the old address no longer works)
 
 ## Pages
 
@@ -53,7 +53,7 @@ The QR code, `arvin-yapliong.vcf`, `robots.txt` and `sitemap.xml` (every page) a
 
 1. Install **Node.js 22 LTS** (or newer) from https://nodejs.org. Check: `node -v` shows `v22.x` or higher.
 2. In this folder: `npm ci` (first time, or after pulling changes).
-3. `npm run dev` and open the address it prints: **http://localhost:5173/arvindymsma.solutions/**. Edits show instantly.
+3. `npm run dev` and open the address it prints: **http://localhost:5173/arvindy/**. Edits show instantly.
 4. Before pushing: `npm run lint`, `npm run build`, `npm run check`, then `npm run preview` to click through the real build.
 
 `npm run check` is the safety net: it fails if any page would load blank or was not prerendered, a link points
@@ -64,10 +64,10 @@ to a missing page or outside the site's folder, a merge-conflict marker slipped 
 
 One-time setup (in the GitHub website):
 
-1. Repo **adymsma-works/arvindymsma.solutions**, then **Settings**, then **Pages**.
+1. Repo **adymsma-works/arvindy**, then **Settings**, then **Pages**.
 2. **Build and deployment, Source: GitHub Actions**.
 3. **Custom domain:** leave it **empty** unless the domain's DNS is already set up (see below).
-   If it shows `arvindymsma.solutions` and that domain isn't live, click **Remove**,
+   If it shows a domain that isn't live, click **Remove**,
    otherwise GitHub redirects visitors to an address that doesn't exist.
 
 Every deploy after that:
@@ -81,14 +81,14 @@ git push origin main
 Then open the **Actions** tab and wait for **Deploy to GitHub Pages** to go green (about 1 minute).
 Pull requests get built and checked, but only `main` deploys.
 
-## Using your own domain later (arvindymsma.solutions)
+## Using your own domain later (e.g. arvindy.com)
 
 1. Buy/renew the domain, then at the registrar's DNS settings add:
    - `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - `CNAME` for `www` pointing to `adymsma-works.github.io`
-2. GitHub, Settings, Pages, **Custom domain**: `arvindymsma.solutions`, Save. Wait for the DNS check to pass, then tick **Enforce HTTPS**.
+2. GitHub, Settings, Pages, **Custom domain**: your domain, Save. Wait for the DNS check to pass, then tick **Enforce HTTPS**.
 3. Actions, **Deploy to GitHub Pages**, **Run workflow**. The build asks GitHub for the new address, so the
-   canonical URL, share tags, QR code and `.vcf` all switch to `https://arvindymsma.solutions/` automatically. No code changes.
+   canonical URL, share tags, QR code and `.vcf` all switch to your domain automatically. No code changes.
 
 ## After each deploy
 
