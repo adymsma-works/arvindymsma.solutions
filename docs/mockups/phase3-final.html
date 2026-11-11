@@ -240,34 +240,48 @@ html[data-theme=dark]{--tty:#1B1F25;--tty-top:#232830;--tty-ring:rgba(255,255,25
 .tty.arm.go .cmd{width:14ch;animation:type .65s steps(14) both}
 @keyframes type{from{width:0}}
 
-/* contact band: a short list of a day's chores. Cross one off and the card answers honestly; the blade turns a notch. */
-.cta{position:relative;overflow:hidden;background:var(--char);color:var(--d-ink);border-radius:28px;padding:56px 64px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);grid-template-areas:"head chores" "btns chores";grid-template-rows:auto 1fr;gap:28px 64px;--cta-rule:rgba(255,255,255,.12);--cta-blade:#1E2229}
-html[data-theme=dark] .cta{--cta-blade:#2A3039}
-.cta>*{position:relative}
+/* contact band: the day's list on a notepad. Cross a chore off (a pen stroke, a tally mark) and the pad answers honestly.
+   Light: a peach desk with a white pad. Dark: a slate desk under one soft lamp, with a lit slate pad. No logo mark in here. */
+.cta{position:relative;overflow:hidden;background-color:var(--cta);background-image:var(--cta-lamp);color:var(--cta-ink);border-radius:28px;padding:56px 64px;box-shadow:inset 0 0 0 1px var(--cta-ring);
+  display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);grid-template-areas:". chores" "head chores" "btns chores" ". chores";grid-template-rows:1fr auto auto 1fr;gap:0 64px}
 .cta-head{grid-area:head}
-.cta-btns{grid-area:btns;align-self:start;display:flex;gap:12px;flex-wrap:wrap}
-.cta-pick{grid-area:chores;min-width:0}
-.cta .cta-blade{position:absolute;left:-76px;bottom:-128px;width:340px;height:340px;color:var(--cta-blade);pointer-events:none;transform-origin:50% 41.6%;transition:transform 1s var(--ease)}
-.chore-h{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.cta-head h2{max-width:13ch}
+.cta-head p{color:var(--cta-ink-2);margin-top:14px}
+.cta-btns{grid-area:btns;display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.cta .btn-main{background:var(--cta-btn);color:var(--cta-btn-ink)}
+.cta .btn-dline{border:1px solid var(--cta-edge);color:var(--cta-ink)}
+/* the pad: one straight sheet (text stays sharp) on a second sheet that sits a little crooked under it */
+.cta-pick{grid-area:chores;position:relative;min-width:0}
+.cta-pick::before{content:"";position:absolute;inset:0;border-radius:14px;background:var(--pad-under);box-shadow:var(--pad-under-ring);transform:rotate(2.2deg)}
+.pad{position:relative;border-radius:14px;background:var(--pad);color:var(--pad-ink);padding:26px 28px 24px;box-shadow:var(--pad-shadow)}
+.chore-h{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pad-ink-2);margin:0 0 8px}
 .chores{display:grid}
-.chore{display:grid;grid-template-columns:20px 1fr;gap:14px;align-items:center;min-height:48px;padding:8px 0;border:0;border-bottom:1px solid var(--cta-rule);background:none;text-align:left;font-size:16px;font-weight:600;line-height:1.35;color:var(--cta-ink,#fff)}
-.chore::before{content:"";width:20px;height:20px;border-radius:6px;box-shadow:inset 0 0 0 1.5px #7C8490;transition:background-color .2s,box-shadow .2s}
-.chore:hover::before{box-shadow:inset 0 0 0 1.5px #fff}
-.chore span{text-decoration:line-through transparent 1.5px;transition:text-decoration-color .3s,color .2s}
-.chore[aria-pressed=true]{color:var(--cta-ink-2,#C5CAD1)}
-.chore[aria-pressed=true] span{text-decoration-color:currentColor}
-.chore[aria-pressed=true]::before{box-shadow:none;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.5 3 3 6-7' fill='none' stroke='%2315181D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
-.cta .chore-a{margin-top:18px;min-height:4.65em;font-size:15px;line-height:1.55;color:var(--cta-ink-2,#C5CAD1)}
-.cta .chore-a.on{color:var(--cta-ink,#fff)}
+.chore{display:grid;grid-template-columns:20px 1fr;gap:14px;align-items:center;min-height:48px;padding:8px 0;border:0;border-bottom:1px solid var(--pad-rule);background:none;text-align:left;font-size:16px;font-weight:600;line-height:1.35;color:var(--pad-ink)}
+.chore::before{content:"";width:20px;height:20px;border-radius:6px 7px 6px 8px;box-shadow:inset 0 0 0 1.5px var(--pad-box);transition:background-color .2s,box-shadow .2s}
+.chore:hover::before{box-shadow:inset 0 0 0 1.5px var(--pad-ink)}
+/* the strike is a pen stroke (an inline SVG line) drawn left to right over the words. The script lays a see-through copy of the
+   label on top (.pen, hidden from screen readers) so the stroke sits above the text and follows it onto a second line. */
+.chore>span{position:relative;transition:color .2s}
+.chore .pen{position:absolute;inset:0;color:transparent;pointer-events:none;user-select:none}
+.chore .pen i{font-style:normal;padding:0 4px;margin:0 -4px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 5.6C14 3.4 24 7 37 5.2S61 3.6 74 5.4 90 4.2 99 4.9' fill='none' stroke='%23FF5A1F' stroke-width='2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") no-repeat 0 58%/0% .6em;transition:background-size .38s var(--ease)}
+.chore[aria-pressed=true]{color:var(--pad-ink-3)}
+.chore[aria-pressed=true] .pen i{background-size:100% .6em}
+.chore[aria-pressed=true]::before{box-shadow:none;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.2 10.6c1.2 1 2.1 2 3 3.2 1.6-3 3.6-5.4 6.4-7.6' fill='none' stroke='%2315181D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
+/* tally: one pen mark per chore the visitor crossed off, nothing else is counted */
+.tally{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;font-size:13px;font-weight:600;color:var(--pad-ink-2)}
+.tally svg{flex:none;width:46px;height:24px;color:var(--pad-ink);overflow:visible}
+.tally path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .32s var(--ease),opacity .1s}
+.tally path.on{stroke-dashoffset:0;opacity:1}
+.tally path:last-child{stroke:var(--orange)}
+.chore-a{min-height:4.65em;font-size:15px;line-height:1.55;color:var(--pad-ink-2)}
+.chore-a.on{color:var(--pad-ink)}
 .chore-a.swap{animation:in .4s var(--ease) both}
-@media (max-width:860px){.cta{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "chores" "btns";grid-template-rows:none;gap:24px}.cta .cta-blade{left:auto;right:-90px;bottom:-140px}.cta .chore-a{min-height:6.2em;margin-bottom:4px}}
-.cta p{color:var(--d-ink-2);margin-top:12px}
-.btn-dline{border:1px solid #4A515C;color:#fff}
+@media (max-width:860px){.cta{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "chores" "btns";grid-template-rows:none;gap:28px}.cta-btns{margin-top:0}.cta-head h2{max-width:none}.chore-a{min-height:6.2em}}
 footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 .draft{background:#FFF8E6;border-bottom:1px solid #F0E2B8;font-size:13px;padding:8px 0;color:#5C4A12}
 
 .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}.seg button{white-space:nowrap}
-@media (max-width:600px){.cta{padding:36px 22px;border-radius:20px}.bench{padding:8px}}
+@media (max-width:600px){.cta{padding:32px 18px 34px;border-radius:20px}.pad{padding:22px 18px 20px}.cta-pick::before{transform:rotate(1.6deg)}.bench{padding:8px}}
 /* ===== round 3: macOS glass ===== */
 .logo{width:32px;height:32px;position:relative;display:block;transition:transform .3s ease}
 /* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
@@ -275,17 +289,27 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 .brand:hover .logo{transform:rotate(30deg)}
 .splash{position:fixed;inset:0;z-index:100;overflow:hidden;visibility:hidden;pointer-events:none}
 .splash.in,.splash.cover,.splash.out{visibility:visible;pointer-events:auto}
-/* diagonal "scratch" wipe: each layer is a band between two diagonal lines; a deep-orange stripe leads, brand orange follows */
-.splash .w{position:absolute;inset:0;clip-path:polygon(0 0,0 0,0 0,0 0);transition:clip-path .5s cubic-bezier(.7,0,.3,1)}
+/* in: a diagonal "scratch" wipe. Each layer is a band between two diagonal lines; a deep-orange stripe leads, brand orange follows,
+   and the white mark rolls in inside the orange. */
+.splash .w{position:absolute;inset:0;clip-path:polygon(0 0,0 0,0 0,0 0);transition:clip-path .42s cubic-bezier(.7,0,.3,1)}
 .splash .w1{background:#E9501A}
-.splash .w2{background:var(--orange);transition-delay:.09s}
+.splash .w2{background:var(--orange);transition-delay:.07s}
 .splash.in .w,.splash.cover .w{clip-path:polygon(0 0,200% 0,0 200%,0 0)}
-.splash.out .w{clip-path:polygon(200% 0,200% 0,0 200%,0 200%);transition:clip-path .7s cubic-bezier(.7,0,.3,1) .22s}
-.splash.out .w1{transition-delay:.31s}
-.splash .roll{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;opacity:0;transform:scale(.25) rotate(-150deg);transition:transform .6s cubic-bezier(.2,.9,.3,1.2) .15s,opacity .2s ease .15s}
-.splash.in .roll,.splash.cover .roll{opacity:1;transform:scale(1) rotate(0deg)}
-.splash.out .roll{opacity:0;transform:scale(12) rotate(80deg);transition:transform .75s cubic-bezier(.6,0,.8,.4),opacity .35s ease .35s}
-.splash.instant .w,.splash.instant .roll{transition:none}
+/* the mark is inline SVG (vector at every size, and no external file to load). 100 units = 150 px; the hub's centre is 50,38. */
+.splash .zoom{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;overflow:visible;color:#fff}
+.splash .zg,.splash .zl{transform-origin:50px 38px}
+.splash .zo{fill:var(--orange);visibility:hidden}
+.splash .zl{opacity:0;transform:scale(.25) rotate(-150deg);transition:transform .44s cubic-bezier(.2,.9,.3,1.2) .08s,opacity .18s ease .08s}
+.splash.in .zl,.splash.cover .zl,.splash.out .zl{opacity:1;transform:none}
+/* out: a zoom-through. The orange sheet now lives in the SVG with a hole where the hub's hole is; mark and sheet grow together
+   from the hub until the hole is wider than the screen, so the new theme arrives through the logo. The script turns .zg one
+   frame at a time (transform only), because a CSS animation here is scaled up from a small bitmap and goes soft; this way the
+   browser redraws the vector at every size and the edge stays sharp. */
+.splash.out .w1{display:none}
+.splash.out .w2{background:none;clip-path:none;transition:none}
+.splash.out .zo{visibility:visible}
+.splash.out .zl{transition:none}
+.splash.instant .w,.splash.instant .zl{transition:none}
 .bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
 .bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
 .seg{background:rgba(21,24,29,.06)}
@@ -350,10 +374,9 @@ html[data-theme=dark] .msg.out,html[data-theme=dark] .typing{background:var(--ch
 html[data-theme=dark] tr.hit td{background:rgba(255,90,31,.14)}
 html[data-theme=dark] .chip:hover{border-color:#fff}
 html[data-theme=dark] .eng{background:rgba(21,24,29,.7)}
-html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes blink{50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 /* ===== colour options A/B/C (designed by the Fable helper, 11 Nov) ===== */
 /* =====================================================================================
    THEME OPTIONS for phase3-workbench.html  (paste AFTER the existing dark block)
@@ -376,7 +399,7 @@ html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(25
    OPTION A — "Peach Paper": one barely-there peach sheet, hero included.
    Orange is 5% of the page colour; the hero is the same sheet as the body (no band), so
    the page reads like one calm macOS window. Charcoal is the ink, orange only marks things
-   (underline, dots, button). The single dark block is the CTA.
+   (underline, dots, button). The contact card is a peach desk with a white notepad (light) or a slate desk with a lit pad (dark).
    Suits: clients who read long, and anyone worried about "too orange". Safest for eyes.
 
    LIGHT  text / background                                   ratio
@@ -388,7 +411,9 @@ html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(25
    ink   #15181D on hit   #FFE8E0 (highlighted table row)     15.14
    ink-2 #44464A on page 8.94 | card 9.46 | panel 9.20 | bench 8.33 | sunk 8.52
    ink-3 #5B5D61 on page 6.24 | card 6.60 | panel 6.42 | bench 5.81 | sunk 5.94
-   CTA: white on Charcoal 17.79 | #C5CAD1 on Charcoal 10.80 | Charcoal on Orange button 5.71
+   Contact card: ink on desk #FFE1D7 14.41 | ink-2 on desk 7.66 | ink on pad #FFFFFF 17.79 | ink-2 9.46 | ink-3 (crossed off) 6.60
+   Charcoal on Orange button 5.71 | checkbox ring #85878B on pad 3.60 | Orange pen marks on pad 3.12 (shape only)
+   Orange button as a SHAPE on the desk 2.52 (FLAG under 3: the label carries it at 5.71)
    hero accent word: Charcoal text (16.83) + Orange underline (shape only)
    line  #E3DCDA on page 1.28 (FLAG, just under 1.3; the old #E4E4DF on white was the same) | on card 1.35
    line-2 #C7C1C0 on page 1.68 | on card 1.78
@@ -399,6 +424,8 @@ html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(25
    ink-2 #C5CAD1 on Charcoal 10.80 | Slate 8.99      ink-3 #A9AEB6 on Charcoal 7.98 | Slate 6.64
    Orange on Charcoal 5.71 (text OK)   line #2E343D on Charcoal 1.42   line-2 #3A414C on Slate 1.44
    chat bubble: white on #2E343D 12.54 (same in B and C dark)
+   Contact card: white on desk #232830 14.81 | #C5CAD1 on desk 8.99 | white on pad #2E343D 12.54 | #C5CAD1 7.61 | #A9AEB6 (crossed off) 5.62
+   checkbox ring #8A929E on pad 3.99 | Orange pen marks on pad 4.02
    ------------------------------------------------------------------------------------- */
 html[data-opt=a]{
   --page:#FFF7F4;                 /* Orange 5% + White */
@@ -411,7 +438,10 @@ html[data-opt=a]{
   --hero:var(--page); --hero-ink:#15181D; --hero-ink-2:#44464A; --hero-o:#15181D; --hero-u:#FF5A1F;
   --wm:1; --wm-f:none; --wm-c:#FFE6DC;              /* Orange 14% + White: tone-on-tone on the peach page */
   --bar:rgba(255,247,244,.86); --bar-edge:rgba(21,24,29,.08);
-  --cta:#15181D; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C; --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  /* contact card: a peach desk (Orange 18% + White) with a white pad; Charcoal ink everywhere, orange only as pen marks and the button */
+  --cta:#FFE1D7; --cta-lamp:none; --cta-ring:rgba(21,24,29,.06); --cta-ink:#15181D; --cta-ink-2:#44464A; --cta-edge:rgba(21,24,29,.42); --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --pad:#FFFFFF; --pad-ink:#15181D; --pad-ink-2:#44464A; --pad-ink-3:#5B5D61; --pad-rule:#E9E3E0; --pad-box:#85878B;
+  --pad-under:#FFF1EB; --pad-under-ring:0 0 0 1px rgba(120,50,20,.07); --pad-shadow:0 1px 2px rgba(120,50,20,.10),0 24px 44px -24px rgba(120,50,20,.45);
   --foot:transparent; --foot-ink:#44464A;
 }
 html[data-opt=a][data-theme=dark]{
@@ -423,7 +453,10 @@ html[data-opt=a][data-theme=dark]{
   --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
   --wm:1; --wm-f:none; --wm-c:#232830;              /* Deep Slate on Charcoal */
   --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
-  --cta:#232830; --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#4A515C;
+  /* contact card: a Deep Slate desk under one soft lamp (a single white glow above the pad), the pad one step lighter */
+  --cta:#232830; --cta-lamp:radial-gradient(64% 86% at 74% -8%,rgba(255,255,255,.10),transparent 72%); --cta-ring:rgba(255,255,255,.06); --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#5B6470;
+  --pad:#2E343D; --pad-ink:#FFFFFF; --pad-ink-2:#C5CAD1; --pad-ink-3:#A9AEB6; --pad-rule:rgba(255,255,255,.10); --pad-box:#8A929E;
+  --pad-under:#272C34; --pad-under-ring:0 0 0 1px rgba(255,255,255,.05); --pad-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 0 1px rgba(255,255,255,.05),0 26px 48px -24px rgba(0,0,0,.75);
   --foot:transparent; --foot-ink:#C5CAD1;
 }
 
@@ -449,11 +482,7 @@ html[data-opt] .panel{background:var(--panel);border-color:var(--panel-edge);box
 html[data-opt] .eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none} /* keep the engineer glass as it is */
 html[data-opt] .msg.in{background:var(--sunk);color:var(--ink)}
 html[data-opt] tr.hit td{background:var(--hit)}
-/* CTA + footer */
-html[data-opt] .cta{background:var(--cta);color:var(--cta-ink)}
-html[data-opt] .cta p{color:var(--cta-ink-2)}
-html[data-opt] .cta .btn-main{background:var(--cta-btn);color:var(--cta-btn-ink)}
-html[data-opt] .cta .btn-dline{border-color:var(--cta-edge);color:var(--cta-ink)}
+/* footer (the contact card paints itself from --cta-* and --pad-*) */
 html[data-opt] footer{background:var(--foot);color:var(--foot-ink)}
 
 /* =====================================================================================
@@ -594,14 +623,32 @@ html[data-opt] .eng .panel{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><div class="w w1"></div><div class="w w2"><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div></div>
+<div class="splash" id="splash" aria-hidden="true"><div class="w w1"></div><div class="w w2"><svg class="zoom" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g class="zg"><path class="zo" fill-rule="evenodd" d="M-2450-2462H2550V2538H-2450Z M43.7 38a6.3 6.3 0 1 0 12.6 0a6.3 6.3 0 1 0-12.6 0Z"/><g class="zl"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></g></svg></div></div>
 <script>
-// came back from a logo click? start covered in orange at the top, then the logo zooms past and the orange fades
+// Logo click, second half: the zoom-through. A short dip (the mark gathers itself), then mark and sheet grow from the hub by the same
+// ratio every frame until the hub's hole is past the farthest corner. That distance is measured in CSS px, so the end scale fits
+// a 320 px phone, a 2560 px screen and any browser zoom, always in the same 680 ms.
+window.splashOut = s => {
+  const z = s.querySelector('.zoom'), g = z.querySelector('.zg'), b = z.getBoundingClientRect(), hx = b.left + b.width * .5, hy = b.top + b.height * .38;
+  const far = Math.hypot(Math.max(hx, innerWidth - hx), Math.max(hy, innerHeight - hy)), hole = b.width * .059; // hole radius, inside its stroke
+  const END = (far + 16) / hole, LOW = .8, D = 680, DIP = .2;
+  let t0 = 0, done = false;
+  const end = () => { if (done) return; done = true; s.className = 'splash instant'; g.style.transform = ''; void s.offsetWidth; s.className = 'splash'; };
+  const frame = t => {
+    if (done) return; if (!t0) t0 = t;
+    const p = Math.min(1, (t - t0) / D); let sc, rot;
+    if (p < DIP) { const u = (1 - Math.cos(Math.PI * p / DIP)) / 2; sc = 1 - (1 - LOW) * u; rot = -14 * u; }
+    else { const u = (p - DIP) / (1 - DIP); sc = LOW * Math.pow(END / LOW, Math.pow(u, 1.25)); rot = -14 + 54 * u * u; }
+    g.style.transform = 'rotate(' + rot.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+    if (p < 1) requestAnimationFrame(frame); else end();
+  };
+  s.dataset.zs = END.toFixed(1); s.className = 'splash out'; requestAnimationFrame(frame);
+  setTimeout(end, D + 400); // if frames never come (tab in the background), still clear the splash
+};
+// came back from a logo click? start covered in orange at the top, hold a beat, then zoom through the logo into the new theme
 try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
   const s = document.getElementById('splash'); s.className = 'splash instant cover'; scrollTo(0, 0);
-  requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant');
-    setTimeout(() => { s.className = 'splash out';
-      setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 1150); }, 220); })); } } catch (e) {}
+  requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant'); setTimeout(() => splashOut(s), 80); })); } } catch (e) {}
 </script>
 <div class="draft"><div class="wrap">Final candidate (direction C, round 3). Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words. Colours: Peach Paper (logo click = light/dark). Design: option 2, Flat Header. Claude Bar section: a recreation with sample numbers.</div></div>
 
@@ -849,9 +896,8 @@ try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'
 </div></section>
 
 <div class="wrap" id="contact"><div class="cta">
-  <svg class="cta-blade" id="ctaBlade" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false"><use href="#blade"/></svg>
   <div class="cta-head"><h2>Tell me what slows your day down.</h2><p>Usually reply within a day.</p></div>
-  <div class="cta-pick">
+  <div class="cta-pick"><div class="pad">
     <p class="chore-h" id="choreH">Sounds like your day? Cross it off.</p>
     <div class="chores" id="chores" role="group" aria-labelledby="choreH">
       <button class="chore" type="button" aria-pressed="false" data-c="price"><span>Answering the same price question all day</span></button>
@@ -860,8 +906,9 @@ try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'
       <button class="chore" type="button" aria-pressed="false" data-c="totals"><span>Adding up scores or totals by hand</span></button>
       <button class="chore" type="button" aria-pressed="false" data-c="other"><span>Something else entirely</span></button>
     </div>
+    <p class="tally"><span id="tallyN">Nothing crossed off yet</span><svg id="tallyM" viewBox="0 0 46 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M7 4c.7 5.2-.5 10.8.3 16"/><path pathLength="1" d="M16 3.6c-.6 5.6.7 11-.2 16.6"/><path pathLength="1" d="M25 4.2c.8 5.2-.6 10.4.2 15.8"/><path pathLength="1" d="M34 3.6c-.5 5.8.6 11 0 16.4"/><path pathLength="1" d="M2.5 17.6C15 13.4 28 9.4 43 5.6"/></svg></p>
     <p class="chore-a" id="choreA" role="status">Pick one and I will say honestly what a small workflow can take over, and what it can't.</p>
-  </div>
+  </div></div>
   <div class="cta-btns"><a class="btn btn-main" href="#">I want this for my shop</a><a class="btn btn-dline" href="#">[Your Facebook Page]</a></div>
 </div></div>
 <footer><div class="wrap">Offers, proof and sign-up sections: same as mockup v1, restyled to this page. · Open for sideline projects (outside HR and payroll)</div></footer>
@@ -1008,18 +1055,20 @@ $('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; cle
 /* auto-play one run when the bench scrolls into view (once) */
 new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
 
-// home logo: orange splash covers the page, then a real reload (like opening the home page fresh)
+// home logo: the orange wipe covers the page, then a real reload (like opening the home page fresh) and the zoom-through.
+// Reduced motion: no splash at all, the theme switches in place and the page jumps to the top.
 (() => {
   const a = document.getElementById('home'), s = document.getElementById('splash');
   a.addEventListener('click', e => {
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
     e.preventDefault();
-    s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash in';
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    if (reduce) { try { localStorage.setItem('theme', next); } catch (err) {} document.documentElement.dataset.theme = next; scrollTo(0, 0); return; }
+    s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash in';
     setTimeout(() => {
       try { localStorage.setItem('theme', next); sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
-      catch (err) { document.documentElement.dataset.theme = next; scrollTo(0, 0); s.className = 'splash out'; setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 1150); } // storage blocked: same feel, no reload
-    }, reduce ? 150 : 720);
+      catch (err) { document.documentElement.dataset.theme = next; scrollTo(0, 0); splashOut(s); } // storage blocked: same feel, no reload
+    }, 560);
   });
   const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
   addEventListener('scroll', solid, { passive: true }); solid();
@@ -1193,11 +1242,11 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
 })();
 
 // Contact band: cross a chore off the list, the card answers with what a small workflow could take over (and what is not built yet).
-// Plain toggle buttons (aria-pressed) and a polite status line; the blade in the corner turns a notch per chore. Nothing is stored or sent.
+// Plain toggle buttons (aria-pressed) and a polite status line; the tally counts only what the visitor crossed off. Nothing is stored or sent.
 (() => {
-  const box = document.getElementById('chores'), out = document.getElementById('choreA'), blade = document.getElementById('ctaBlade');
+  const box = document.getElementById('chores'), out = document.getElementById('choreA'), tn = document.getElementById('tallyN'), tm = document.getElementById('tallyM');
   if (!box || !out) return;
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches, idle = out.textContent;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches, idle = out.textContent, none = tn ? tn.textContent : '', all = box.querySelectorAll('.chore').length;
   const SAY = {
     price:  'A reply that reads your own price list can take this one. You step in only when someone wants to order. That is the demo at the top of this page.',
     orders: 'Each order can land as a row in your Google Sheet, with an email to you. The demo above already logs every message that way.',
@@ -1205,15 +1254,17 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     totals: 'A sheet that adds itself up as the numbers come in. The pageant scoring demo is not built yet, so no promises until it is.',
     other:  'Tell me in one message. If a workflow can\'t do it well, I will say so before any work starts.',
   };
-  let turn = 0;
+  box.querySelectorAll('.chore > span').forEach(t => { const p = document.createElement('span'), i = document.createElement('i');
+    p.className = 'pen'; p.setAttribute('aria-hidden', 'true'); i.textContent = t.textContent; p.append(i); t.append(p); }); // the pen stroke's layer
   box.addEventListener('click', e => {
     const b = e.target.closest('.chore'); if (!b) return;
     const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
     const done = [...box.querySelectorAll('.chore[aria-pressed=true]')];
     const key = on ? b.dataset.c : (done.length ? done[done.length - 1].dataset.c : null);
     out.textContent = key ? SAY[key] : idle; out.classList.toggle('on', !!key);
-    if (!still) { out.classList.remove('swap'); void out.offsetWidth; out.classList.add('swap');
-      if (blade) { turn += on ? 120 : -120; blade.style.transform = 'rotate(' + turn + 'deg)'; } }
+    if (tn) tn.textContent = done.length ? done.length + ' of ' + all + ' crossed off' : none;
+    if (tm) [...tm.children].forEach((p, i) => p.classList.toggle('on', i < done.length));
+    if (!still) { out.classList.remove('swap'); void out.offsetWidth; out.classList.add('swap'); }
   });
 })();
 
