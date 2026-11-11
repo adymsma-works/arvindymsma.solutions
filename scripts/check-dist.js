@@ -25,7 +25,7 @@ const files = walk(dist);
 
 // 1. Required files exist.
 for (const f of [
-  "index.html", "card.html", "404.html", profile.resumeFile, profile.vcardFile, "og.png", "favicon.svg",
+  "index.html", "card.html", "404.html", profile.resumeFile, profile.vcardFile, "og.png", "favicon-blade.svg",
   "hero/bunny-loop-720p.webm", "hero/bunny-loop-720p.mp4", "hero/bunny-loop-poster.webp", "hero/bunny-loop-still.webp",
   ...findPages().map((p) => `${p}index.html`),
 ]) {
