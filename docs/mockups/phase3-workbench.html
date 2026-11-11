@@ -47,15 +47,26 @@ h3{font-size:19px;letter-spacing:-.01em;line-height:1.3}
 /* hero */
 .hero{padding:56px 0 48px}
 .who{display:flex;align-items:center;gap:14px;margin-bottom:32px}
-/* avatar: transparent bunny, 3D tilt on drag (springs back) */
-.buddy{position:relative;flex:none;width:52px;height:58px;perspective:260px;cursor:grab;touch-action:none;border-radius:12px;outline-offset:4px}
-.buddy:active{cursor:grabbing}
-.buddy-in{position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.34,1.56,.64,1);will-change:transform}
-.buddy.drag .buddy-in{transition:none}
+/* avatar: transparent bunny; click = dance like the hero video (bob to the beat, sway, notes), click again = stop */
+.buddy{position:relative;flex:none;width:52px;height:58px;padding:0;border:0;background:none;cursor:pointer;border-radius:12px;outline-offset:4px;-webkit-tap-highlight-color:transparent}
+.buddy-in{position:absolute;inset:0;display:block;transform-origin:50% 100%;transition:transform .2s ease}
 .buddy img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
-.buddy-shadow{position:absolute;left:18%;right:18%;bottom:-6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px);transition:transform .55s cubic-bezier(.34,1.56,.64,1)}
-.buddy.drag .buddy-shadow{transition:none}
+.buddy-shadow{position:absolute;left:18%;right:18%;bottom:-6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px)}
+.buddy .note{position:absolute;top:14px;font-size:14px;line-height:1;color:var(--orange);opacity:0;pointer-events:none}
+.buddy .n1{left:-8px}.buddy .n2{right:-10px}.buddy .n3{left:22px}
+.buddy:hover .buddy-in{transform:translateY(-2px)}
+.buddy.playing .buddy-in{animation:sway 1s ease-in-out infinite}
+.buddy.playing img{animation:bob .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .buddy-shadow{animation:shad .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .n1{animation:note 2s ease-out infinite}
+.buddy.playing .n2{animation:note 2s ease-out .7s infinite}
+.buddy.playing .n3{animation:note 2s ease-out 1.4s infinite}
 @keyframes float{50%{transform:translateY(-3px)}}
+@keyframes bob{from{transform:translateY(0) scale(1.03,.97)}to{transform:translateY(-5px) scale(.98,1.02)}}
+@keyframes shad{to{transform:scaleX(.8);opacity:.6}}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes note{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:1}100%{opacity:0;transform:translateY(-26px) rotate(12deg)}}
+@media (prefers-reduced-motion:reduce){.buddy.playing .note{opacity:1}}
 .who small{display:block;color:var(--ink-2);font-size:14px}
 .hero h1{max-width:16ch}
 .hero .lede{margin-top:24px}
@@ -191,14 +202,18 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 @media (max-width:600px){.cta{padding:40px 24px;border-radius:20px}.bench{padding:8px}}
 /* ===== round 3: macOS glass ===== */
 .logo{width:32px;height:32px;position:relative;display:block;transition:transform .3s ease}
-/* home logo: hover turns it a little; click spins it once like a fan starting, with an orange glow (cover-photo engine) */
+/* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
 .logo-wrap{position:relative;display:block;width:32px;height:32px}
-.logo-glow{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,31,.55) 0,rgba(255,90,31,.18) 45%,transparent 70%);opacity:0;transform:scale(.6);pointer-events:none}
 .brand:hover .logo{transform:rotate(30deg)}
-.brand.go .logo{animation:spin .9s cubic-bezier(.45,0,.2,1)}
-.brand.go .logo-glow{animation:glow .9s ease-out}
+.splash{position:fixed;inset:0;z-index:100;background:var(--orange);display:grid;place-items:center;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility 0s .28s}
+.splash.show{opacity:1;visibility:visible;transition:opacity .28s ease}
+.splash.instant{transition:none}
+.splash .swm{position:absolute;right:-14%;top:-20%;width:min(900px,95vw);height:auto}
+.splash .smark{position:relative;display:grid;justify-items:center;gap:18px}
+.splash .smark img{width:148px;height:148px}
+.splash .smark b{font-weight:800;font-size:28px;letter-spacing:-.01em;color:var(--char)}
+.splash.show .smark img{animation:spin 1s cubic-bezier(.45,0,.2,1)}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes glow{30%{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.4)}}
 .bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
 .bench-top .lights{display:flex;gap:8px;margin-right:8px}.bench-top .lights i{width:12px;height:12px;border-radius:50%;background:#FF5F57}.bench-top .lights i+i{background:#FEBC2E}.bench-top .lights i+i+i{background:#28C840}
 .bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
@@ -242,7 +257,13 @@ th{background:rgba(21,24,29,.03)}
 .top{position:relative;overflow:hidden;background:var(--char);color:var(--d-ink);padding-bottom:168px}
 .top .wm{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);height:auto;pointer-events:none;user-select:none}
 .top .wrap{position:relative}
-.top .nav ul a{color:var(--d-ink-2)}
+/* sticky nav: clear over the dark top, charcoal glass once you scroll */
+html{scroll-padding-top:84px}
+.bar{position:sticky;top:0;z-index:50;color:var(--d-ink);transition:background-color .25s ease,box-shadow .25s ease}
+.bar.solid{background:rgba(21,24,29,.92);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.bar .nav ul a{color:var(--d-ink-2);transition:color .15s}
+.bar .nav ul a:hover{color:#fff}
+.top{margin-top:-72px;padding-top:72px}
 .top .who small{color:var(--d-ink-2)}
 .top .lede{color:#C5CAD1}
 .top h1 .o{color:var(--orange)}
@@ -254,15 +275,25 @@ th{background:rgba(21,24,29,.03)}
 </style>
 </head>
 <body>
+<div class="splash" id="splash" aria-hidden="true"><img class="swm" src="assets/yapliong-symbol-orange-wm.svg" alt=""><div class="smark"><img src="assets/yapliong-symbol-on-orange.svg" alt=""><b>Arvin Dy</b></div></div>
+<script>
+// came back from a logo click? start fully orange, at the top, then fade into the page
+try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
+  const s = document.getElementById('splash'); s.classList.add('instant', 'show'); scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => s.classList.remove('instant')));
+  setTimeout(() => s.classList.remove('show'), 700); } } catch (e) {}
+</script>
 <div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
 
+<header class="bar" id="bar"><div class="wrap">
+  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
+    <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+</div></header>
 <div class="top"><img class="wm" src="assets/yapliong-symbol-watermark.svg" alt="" aria-hidden="true">
 <div class="wrap">
-  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home"><span class="logo-wrap"><span class="logo-glow" aria-hidden="true"></span><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
-    <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#contact">Contact</a></li></ul></nav>
 
   <header class="hero">
-    <div class="who"><span class="buddy" id="buddy" tabindex="0" role="img" aria-label="My avatar: a teal bunny with headphones. Drag it, or use the arrow keys, to tilt it."><span class="buddy-in"><img src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"></span><span class="buddy-shadow" aria-hidden="true"></span></span><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
+    <div class="who"><button class="buddy" id="buddy" type="button" aria-pressed="false" aria-label="Play my bunny&#39;s dance"><span class="buddy-in"><img src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"></span><span class="buddy-shadow" aria-hidden="true"></span><span class="note n1" aria-hidden="true">♪</span><span class="note n2" aria-hidden="true">♫</span><span class="note n3" aria-hidden="true">♪</span></button><div><strong>Arvin Dy</strong><small>Developer · Cebu, Philippines</small></div></div>
     <h1>See the work <span class="o">before</span> you message me.</h1>
     <p class="lede">Tap a customer message below. Watch what the owner sees, then what the system does behind it. Fake shop, real workflow.</p>
   </header>
@@ -578,33 +609,26 @@ $('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; cle
 /* auto-play one run when the bench scrolls into view (once) */
 new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
 
-// home logo: on this page, spin + orange glow and glide back to the top instead of a hard reload
+// home logo: orange splash covers the page, then a real reload (like opening the home page fresh)
 (() => {
-  const a = document.getElementById('home');
+  const a = document.getElementById('home'), s = document.getElementById('splash');
   a.addEventListener('click', e => {
-    e.preventDefault();
-    a.classList.remove('go'); void a.offsetWidth; a.classList.add('go');
-    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
+    e.preventDefault(); s.classList.add('show');
+    setTimeout(() => {
+      try { sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
+      catch (err) { scrollTo(0, 0); s.classList.remove('show'); } // storage blocked: same feel, no reload
+    }, reduce ? 150 : 650);
   });
-  a.addEventListener('animationend', ev => { if (ev.target.classList.contains('logo')) a.classList.remove('go'); });
+  const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
+  addEventListener('scroll', solid, { passive: true }); solid();
 })();
 
-// bunny: drag tilts it in 3D inside its spot, release springs it back
+// bunny: click plays the dance for one loop of the hero video (10 s); click again stops it
 (() => {
-  const el = document.getElementById('buddy'), inner = el.querySelector('.buddy-in'), sh = el.querySelector('.buddy-shadow');
-  const MAX = 8, TILT = 30; let sx = 0, sy = 0, on = false;
-  const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-  function set(dx, dy) {
-    dx = clamp(dx, MAX); dy = clamp(dy, MAX);
-    inner.style.transform = `translate(${dx}px,${dy}px) rotateY(${dx / MAX * TILT}deg) rotateX(${-dy / MAX * TILT}deg) scale(${dx || dy ? 1.06 : 1})`;
-    sh.style.transform = `translateX(${dx * .6}px) scaleX(${1 - Math.abs(dy) / 60})`;
-  }
-  el.addEventListener('pointerdown', e => { on = true; sx = e.clientX; sy = e.clientY; el.classList.add('drag'); el.setPointerCapture(e.pointerId); });
-  el.addEventListener('pointermove', e => { if (on) set((e.clientX - sx) / 2, (e.clientY - sy) / 2); });
-  const end = () => { if (!on) return; on = false; el.classList.remove('drag'); set(0, 0); };
-  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
-  const K = { ArrowLeft: [-MAX, 0], ArrowRight: [MAX, 0], ArrowUp: [0, -MAX], ArrowDown: [0, MAX] };
-  el.addEventListener('keydown', e => { const k = K[e.key]; if (!k) return; e.preventDefault(); set(...k); clearTimeout(el._t); el._t = setTimeout(() => set(0, 0), 350); });
+  const b = document.getElementById('buddy'); let t;
+  const set = on => { b.classList.toggle('playing', on); b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', on ? "Stop my bunny's dance" : "Play my bunny's dance"); clearTimeout(t); if (on) t = setTimeout(() => set(false), 10000); };
+  b.addEventListener('click', () => set(!b.classList.contains('playing')));
 })();
 </script>
 </body>
