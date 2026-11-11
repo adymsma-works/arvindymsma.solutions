@@ -301,7 +301,7 @@ th{background:rgba(21,24,29,.03)}
 .pill.ok{border-color:rgba(91,212,154,.5);color:#7FE0B0}
 /* ===== round 4: cover-style top (charcoal + giant faint symbol, like the Facebook cover) ===== */
 .top{position:relative;overflow:hidden;background:var(--char);color:var(--d-ink);padding-bottom:168px}
-.top .wm{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);height:auto;aspect-ratio:1;pointer-events:none;user-select:none;color:var(--wm-c,#232830);transform-origin:50% 41.6%;animation:fan 60s linear infinite}
+.bgfan .wm{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);height:auto;aspect-ratio:1;pointer-events:none;user-select:none;color:var(--wm-c,#232830);transform-origin:50% 41.6%;animation:fan 60s linear infinite}
 @keyframes fan{to{transform:rotate(360deg)}} /* background fan: one slow turn a minute; off under reduced motion */
 .top .wrap{position:relative}
 /* sticky nav: clear over the dark top, charcoal glass once you scroll */
@@ -315,7 +315,7 @@ html{scroll-padding-top:84px}
 .top .lede{color:#C5CAD1}
 .top h1 .o{color:var(--orange)}
 .pull{margin-top:-136px;position:relative}
-@media (max-width:600px){.top{padding-bottom:120px}.pull{margin-top:-96px}.top .wm{right:-45%;top:-4%;width:115vw;opacity:.7}}
+@media (max-width:600px){.top{padding-bottom:120px}.pull{margin-top:-96px}.bgfan .wm{right:-45%;top:-4%;width:115vw;opacity:.7}}
 /* ===== dark mode (logo click): Yapliong palette only: Charcoal page, Deep Slate surfaces, white text, orange accents ===== */
 html[data-theme=dark]{color-scheme:dark;--ink:#FFFFFF;--ink-2:#C5CAD1;--ink-3:#A9AEB6;--line:#2E343D;--line-2:#3A414C;--white:#232830;--mist:#1B1F25}
 html[data-theme=dark] body{background:var(--char)}
@@ -413,8 +413,8 @@ html[data-opt=a][data-theme=dark]{
    ------------------------------------------------------------------------------------- */
 html[data-opt] body{background:var(--page)}
 /* hero + nav */
-html[data-opt] .top{background:var(--hero);color:var(--hero-ink)}
-html[data-opt] .top .wm{opacity:var(--wm);filter:var(--wm-f)}
+html[data-opt] .top{background:transparent;color:var(--hero-ink)}
+html[data-opt] .bgfan .wm{opacity:var(--wm);filter:var(--wm-f)}
 html[data-opt] .top .lede,html[data-opt] .top .who small{color:var(--hero-ink-2)}
 html[data-opt] .top h1 .o{color:var(--hero-o);text-decoration:underline var(--hero-u);text-decoration-thickness:.07em;text-underline-offset:.14em}
 html[data-opt] header.bar{color:var(--hero-ink)}
@@ -509,16 +509,17 @@ html[data-opt=a][data-theme=dark]{--cb-bg:rgba(46,52,61,.78);--cb-edge:rgba(255,
    the centre and round symbolic window buttons on the right, a tab bar under it, cards inside.
    No dot board: the window is one flat sheet.
    ===================================================================================== */
-.top .wm-p{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);aspect-ratio:1;pointer-events:none;user-select:none;will-change:transform}
-.top .wm-s{width:100%;height:100%;animation:wm-s 17s cubic-bezier(.37,0,.63,1) infinite alternate}
-.top .wm-b{width:100%;height:100%;transform-origin:50% 41.6%;animation:wm-b 9s cubic-bezier(.37,0,.63,1) infinite alternate}
-.top .wm-r{width:100%;height:100%;transform-origin:50% 41.6%;will-change:transform}
-.top .wm-p .wm{position:static;display:block;width:100%;height:100%;will-change:transform;animation:fan 120s linear infinite}
-.top .wm-p.live .wm{animation:none}           /* the engine script turns .wm-r instead */
-.top .wm-p.off *{animation-play-state:paused} /* hero off screen or tab hidden */
+.bgfan{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bgfan .wm-p{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);aspect-ratio:1;pointer-events:none;user-select:none;will-change:transform}
+.bgfan .wm-s{width:100%;height:100%;animation:wm-s 17s cubic-bezier(.37,0,.63,1) infinite alternate}
+.bgfan .wm-b{width:100%;height:100%;transform-origin:50% 41.6%;animation:wm-b 9s cubic-bezier(.37,0,.63,1) infinite alternate}
+.bgfan .wm-r{width:100%;height:100%;transform-origin:50% 41.6%;will-change:transform}
+.bgfan .wm-p .wm{position:static;display:block;width:100%;height:100%;will-change:transform;animation:fan 120s linear infinite}
+.bgfan .wm-p.live .wm{animation:none}           /* the engine script turns .wm-r instead */
+.bgfan .wm-p.off *{animation-play-state:paused} /* hero off screen or tab hidden */
 @keyframes wm-s{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
 @keyframes wm-b{from{transform:translate3d(0,-2.5%,0) scale(.97)}to{transform:translate3d(0,2.5%,0) scale(1.045)}}
-@media (max-width:600px){.top .wm-p{right:-45%;top:-4%;width:115vw}}
+@media (max-width:600px){.bgfan .wm-p{right:-45%;top:-4%;width:115vw}}
 
 /* one flat window */
 html[data-opt=a]{--ctl:rgba(21,24,29,.09);--card-ring:0 0 0 1px rgba(21,24,29,.07),0 1px 3px rgba(21,24,29,.08)}
@@ -582,7 +583,8 @@ try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'
   <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home. Also switches light and dark mode"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
     <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#tools">Tools</a></li><li><a href="#contact">Contact</a></li></ul></nav>
 </div></header>
-<div class="top"><div class="wm-p"><div class="wm-s"><div class="wm-b"><div class="wm-r"><svg class="wm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="translate(102.4,114.7) scale(8.1920)"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div></div></div></div>
+<div class="bgfan" aria-hidden="true"><div class="wm-p"><div class="wm-s"><div class="wm-b"><div class="wm-r"><svg class="wm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="translate(102.4,114.7) scale(8.1920)"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div></div></div></div></div>
+<div class="top">
 <div class="wrap">
 
   <header class="hero">
@@ -1090,15 +1092,15 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
 </script>
 <script>
 // Hero blade: an engine. It always idles; pointer movement (or scrolling) spins it up, then it coasts back down.
-// It also leans a little toward the pointer. One requestAnimationFrame loop, transform only; stops when the tab is
-// hidden or the hero is off screen. Touch: idle spin + scroll. Reduced motion: nothing runs, the blade is still.
+// It follows the mouse anywhere and stays behind the whole page while scrolling (fixed layer, .bgfan).
+// One requestAnimationFrame loop, transform only; stops when the tab is hidden. Touch: idle spin + scroll. Reduced motion: nothing runs, the blade is still.
 (() => {
-  const top = document.querySelector('.top'), p = top && top.querySelector('.wm-p'), r = top && top.querySelector('.wm-r');
+  const p = document.querySelector('.bgfan .wm-p'), r = p && p.querySelector('.wm-r');
   if (!p || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   p.classList.add('live'); // JS owns the rotation now (the CSS turn is only the no-script fallback)
   const IDLE = 9, MAX = 150;                       // degrees per second
   const PULL = .7, REACH = 900;                    // follow: share of the gap to the pointer, max px
-  let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, sc = scrollY, lastY = scrollY, lx = null, ly = 0;
+  let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, lastY = scrollY, lx = null, ly = 0;
   let last = 0, raf = 0, seen = true;
   const ease = (dt, tau) => 1 - Math.exp(-dt / tau);
   const frame = t => {
@@ -1108,9 +1110,8 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     ang = (ang + om * dt) % 360;
     px += (tx - px) * ease(dt, .55); py += (ty - py) * ease(dt, .55); // heavy, smooth follow
     const tilt = Math.max(-1, Math.min(1, (tx - px) / 120));
-    sc += (scrollY - sc) * ease(dt, .18);
     r.style.transform = 'rotate(' + ang.toFixed(2) + 'deg)';
-    p.style.transform = 'perspective(1200px) translate3d(' + px.toFixed(1) + 'px,' + (py + sc * .18).toFixed(1) + 'px,0) rotateY(' + (tilt * 8).toFixed(2) + 'deg)';
+    p.style.transform = 'perspective(1200px) translate3d(' + px.toFixed(1) + 'px,' + py.toFixed(1) + 'px,0) rotateY(' + (tilt * 8).toFixed(2) + 'deg)';
     raf = requestAnimationFrame(frame);
   };
   const sync = () => {
@@ -1127,14 +1128,12 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
     if (e.pointerType !== 'mouse' || !raf) return;
     if (lx !== null) rev(Math.hypot(e.clientX - lx, e.clientY - ly) * .16);
     lx = e.clientX; ly = e.clientY;
-    const b = top.getBoundingClientRect();         // rest centre from offsets (offsets ignore transforms)
-    const cx = b.left + p.offsetLeft + p.offsetWidth / 2, cy = b.top + p.offsetTop + p.offsetHeight * .416;
+    const cx = p.offsetLeft + p.offsetWidth / 2, cy = p.offsetTop + p.offsetHeight * .416;
     tx = clamp((e.clientX - cx) * PULL); ty = clamp((e.clientY - cy) * PULL);
   }, { passive: true });
   document.documentElement.addEventListener('pointerleave', () => { tx = ty = 0; lx = null; }); // mouse left the window
   addEventListener('scroll', () => { rev(Math.abs(scrollY - lastY) * .22); lastY = scrollY; }, { passive: true });
   document.addEventListener('visibilitychange', sync);
-  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync(); }).observe(top);
   sync();
 })();
 
