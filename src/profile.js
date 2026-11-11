@@ -5,6 +5,7 @@
 
 export const profile = {
   name: "Arvin D. Yapliong",
+  displayName: "Arvin Dy", // browser tab, share titles; the full name stays on the vCard, resume and search data
   firstName: "Arvin",
   lastName: "Yapliong",
   middleInitial: "D.",

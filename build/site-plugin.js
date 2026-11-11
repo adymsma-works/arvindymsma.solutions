@@ -124,6 +124,7 @@ export default function sitePlugin() {
           SITE_URL: site.siteUrl,
           SITE_DISPLAY: site.display,
           NAME: profile.name,
+          DISPLAY_NAME: profile.displayName,
           HEADLINE: profile.headline,
           CITY: profile.city,
           EMAIL: profile.email,
