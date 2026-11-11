@@ -12,7 +12,12 @@ for (const p of findPages()) {
   const file = join("dist", p, "index.html");
   const html = readFileSync(file, "utf8");
   const m = html.match(/<div id="root" data-page="([^"]+)"(?: data-slug="([^"]+)")?><!--app--><\/div>/);
-  if (!m) throw new Error(`${file}: no <div id="root" data-page=...><!--app--></div> placeholder`);
+  if (!m) {
+    // A static page (no React root at all, e.g. the home page) is already complete HTML. A React page
+    // whose placeholder was edited still fails here, so it can never ship empty.
+    if (!html.includes('id="root"') && !html.includes("<!--app-->")) continue;
+    throw new Error(`${file}: no <div id="root" data-page=...><!--app--></div> placeholder`);
+  }
   writeFileSync(file, html.replace("<!--app-->", render(m[1], m[2])));
   n++;
 }

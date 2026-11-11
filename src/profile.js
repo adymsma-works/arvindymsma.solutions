@@ -21,6 +21,7 @@ export const profile = {
   github: "https://github.com/adymsma-works",
   githubUser: "adymsma-works",
   linkedin: "https://www.linkedin.com/in/arvin-y-18a8312a5",
+  facebook: "https://www.facebook.com/profile.php?id=61596157541965",
   company: "https://msma.ph",
   tagline: "Building solutions. Driving progress.",
   summary:

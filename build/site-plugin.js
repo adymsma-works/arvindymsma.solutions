@@ -126,6 +126,8 @@ export default function sitePlugin() {
           NAME: profile.name,
           HEADLINE: profile.headline,
           CITY: profile.city,
+          EMAIL: profile.email,
+          FACEBOOK: profile.facebook,
           SUMMARY: profile.summary,
           JSON_LD: jsonLd(site.siteUrl),
           QR_CODE: await qrDataUri(),
