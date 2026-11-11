@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const th = localStorage.getItem('theme'); if (th) document.documentElement.dataset.theme = th; } catch (e) {}</script>
 <style>
 :root{
   --orange:#FF5A1F; --char:#15181D; --slate:#232830; --white:#FFFFFF; --mist:#F4F4F2;
@@ -92,6 +93,7 @@ h3{font-size:19px;letter-spacing:-.01em;line-height:1.3}
 .msg.out{align-self:flex-end;background:var(--char);color:#fff;border-bottom-right-radius:6px}
 .msg small{display:block;font-size:12px;color:var(--ink-3);margin-top:4px}
 .msg.out small{color:var(--d-ink-2)}
+.msg.in small{color:var(--ink-2)}
 .typing{align-self:flex-end;display:flex;gap:4px;padding:12px 14px;background:var(--char);border-radius:18px}
 .typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.4;animation:blink 1.2s infinite}
 .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
@@ -156,7 +158,7 @@ tr.new{animation:in var(--beat) var(--ease) both}
 .span .st{font-family:var(--mono);font-size:11px;color:var(--d-ink-2);text-align:right}
 .span .st.ok{color:#5BD49A}
 pre{margin:0;padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#D7DAE0;overflow:auto;max-height:280px;white-space:pre-wrap;word-break:break-word;scrollbar-width:thin}
-pre .k{color:#A9AEB6} pre .s{color:#FFB08F} pre .c{color:#6B7079}
+pre .k{color:#C5CAD1} pre .s{color:#FFB08F} pre .c{color:#6B7079}
 .eng .note{font-size:12px;color:var(--d-ink-2);padding:4px 4px 0}
 
 /* stepper + controls */
@@ -205,18 +207,18 @@ footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
 /* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
 .logo-wrap{position:relative;display:block;width:32px;height:32px}
 .brand:hover .logo{transform:rotate(30deg)}
-.splash{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;visibility:hidden}
+.splash{position:fixed;inset:0;z-index:100;overflow:hidden;background:var(--orange);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s .25s}
 .splash.in,.splash.cover,.splash.out{visibility:visible;pointer-events:auto}
-.splash .wave{position:absolute;top:0;bottom:0;left:-120px;width:calc(100% + 240px);transform:translateX(-100%);transition:transform .6s cubic-bezier(.7,0,.25,1)}
-.splash .back{background:linear-gradient(#E9501A,#E9501A) center/calc(100% - 238px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23E9501A' d='M100 0H50Q0 125 50 250T50 500T50 750T50 1000H100Z'/%3E%3C/svg%3E") left/120px 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23E9501A' d='M0 0H50Q100 125 50 250T50 500T50 750T50 1000H0Z'/%3E%3C/svg%3E") right/120px 100% no-repeat}
-.splash .front{background:linear-gradient(#FF5A1F,#FF5A1F) center/calc(100% - 238px) 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23FF5A1F' d='M100 0H50Q0 125 50 250T50 500T50 750T50 1000H100Z'/%3E%3C/svg%3E") left/120px 100% no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath fill='%23FF5A1F' d='M0 0H50Q100 125 50 250T50 500T50 750T50 1000H0Z'/%3E%3C/svg%3E") right/120px 100% no-repeat;transition-delay:.07s}
-.splash .roll{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;transform:translateX(-75vw) rotate(-720deg);transition:transform .62s cubic-bezier(.6,0,.2,1) .05s}
-.splash.in .wave,.splash.cover .wave{transform:translateX(0)}
-.splash.in .roll,.splash.cover .roll{transform:none}
-.splash.out .wave{transform:translateX(100%)}
-.splash.out .back{transition-delay:.07s}.splash.out .front{transition-delay:0s}
-.splash.out .roll{transform:translateX(75vw) rotate(720deg);transition-timing-function:cubic-bezier(.6,0,.4,1);transition-delay:0s}
-.splash.instant .wave,.splash.instant .roll{transition:none}
+.splash.in,.splash.cover{opacity:1;transition:opacity .25s ease}
+.splash.out{opacity:0;transition:opacity .4s ease .32s}
+/* zoom-through: big tone-on-tone blade drawing settles in, white symbol pops in, then rushes past the viewer */
+.splash .zwm{position:absolute;right:-14%;top:-20%;width:min(900px,95vw);height:auto;opacity:0;transform:scale(.7) rotate(-35deg);transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .35s ease}
+.splash.in .zwm,.splash.cover .zwm{opacity:1;transform:none}
+.splash.out .zwm{opacity:1;transform:scale(1.3) rotate(18deg);transition:transform .8s cubic-bezier(.5,0,.3,1)}
+.splash .roll{position:absolute;left:50%;top:50%;width:132px;height:132px;margin:-66px 0 0 -66px;opacity:0;transform:scale(.2) rotate(-200deg);transition:transform .6s cubic-bezier(.2,.9,.3,1.25),opacity .2s ease}
+.splash.in .roll,.splash.cover .roll{opacity:1;transform:none}
+.splash.out .roll{opacity:0;transform:scale(16) rotate(110deg);transition:transform .7s cubic-bezier(.7,0,.85,.35),opacity .45s ease .25s}
+.splash.instant,.splash.instant .zwm,.splash.instant .roll{transition:none}
 .bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
 .bench-top .lights{display:flex;gap:8px;margin-right:8px}.bench-top .lights i{width:12px;height:12px;border-radius:50%;background:#FF5F57}.bench-top .lights i+i{background:#FEBC2E}.bench-top .lights i+i+i{background:#28C840}
 .bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
@@ -272,25 +274,43 @@ html{scroll-padding-top:84px}
 .top h1 .o{color:var(--orange)}
 .pull{margin-top:-136px;position:relative}
 @media (max-width:600px){.top{padding-bottom:120px}.pull{margin-top:-96px}.top .wm{right:-45%;top:-4%;width:115vw;opacity:.7}}
+/* ===== dark mode (logo click): Yapliong palette only: Charcoal page, Deep Slate surfaces, white text, orange accents ===== */
+html[data-theme=dark]{color-scheme:dark;--ink:#FFFFFF;--ink-2:#C5CAD1;--ink-3:#A9AEB6;--line:#2E343D;--line-2:#3A414C;--white:#232830;--mist:#1B1F25}
+html[data-theme=dark] body{background:var(--char)}
+html[data-theme=dark] .bench{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#232830,#1B1F25);border-color:rgba(255,255,255,.08);box-shadow:0 24px 64px -24px rgba(0,0,0,.6)}
+html[data-theme=dark] .seg{background:rgba(255,255,255,.06)}
+html[data-theme=dark] .seg button[aria-selected=true],html[data-theme=dark] .seg button[aria-pressed=true]{background:#3A414C;color:#fff;box-shadow:none}
+html[data-theme=dark] .panel{background:rgba(35,40,48,.82);border-color:rgba(255,255,255,.08);box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}
+html[data-theme=dark] .ph{border-color:rgba(255,255,255,.07)}
+html[data-theme=dark] th{background:rgba(255,255,255,.03)}
+html[data-theme=dark] .msg.in{background:#2E343D;color:#fff}
+html[data-theme=dark] .msg.out,html[data-theme=dark] .typing{background:var(--char);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+html[data-theme=dark] tr.hit td{background:rgba(255,90,31,.14)}
+html[data-theme=dark] .chip:hover{border-color:#fff}
+html[data-theme=dark] .eng{background:rgba(21,24,29,.7)}
+html[data-theme=dark] .entry::before{background:#232830 url(assets/yapliong-symbol-white.svg) center/18px no-repeat;box-shadow:none}
+html[data-theme=dark] .entry.next::before{background:#232830}
+html[data-theme=dark] .receipt{background:#1B1F25}
+html[data-theme=dark] .cta{background:#232830;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes blink{50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><div class="wave back"></div><div class="wave front"></div><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div>
+<div class="splash" id="splash" aria-hidden="true"><img class="zwm" src="assets/yapliong-symbol-orange-tone.svg" alt=""><img class="roll" src="assets/yapliong-symbol-allwhite.svg" alt=""></div>
 <script>
-// came back from a logo click? start covered in orange at the top, then the wave rolls off to the right
+// came back from a logo click? start covered in orange at the top, then the logo zooms past and the orange fades
 try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
   const s = document.getElementById('splash'); s.className = 'splash instant cover'; scrollTo(0, 0);
   requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant');
     setTimeout(() => { s.className = 'splash out';
-      setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 800); }, 200); })); } } catch (e) {}
+      setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 900); }, 220); })); } } catch (e) {}
 </script>
 <div class="draft"><div class="wrap">Draft, direction C round 3. Yapliong logo shown for review only: not live until the name/trademark check. The demo shop is fake. The build log entries are real (roadmap, 10–11 Nov 2026). [Brackets] = your words.</div></div>
 
 <header class="bar" id="bar"><div class="wrap">
-  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
+  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home. Also switches light and dark mode"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span>Arvin Dy</a>
     <ul><li><a href="#bench">Demos</a></li><li><a href="#">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#contact">Contact</a></li></ul></nav>
 </div></header>
 <div class="top"><img class="wm" src="assets/yapliong-symbol-watermark.svg" alt="" aria-hidden="true">
@@ -619,9 +639,10 @@ new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('pr
   a.addEventListener('click', e => {
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
     e.preventDefault(); s.className = 'splash in';
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     setTimeout(() => {
-      try { sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
-      catch (err) { scrollTo(0, 0); s.className = 'splash out'; setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 800); } // storage blocked: same feel, no reload
+      try { localStorage.setItem('theme', next); sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
+      catch (err) { document.documentElement.dataset.theme = next; scrollTo(0, 0); s.className = 'splash out'; setTimeout(() => { s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash'; }, 800); } // storage blocked: same feel, no reload
     }, reduce ? 150 : 720);
   });
   const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
