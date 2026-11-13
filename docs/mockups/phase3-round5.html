@@ -1,0 +1,1902 @@
+<!doctype html>
+<html lang="en" data-opt="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yapliong</title>
+<link rel="icon" type="image/svg+xml" href="assets/yapliong-favicon.svg">
+<!-- Final candidate for ADR-003 (direction C, round 3: option 2 "Flat Header" + ops-console build log). Not part of the site build.
+     Demo shop and its prices are fake. Receipts in "How I work" are real (roadmap, 10-11 Nov 2026). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const d = document.documentElement, th = localStorage.getItem('theme'); if (th) d.dataset.theme = th; } catch (e) {}</script>
+<style>
+:root{
+  --orange:#FF5A1F; --char:#15181D; --slate:#232830; --white:#FFFFFF; --mist:#F4F4F2;
+  --ink:#15181D; --ink-2:#4A4F57; --ink-3:#6B7079; --line:#E4E4DF; --line-2:#D5D5CF;
+  --d-ink:#FFFFFF; --d-ink-2:#A9AEB6; --d-line:#2E343D; --d-panel:#1B1F25;
+  --ok:#1F8A5B; --r:14px; --mono:"JetBrains Mono",ui-monospace,monospace;
+  --beat:.6s; --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0}
+body{font:400 17px/1.6 Manrope,system-ui,sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em;line-height:1.08}
+h1{font-size:clamp(40px,6vw,72px)}
+h2{font-size:clamp(30px,3.6vw,44px)}
+h3{font-size:19px;letter-spacing:-.01em;line-height:1.3}
+.lede{font-size:19px;color:var(--ink-2);max-width:58ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.mono{font-family:var(--mono);font-size:12.5px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;font-weight:700;text-decoration:none;border:0}
+.btn-main{background:var(--orange);color:var(--char)}
+.btn-ghost{border:1px solid var(--line-2);background:var(--white)}
+button.btn{font:inherit;font-weight:700;color:var(--ink);cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;text-decoration:none}
+.mark{width:32px;height:32px;border-radius:8px;background:var(--char);display:grid;place-items:center}
+.mark i{width:12px;height:12px;border-radius:3px;background:var(--orange)}
+.nav ul{display:flex;gap:28px;list-style:none;padding:0;font-weight:500;font-size:15px}
+.nav ul a{text-decoration:none;color:var(--ink-2)}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* hero */
+.hero{padding:56px 0 48px}
+.who{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+/* avatar: transparent bunny; click = dance like the hero video (bob to the beat, sway, notes), click again = stop */
+.buddy{position:relative;flex:none;width:52px;height:58px;padding:0;border:0;background:none;cursor:pointer;border-radius:12px;outline-offset:4px;-webkit-tap-highlight-color:transparent}
+.buddy-in{position:absolute;inset:0;display:block;transform-origin:50% 100%;transition:transform .2s ease}
+.buddy img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.buddy .shut{position:absolute;inset:0;opacity:0}
+.buddy.playing .shut,.buddy.idle .shut{opacity:1}.buddy.playing .awake,.buddy.idle .awake{opacity:0}   /* eyes close for the music */
+.buddy .shut,.buddy .awake{transition:opacity .25s}
+/* idle: nobody has moved for 6 s, so he listens to his music: slow nod, a note now and then */
+.buddy.idle:not(.playing) .buddy-in{animation:nod 1.6s ease-in-out infinite}
+.buddy.idle:not(.playing) .n1{animation:note 3.2s ease-out infinite}
+.buddy.idle:not(.playing) .n2{animation:note 3.2s ease-out 1.6s infinite}
+@keyframes nod{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg) translateY(1px)}}
+.buddy-shadow{position:absolute;left:18%;right:18%;bottom:-6px;height:6px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(3px)}
+.buddy .note{position:absolute;top:14px;font-size:14px;line-height:1;color:var(--orange);opacity:0;pointer-events:none}
+.buddy .n1{left:-8px}.buddy .n2{right:-10px}.buddy .n3{left:22px}
+.buddy:hover .buddy-in{transform:translateY(-2px)}
+.buddy.playing .buddy-in{animation:sway 1s ease-in-out infinite}
+.buddy.playing img{animation:bob .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .buddy-shadow{animation:shad .5s cubic-bezier(.3,0,.3,1) infinite alternate}
+.buddy.playing .n1{animation:note 2s ease-out infinite}
+.buddy.playing .n2{animation:note 2s ease-out .7s infinite}
+.buddy.playing .n3{animation:note 2s ease-out 1.4s infinite}
+@keyframes float{50%{transform:translateY(-3px)}}
+@keyframes bob{from{transform:translateY(0) scale(1.03,.97)}to{transform:translateY(-5px) scale(.98,1.02)}}
+@keyframes shad{to{transform:scaleX(.8);opacity:.6}}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes note{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:1}100%{opacity:0;transform:translateY(-26px) rotate(12deg)}}
+@media (prefers-reduced-motion:reduce){.buddy.playing .note,.buddy.idle .note{opacity:1;animation:none}.buddy.idle .buddy-in{animation:none}}
+.who small{display:block;color:var(--ink-2);font-size:14px}
+/* bunny menu: opens under the bunny when he is clicked; Esc or a click outside closes it */
+.who{position:relative;width:fit-content;max-width:100%}
+.bmenu{position:absolute;top:calc(100% + 10px);right:0;z-index:20;width:min(320px,calc(100vw - 32px));padding:14px;border-radius:16px;
+  background:#15181D;color:#F5F6F7;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 24px 50px -20px rgba(10,12,16,.6);animation:in .25s var(--ease) both}
+.bmenu::before{content:"";position:absolute;top:-6px;right:22px;width:12px;height:12px;background:#15181D;transform:rotate(45deg);border-radius:2px}
+.bmenu p{position:relative;font-size:14.5px;line-height:1.5;margin-bottom:10px}
+.bmenu button{display:block;width:100%;text-align:left;padding:10px 12px;margin-top:4px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:inherit;font:inherit;cursor:pointer}
+.bmenu button:hover,.bmenu button:focus-visible{background:rgba(255,90,31,.22)}
+.bmenu b{display:block;font-size:14px;font-weight:700}
+.bmenu small,.top .who .bmenu small,html[data-opt] .top .who .bmenu small{display:block;margin-top:1px;font-size:12.5px;color:#B9BEC6}
+.who strong a{color:inherit;text-decoration:none}
+.who strong a:hover{text-decoration:underline;text-underline-offset:3px}
+.hero h1{max-width:16ch}
+.hero .lede{margin-top:24px}
+
+/* ===== workbench ===== */
+.bench{border:1px solid var(--line);border-radius:22px;background:var(--mist);padding:12px;box-shadow:0 1px 2px rgba(21,24,29,.04),0 24px 64px -24px rgba(21,24,29,.18)}
+.bench-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 8px 16px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:#E9E9E4;gap:2px}
+.seg button{border:0;background:none;min-height:36px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ink-2);transition:background .2s,color .2s}
+.seg button[aria-selected=true],.seg button[aria-pressed=true]{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(21,24,29,.12)}
+.seg button[disabled]{opacity:.5;cursor:default}
+.seg .soon{font-weight:500;font-size:11px;margin-left:6px;color:var(--ink-3)}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:12px}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+.ph span{color:var(--ink-3);font-weight:500}
+
+/* chat */
+.chat{flex:1;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:340px;max-height:420px;overflow-y:auto;scrollbar-width:thin}
+.msg{max-width:84%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.45;animation:in var(--beat) var(--ease) both}
+.msg.in{align-self:flex-start;background:#EFEFEB;border-bottom-left-radius:6px}
+.msg.out{align-self:flex-end;background:var(--char);color:#fff;border-bottom-right-radius:6px}
+.msg small{display:block;font-size:12px;color:var(--ink-3);margin-top:4px}
+.msg.out small{color:var(--d-ink-2)}
+.msg.in small{color:var(--ink-2)}
+.typing{align-self:flex-end;display:flex;gap:4px;padding:12px 14px;background:var(--char);border-radius:18px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.4;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+.empty{margin:auto;text-align:center;color:var(--ink-3);font-size:14px;max-width:28ch}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line)}
+.chip{border:1px solid var(--line-2);background:var(--white);border-radius:999px;min-height:36px;padding:0 14px;font-size:14px;font-weight:600}
+.chip:hover{border-color:var(--ink)}
+.chip[disabled]{opacity:.45;cursor:default}
+.chips small{width:100%;color:var(--ink-3);font-size:12px}
+
+/* right side views */
+.views{position:relative}
+.view{display:none;gap:12px}
+.view.on{display:grid}
+.owner{grid-template-columns:1fr 1fr}
+@media (max-width:700px){.owner{grid-template-columns:1fr}}
+.owner .wide{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+#sheet td{white-space:normal}
+th{font-size:12px;color:var(--ink-3);font-weight:600;background:#FAFAF8}
+td.n{color:var(--ink-3);width:1%;font-family:var(--mono);font-size:12px}
+tr{transition:background .4s}
+tr.hit td{background:#FFF1EA}
+tr.hit td:first-child{box-shadow:inset 3px 0 0 var(--orange)}
+tr.new{animation:in var(--beat) var(--ease) both}
+.tablebox{overflow-x:auto;scrollbar-width:thin}
+.mail{padding:16px;font-size:14px;display:grid;gap:6px;min-height:132px}
+.mail .from{font-weight:700}
+.mail .muted,.muted{color:var(--ink-3)}
+.mail.skip{color:var(--ink-3)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2)}
+.badge.on{border-color:var(--orange);color:var(--ink)}
+.badge.on::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange)}
+.sum{padding:16px;font-size:14px;display:grid;gap:8px}
+.sum .big{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.sum dl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sum dt{font-size:12px;color:var(--ink-3)} .sum dd{font-size:22px;font-weight:800}
+
+/* engineer view (dark) */
+.eng{grid-template-columns:1fr;background:var(--char);border-radius:var(--r);padding:12px;color:var(--d-ink)}
+.eng .panel{background:var(--d-panel);border-color:var(--d-line);color:var(--d-ink)}
+.eng .ph{border-color:var(--d-line)} .eng .ph span{color:var(--d-ink-2)}
+.arch{padding:20px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:700px){.arch{grid-template-columns:1fr 1fr}}
+.lane{border:1px dashed var(--d-line);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start}
+.lane > b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2);font-weight:700}
+.node{border:1px solid var(--d-line);background:var(--slate);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;transition:border-color .3s,box-shadow .3s,opacity .3s}
+.node small{display:block;font-family:var(--mono);font-size:11px;color:var(--d-ink-2);font-weight:400}
+.node.act{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,90,31,.18)}
+.node.done{border-color:#4A515C}
+.node{position:relative}
+/* skipped step: full-strength text (passes 4.5:1); it reads as skipped by shape: dashed outline, no fill, struck name, label */
+.node.skip,.eng .node.skip{background:none;border-style:dashed;border-color:rgba(255,255,255,.34);color:var(--d-ink-2);text-decoration:line-through;text-decoration-thickness:1px}
+.node.skip small{display:inline-block;width:100%}
+.node.skip::after{content:"skipped";position:absolute;top:7px;right:8px;font:500 10.5px/1.5 var(--mono);color:var(--d-ink-2);border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:0 6px}
+.eng-split{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+@media (max-width:860px){.eng-split{grid-template-columns:1fr}}
+.trace{padding:8px 0}
+.span{display:grid;grid-template-columns:150px 1fr 64px;align-items:center;gap:10px;padding:6px 16px;font-size:13px;border:0;background:none;width:100%;text-align:left}
+.span:hover,.span.sel{background:#232830}
+.span .bar{height:8px;border-radius:4px;background:#2F3640;position:relative;overflow:hidden}
+.span .bar i{position:absolute;top:0;bottom:0;border-radius:4px;background:#5B6470;transform-origin:left;transform:scaleX(0);transition:transform var(--beat) var(--ease)}
+.span.done .bar i{transform:scaleX(1)}
+.span.act .bar i{background:var(--orange);transform:scaleX(1)}
+.span .st{font-family:var(--mono);font-size:11px;color:var(--d-ink-2);text-align:right}
+.span .st.ok{color:#5BD49A}
+pre{margin:0;padding:16px;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#D7DAE0;overflow:auto;max-height:280px;white-space:pre-wrap;word-break:break-word;scrollbar-width:thin}
+pre .k{color:#C5CAD1} pre .s{color:#FFB08F} pre .c{color:#6B7079}
+.eng .note{font-size:12px;color:var(--d-ink-2);padding:4px 4px 0}
+
+/* stepper + controls */
+.bottom{display:flex;gap:12px;align-items:center;padding:12px 4px 4px;flex-wrap:wrap}
+.steps{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;list-style:none;padding:0;min-width:280px}
+.steps li{height:4px;border-radius:2px;background:var(--line-2);transition:background .3s}
+.steps li.done{background:var(--ink)} .steps li.act{background:var(--orange)} .steps li.skip{background:repeating-linear-gradient(90deg,var(--line-2) 0 4px,transparent 4px 8px)}
+.ctrl{display:flex;gap:6px}
+.icon{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);background:var(--white);display:grid;place-items:center;font-weight:700;font-size:14px}
+.status{font-size:13px;color:var(--ink-2);min-width:220px}
+.status b{color:var(--ink)}
+
+/* how I work */
+section{padding:112px 0}
+.how{display:grid;grid-template-columns:400px 1fr;gap:64px}
+@media (max-width:980px){.how{grid-template-columns:1fr;gap:40px}}
+.how-left{position:sticky;top:96px;align-self:start}
+@media (max-width:980px){.how-left{position:static}}
+/* the intro lines up with the desktop beside it: eyebrow on the panel's line, heading at the window's top edge */
+.how-left .eyebrow{height:30px;line-height:30px}
+.how-left h2{margin:24px 0 20px}
+.promises{margin-top:32px}
+/* Terminals: a light pane on the peach page (warm grey, Charcoal text), a dark pane in dark mode. No orange text. */
+:root{--tty:#F0EDE9;--tty-top:#E4E0DA;--tty-ring:rgba(21,24,29,.16);--tty-line:rgba(21,24,29,.11);--tty-ink:#15181D;--tty-2:#44464A;--tty-3:#5B5D61;--tty-rail:#B5B0A9;--tty-shade:rgba(120,50,20,.38);
+  /* the desktop they sit on: a wallpaper in our palette (peach, one orange glow, two flat facets) and a thin Charcoal panel */
+  --desk:#FFDCCD;--desk-img:radial-gradient(110% 90% at 100% 100%,rgba(255,90,31,.34),transparent 62%),linear-gradient(118deg,rgba(255,255,255,.36) 0 34%,transparent 34.15%),linear-gradient(242deg,rgba(255,90,31,.09) 0 22%,transparent 22.15%),linear-gradient(135deg,#FFE6DB,#FFD3C1);
+  --desk-bar:#15181D;--desk-ink:#F4F4F2;--desk-dot:rgba(244,244,242,.36);--desk-ring:rgba(21,24,29,.14)}
+html[data-theme=dark]{--tty:#1B1F25;--tty-top:#232830;--tty-ring:rgba(255,255,255,.10);--tty-line:rgba(255,255,255,.10);--tty-ink:#F4F4F2;--tty-2:#C5CAD1;--tty-3:#A9AEB6;--tty-rail:#4A515C;--tty-shade:rgba(0,0,0,.6);
+  --desk:#20252C;--desk-img:radial-gradient(110% 90% at 100% 100%,rgba(255,90,31,.22),transparent 62%),linear-gradient(118deg,rgba(255,255,255,.035) 0 34%,transparent 34.15%),linear-gradient(242deg,rgba(0,0,0,.16) 0 22%,transparent 22.15%),linear-gradient(135deg,#2C323B,#15181D);
+  --desk-bar:rgba(0,0,0,.42);--desk-ring:rgba(255,255,255,.09)}
+.desk{min-width:0;border-radius:16px;overflow:hidden;background-color:var(--desk);background-image:var(--desk-img);box-shadow:0 0 0 1px var(--desk-ring),0 28px 64px -32px var(--shade,rgba(21,24,29,.3))}
+.desk-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:30px;padding:0 12px;background:var(--desk-bar);color:var(--desk-ink);font:500 11.5px/1 var(--mono);white-space:nowrap}
+.desk-bar .ws{display:flex;align-items:center;gap:6px}
+.desk-bar .ws i{width:6px;height:6px;border-radius:3px;background:var(--desk-dot)}
+.desk-bar .ws .on{width:16px;background:var(--orange)}
+.desk-in{padding:24px}
+.tty{min-width:0;border-radius:12px;background:var(--tty);color:var(--tty-ink);overflow:hidden;box-shadow:0 0 0 1px var(--tty-ring),0 20px 44px -22px var(--tty-shade)}
+.tty-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;height:40px;padding:0 10px 0 14px;background:var(--tty-top);border-bottom:1px solid var(--tty-line);font:500 12.5px var(--mono);color:var(--tty-2)}
+.tty-title{grid-column:2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tty-bar .wc i,.cbt-h .wc i{background:var(--tty-line);color:var(--tty-ink)}
+.tty-body{padding:20px 24px 18px}
+.tty-ps{font:400 13px/1.6 var(--mono);color:var(--tty-3);white-space:nowrap;overflow:hidden}
+.tty-ps .cmd{color:var(--tty-ink)}
+.cur{display:inline-block;width:.6em;height:1.15em;vertical-align:-.22em;background:var(--tty-ink);animation:cur 1.1s steps(1) infinite}
+@keyframes cur{50%{opacity:0}}
+/* one device for both columns: a thin rail with a dot per entry. Filled = done, ring = next. */
+.rail{list-style:none;padding:0}
+.rail>li{position:relative;padding:0 0 24px 28px}
+.rail>li:last-child{padding-bottom:0}
+.rail>li::before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:50%;background:var(--rail-dot)}
+.rail>li::after{content:"";position:absolute;left:4px;top:21px;bottom:-1px;width:1px;background:var(--rail-line)}
+.rail>li:last-child::after{content:none}
+.rail>li.next::before{background:none;box-shadow:inset 0 0 0 2px var(--orange)}
+.rail>li:has(+.next)::after{background:repeating-linear-gradient(var(--rail-line) 0 4px,transparent 4px 8px)}
+.rail h3,.rail b.h{display:block;font-size:16.5px;font-weight:800;letter-spacing:-.01em;line-height:1.3}
+.promises{--rail-dot:var(--ink);--rail-line:var(--line-2)}
+.promises li{font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.promises b.h{color:var(--ink);margin-bottom:4px}
+.tlog{--rail-dot:var(--tty-ink);--rail-line:var(--tty-rail);margin:20px 0 0}
+.t-meta{display:flex;flex-wrap:wrap;gap:0 12px;font:400 12.5px/1.7 var(--mono);color:var(--tty-3)}
+.t-meta .t-tag{color:var(--tty-2)}
+.tlog h3{margin:4px 0 4px;color:var(--tty-ink)}
+.t-p{font-size:14.5px;line-height:1.55;color:var(--tty-2);max-width:60ch}
+.t-rc{margin-top:8px;font:400 12.5px/1.7 var(--mono);color:var(--tty-3)}
+.t-rc b{font-weight:500;color:var(--tty-ink)}
+.t-rc i{font-style:normal;margin:0 8px;color:var(--tty-rail)}
+.tty-end{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin-top:22px;font:400 12px/1.6 var(--mono);color:var(--tty-3)}
+.tty-end .end{padding:0 6px;background:var(--tty-ink);color:var(--tty)}
+.tty-end .src{margin-left:auto}
+@media (max-width:600px){.desk-in{padding:10px}.tty-body{padding:16px 14px 14px}.tty-end .src{margin-left:0}.rail>li{padding-left:22px}.tty-ps .host{display:none}}
+/* type-in, once (the script adds .arm, then .go when the pane is in view; never under reduced motion) */
+.tty.arm .rv{opacity:0}
+.tty.arm.go .rv{opacity:1;animation:in .5s var(--ease) both;animation-delay:calc(.7s + var(--i) * .12s)}
+.tty.arm .cmd{display:inline-block;vertical-align:bottom;overflow:hidden;width:0}
+.tty.arm.go .cmd{width:14ch;animation:type .65s steps(14) both}
+@keyframes type{from{width:0}}
+
+/* contact band: the visitor builds the first message by tapping three answers; the card shows it as the chat bubble I will get.
+   "Message me on Messenger" copies that text and opens my Page's chat. Nothing is stored or sent from this page.
+   Light: a peach desk with a white card. Dark: a slate desk under one soft lamp, with a lit slate card. */
+.cta{position:relative;overflow:hidden;background-color:var(--cta);background-image:var(--cta-lamp);color:var(--cta-ink);border-radius:28px;padding:56px 64px;box-shadow:inset 0 0 0 1px var(--cta-ring);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);grid-template-areas:". chores" "head chores" "btns chores" ". chores";grid-template-rows:1fr auto auto 1fr;gap:0 64px}
+.cta-head{grid-area:head}
+.cta-head h2{max-width:12ch}
+.cta-head p{color:var(--cta-ink-2);margin-top:14px;max-width:38ch}
+.cta-btns{grid-area:btns;display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.cta .btn-main{background:var(--cta-btn);color:var(--cta-btn-ink)}
+.cta .btn-dline{border:1px solid var(--cta-edge);color:var(--cta-ink)}
+.cta-fine{flex-basis:100%;margin-top:2px;font-size:13px;color:var(--cta-ink-2)}
+.cta-pick{grid-area:chores;position:relative;min-width:0}
+.pad{position:relative;border-radius:14px;background:var(--pad);color:var(--pad-ink);padding:24px 26px 22px;box-shadow:var(--pad-shadow)}
+/* bunny chat (contact): bunny on the left, visitor on the right, answer chips under the last question */
+.bchat{display:flex;flex-direction:column;min-height:420px}
+.chat-top{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--pad-rule)}
+.chat-av{flex:none;width:36px;height:40px;object-fit:contain;transform-origin:50% 100%}
+.chat-av.hop{animation:cs-hop .55s cubic-bezier(.3,0,.3,1)}
+.chat-top b{display:block;font-size:14.5px;line-height:1.3}
+.chat-top small{display:block;font-size:12px;color:var(--pad-ink-3)}
+.chat-reset{margin-left:auto;min-height:32px;padding:0 12px;border:1px solid var(--pad-rule);border-radius:999px;background:transparent;color:var(--pad-ink-2);font:600 12.5px Manrope,sans-serif;cursor:pointer}
+.chat-reset:hover{border-color:var(--pad-box)}
+.chat-log{display:flex;flex-direction:column;gap:8px;padding:16px 0 12px}
+.cm{max-width:88%;padding:10px 14px;font-size:14.5px;line-height:1.5;animation:in .3s var(--ease) both}
+.cm.b{align-self:flex-start;border-radius:4px 16px 16px 16px;background:color-mix(in srgb,var(--pad-ink) 7%,var(--pad));color:var(--pad-ink)}
+.cm.b strong{font-weight:700}
+.cm.u{align-self:flex-end;border-radius:16px 16px 4px 16px;background:var(--pad-ink);color:var(--pad);font-weight:600}
+.cm.typing{display:flex;gap:4px;padding:15px 14px}
+.cm.typing i{width:6px;height:6px;border-radius:50%;background:var(--pad-ink-3);animation:dots 1s ease-in-out infinite}
+.cm.typing i:nth-child(2){animation-delay:.15s}.cm.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dots{50%{transform:translateY(-3px);opacity:.5}}
+.bchat .mnote{margin-top:16px}
+@media (prefers-reduced-motion:reduce){.cm,.chat-av.hop{animation:none}}
+.ask-h{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--pad-ink-2)}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{min-height:36px;padding:0 13px;border:1px solid var(--pad-rule);border-radius:999px;background:transparent;font:600 14px/1 Manrope,sans-serif;color:var(--pad-ink);cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}
+.opt:hover{border-color:var(--pad-box)}
+.opt[aria-pressed=true]{background:var(--pad-ink);border-color:var(--pad-ink);color:var(--pad)}
+/* the message as it will arrive: a sent bubble, blanks shown as short pen lines until answered */
+.mnote{margin-top:20px;padding-top:18px;border-top:1px solid var(--pad-rule)}
+.mnote-to{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;font-weight:600;color:var(--pad-ink-3)}
+.bubble{margin:10px 0 0 auto;max-width:94%;padding:12px 15px;border-radius:18px 18px 4px 18px;background:var(--orange);color:#15181D;font-size:15px;line-height:1.5}
+.bubble .gap{display:inline-block;min-width:4.5em;border-bottom:1.5px dashed rgba(21,24,29,.5);vertical-align:-.15em;height:1em}
+.bubble b{font-weight:700}
+.bubble b.new{animation:in .35s var(--ease) both}
+.reply{margin-top:12px;min-height:3.1em;font-size:14px;line-height:1.55;color:var(--pad-ink-2)}
+.reply strong{color:var(--pad-ink);font-weight:700}
+@media (max-width:860px){.cta{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "chores" "btns";grid-template-rows:none;gap:28px;padding:40px 24px}.cta-btns{margin-top:0}.cta-head h2{max-width:none}.reply{min-height:4.7em}}
+footer{padding:40px 0;font-size:14px;color:var(--ink-2)}
+.draft{background:#FFF8E6;border-bottom:1px solid #F0E2B8;font-size:13px;padding:8px 0;color:#5C4A12}
+
+.seg{max-width:100%;overflow-x:auto;scrollbar-width:none}.seg button{white-space:nowrap}
+@media (max-width:600px){.cta{padding:32px 18px 34px;border-radius:20px}.pad{padding:22px 18px 20px}.bench{padding:8px}}
+/* ===== round 3: macOS glass ===== */
+.logo{width:32px;height:32px;position:relative;display:block;transition:transform .3s ease}
+/* home logo: hover turns it a little; click = orange splash (cover-photo style), then a real reload */
+.logo-wrap{position:relative;display:block;width:32px;height:32px}
+.brand:hover .logo{transform:rotate(30deg)}
+/* header: my Yapliong wordmark (the logo file's own letter shapes), ink follows the theme, the i-dot stays orange */
+.wordmark{display:block;width:auto;height:22px;transform:translateY(3px)}
+.splash{position:fixed;inset:0;z-index:100;overflow:hidden;visibility:hidden;pointer-events:none}
+.splash.in,.splash.cover,.splash.out{visibility:visible;pointer-events:auto}
+/* in: a diagonal "scratch" wipe. Each layer is a band between two diagonal lines; a deep-orange stripe leads, brand orange follows,
+   and the white mark rolls in inside the orange. */
+.splash .w{position:absolute;inset:0;clip-path:polygon(0 0,0 0,0 0,0 0);transition:clip-path .42s cubic-bezier(.7,0,.3,1)}
+.splash .w1{background:#E9501A}
+.splash .w2{background:var(--orange);transition-delay:.07s}
+.splash.in .w,.splash.cover .w{clip-path:polygon(0 0,200% 0,0 200%,0 0)}
+/* the mark is inline SVG (vector at every size, and no external file to load). 100 units = 150 px; the hub's centre is 50,38. */
+.splash .zoom{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;overflow:visible;color:#fff}
+.splash .zg,.splash .zl{transform-origin:50px 38px}
+.splash .zo{fill:var(--orange);visibility:hidden}
+.splash .zl{opacity:0;transform:scale(.25) rotate(-150deg);transition:transform .44s cubic-bezier(.2,.9,.3,1.2) .08s,opacity .18s ease .08s}
+.splash.in .zl,.splash.cover .zl,.splash.out .zl{opacity:1;transform:none}
+/* out: a zoom-through. The orange sheet now lives in the SVG with a hole where the hub's hole is; mark and sheet grow together
+   from the hub until the hole is wider than the screen, so the new theme arrives through the logo. The script turns .zg one
+   frame at a time (transform only), because a CSS animation here is scaled up from a small bitmap and goes soft; this way the
+   browser redraws the vector at every size and the edge stays sharp. */
+.splash.out .w1{display:none}
+.splash.out .w2{background:none;clip-path:none;transition:none}
+.splash.out .zo{visibility:visible}
+.splash.out .zl{transition:none}
+.splash.instant .w,.splash.instant .zl{transition:none}
+.bench{background:radial-gradient(rgba(21,24,29,.10) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#F1F1EE,#E3E4E0);border:1px solid rgba(21,24,29,.10);border-radius:26px}
+.bench-top>div:first-child{display:flex;align-items:center;min-width:0;max-width:100%}
+.seg{background:rgba(21,24,29,.06)}
+.panel{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);border:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(21,24,29,.06),0 8px 24px -12px rgba(21,24,29,.18)}
+.ph{border-color:rgba(21,24,29,.07)}
+th{background:rgba(21,24,29,.03)}
+.eng{--d-ink-2:#D0D4DA;--d-line:rgba(255,255,255,.12);background:rgba(30,34,41,.86);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 40px -16px rgba(21,24,29,.35);border-radius:18px}
+.eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none;backdrop-filter:none}
+.eng .node{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.eng .span:hover,.eng .span.sel{background:rgba(255,255,255,.07)}
+.eng .span .bar{background:rgba(255,255,255,.10)} .eng .span .bar i{background:#8A929E}
+.eng-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:4px 4px 0}
+.eng-head .mono{color:var(--d-ink-2)}
+.seg-dark{background:rgba(255,255,255,.08)}
+.seg-dark button{color:var(--d-ink-2)}
+.seg-dark button[aria-pressed=true]{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+.emode{display:none;gap:12px}.emode.on{display:grid}
+.sys{display:grid;grid-template-columns:.8fr 24px 1fr 24px 1.3fr 24px 1.2fr;gap:8px;padding:20px 16px;align-items:stretch}
+.zone{border:1px solid var(--d-line);border-radius:12px;padding:10px;display:grid;gap:8px;align-content:start}
+.zone>b{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--d-ink-2)}
+.zone.trust{border:1.5px dashed var(--orange);background:rgba(255,90,31,.05)}
+.tb{font-size:11px;font-weight:600;color:#FFC2A8}
+.node.route{border-style:dashed}
+.arrow{align-self:center;height:2px;background:rgba(255,255,255,.25);position:relative}
+.arrow::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:7px solid rgba(255,255,255,.4)}
+@media (max-width:860px){.sys{grid-template-columns:1fr}.arrow{width:2px;height:20px;justify-self:center}.arrow::after{right:-4px;top:auto;bottom:-6px;border:5px solid transparent;border-top:7px solid rgba(255,255,255,.4)}}
+.adr,.fail{padding:12px 16px 16px;margin:0;display:grid;gap:12px;font-size:14px;color:var(--d-ink-2)}
+.adr{padding-left:36px}.adr b,.fail b{color:#fff}
+.adr .mono,.fail .mono{color:#FFC2A8;font-size:11.5px;white-space:nowrap}
+.fail{list-style:none}
+.fail li{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start}
+.pill{font-size:11px;font-weight:700;text-align:center;padding:2px 0;border-radius:999px;border:1px solid var(--d-line);color:var(--d-ink-2)}
+.pill.ok{border-color:rgba(91,212,154,.5);color:#7FE0B0}
+/* ===== round 4: cover-style top (charcoal + giant faint symbol, like the Facebook cover) ===== */
+.top{position:relative;overflow:hidden;background:var(--char);color:var(--d-ink);padding-bottom:168px}
+.bgfan .wm{position:absolute;right:-12%;top:-18%;width:min(760px,80vw);height:auto;aspect-ratio:1;pointer-events:none;user-select:none;color:var(--wm-c,#232830);transform-origin:50% 41.6%;animation:fan 60s linear infinite}
+@keyframes fan{to{transform:rotate(360deg)}} /* background fan: one slow turn a minute; off under reduced motion */
+.top .wrap{position:relative}
+/* sticky nav: clear over the dark top, charcoal glass once you scroll */
+html{scroll-padding-top:84px}
+.bar{position:sticky;top:0;z-index:50;color:var(--d-ink);transition:background-color .25s ease,box-shadow .25s ease}
+.bar.solid{background:rgba(21,24,29,.92);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.bar .nav ul a{color:var(--d-ink-2);transition:color .15s}
+.bar .nav ul a:hover{color:#fff}
+.top{margin-top:-72px;padding-top:72px}
+.top .who small{color:var(--d-ink-2)}
+.top .lede{color:#C5CAD1}
+.top h1 .o{color:var(--orange)}
+.pull{margin-top:-136px;position:relative}
+@media (max-width:600px){.top{padding-bottom:120px}.pull{margin-top:-96px}}
+/* ===== dark mode (logo click): Yapliong palette only: Charcoal page, Deep Slate surfaces, white text, orange accents ===== */
+html[data-theme=dark]{color-scheme:dark;--ink:#FFFFFF;--ink-2:#C5CAD1;--ink-3:#A9AEB6;--line:#2E343D;--line-2:#3A414C;--white:#232830;--mist:#1B1F25}
+html[data-theme=dark] body{background:var(--char)}
+html[data-theme=dark] .bench{background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.2px) 0 0/16px 16px,linear-gradient(180deg,#232830,#1B1F25);border-color:rgba(255,255,255,.08);box-shadow:0 24px 64px -24px rgba(0,0,0,.6)}
+html[data-theme=dark] .seg{background:rgba(255,255,255,.06)}
+html[data-theme=dark] .seg button[aria-selected=true],html[data-theme=dark] .seg button[aria-pressed=true]{background:#3A414C;color:#fff;box-shadow:none}
+html[data-theme=dark] .panel{background:rgba(35,40,48,.82);border-color:rgba(255,255,255,.08);box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}
+html[data-theme=dark] .ph{border-color:rgba(255,255,255,.07)}
+html[data-theme=dark] th{background:rgba(255,255,255,.03)}
+html[data-theme=dark] .msg.in{background:#2E343D;color:#fff}
+html[data-theme=dark] .msg.out,html[data-theme=dark] .typing{background:var(--char);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+html[data-theme=dark] tr.hit td{background:rgba(255,90,31,.14)}
+html[data-theme=dark] .chip:hover{border-color:#fff}
+html[data-theme=dark] .eng{background:rgba(21,24,29,.7)}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* ===== colour options A/B/C (designed by the Fable helper, 11 Nov) ===== */
+/* =====================================================================================
+   THEME OPTIONS for phase3-workbench.html  (paste AFTER the existing dark block)
+   Use: <html data-opt="a"> (A picked by Arvin, 11 Nov; B and C removed)  +  the existing data-theme="dark" toggle (logo click).
+   Brand hues only: Orange #FF5A1F, Charcoal #15181D, Deep Slate #232830, White, Mist #F4F4F2.
+   Every other colour is a mix of those (recipe in the comment beside it).
+
+   How it is built: each option only sets VARIABLES (light, then dark). One shared rule
+   block at the bottom paints hero, nav, bench, panels, timeline, CTA and footer from those
+   variables, so both modes of every option follow the same colour logic by construction.
+   Dark variables are restated in full on purpose: `html[data-opt=x]` has the same
+   specificity as the old `html[data-theme=dark]` and comes later, so it would otherwise
+   leak light tokens into dark mode.
+
+   Contrast: WCAG 2.x ratios, computed (sRGB relative luminance), alpha layers flattened first.
+   Targets: body text >= 4.5, large text >= 3, borders ~1.3.  "FLAG" marks anything under.
+   ===================================================================================== */
+
+/* -------------------------------------------------------------------------------------
+   OPTION A — "Peach Paper": one barely-there peach sheet, hero included.
+   Orange is 5% of the page colour; the hero is the same sheet as the body (no band), so
+   the page reads like one calm macOS window. Charcoal is the ink, orange only marks things
+   (underline, dots, button). The contact card is a peach desk with a white notepad (light) or a slate desk with a lit pad (dark).
+   Suits: clients who read long, and anyone worried about "too orange". Safest for eyes.
+
+   LIGHT  text / background                                   ratio
+   ink   #15181D on page  #FFF7F4 (hero, body, footer, nav)   16.83
+   ink   #15181D on card  #FFFFFF                             17.79
+   ink   #15181D on panel #FFFBFA (white 78% over bench)      17.31
+   ink   #15181D on bench #FFEDE6                             15.68
+   ink   #15181D on sunk  #FFF0EB (chat bubble, receipt, tag) 16.03
+   ink   #15181D on hit   #FFE8E0 (highlighted table row)     15.14
+   ink-2 #44464A on page 8.94 | card 9.46 | panel 9.20 | bench 8.33 | sunk 8.52
+   ink-3 #5B5D61 on page 6.24 | card 6.60 | panel 6.42 | bench 5.81 | sunk 5.94
+   Contact card: ink on desk #FFE1D7 14.41 | ink-2 on desk 7.66 | ink on pad #FFFFFF 17.79 | ink-2 9.46 | ink-3 (crossed off) 6.60
+   Charcoal on Orange button 5.71 | checkbox ring #85878B on pad 3.60 | Orange pen marks on pad 3.12 (shape only)
+   Orange button as a SHAPE on the desk 2.52 (FLAG under 3: the label carries it at 5.71)
+   hero accent word: Charcoal text (16.83) + Orange underline (shape only)
+   line  #E3DCDA on page 1.28 (FLAG, just under 1.3; the old #E4E4DF on white was the same) | on card 1.35
+   line-2 #C7C1C0 on page 1.68 | on card 1.78
+   Orange as a SHAPE on page 2.95 (FLAG under 3: decoration only, never text; focus ring too)
+   surfaces: bench vs page 1.07, card vs page 1.06 (separated by the border + shadow, not by fill)
+
+   DARK   white on Charcoal 17.79 | on Slate card 14.81 | on panel #22272F 15.01
+   ink-2 #C5CAD1 on Charcoal 10.80 | Slate 8.99      ink-3 #A9AEB6 on Charcoal 7.98 | Slate 6.64
+   Orange on Charcoal 5.71 (text OK)   line #2E343D on Charcoal 1.42   line-2 #3A414C on Slate 1.44
+   chat bubble: white on #2E343D 12.54 (same in B and C dark)
+   Contact card: white on desk #232830 14.81 | #C5CAD1 on desk 8.99 | white on pad #2E343D 12.54 | #C5CAD1 7.61 | #A9AEB6 (crossed off) 5.62
+   checkbox ring #8A929E on pad 3.99 | Orange pen marks on pad 4.02
+   ------------------------------------------------------------------------------------- */
+html[data-opt=a]{
+  --page:#FFF7F4;                 /* Orange 5% + White */
+  --white:#FFFFFF; --mist:#FFF0EB;/* Orange 9% + White */
+  --ink:#15181D; --ink-2:#44464A; --ink-3:#5B5D61;   /* Charcoal 100 / 80 / 70% + White */
+  --line:#E3DCDA; --line-2:#C7C1C0;                  /* Charcoal 12 / 24% over the page */
+  --sunk:#FFF0EB; --hit:#FFE8E0;                     /* Orange 9% / 14% + White */
+  --bench:#FFEDE6; --dot:rgba(21,24,29,.08);         /* Orange 11% + White */
+  --panel:rgba(255,255,255,.78); --panel-edge:rgba(255,255,255,.9); --shade:rgba(21,24,29,.16);
+  --hero:var(--page); --hero-ink:#15181D; --hero-ink-2:#44464A; --hero-o:#15181D; --hero-u:#FF5A1F;
+  --wm:1; --wm-f:none; --wm-c:#FFE6DC;              /* Orange 14% + White: tone-on-tone on the peach page */
+  --bar:rgba(255,247,244,.86); --bar-edge:rgba(21,24,29,.08);
+  /* contact card: a peach desk (Orange 18% + White) with a white pad; Charcoal ink everywhere, orange only as pen marks and the button */
+  --cta:#FFE1D7; --cta-lamp:none; --cta-ring:rgba(21,24,29,.06); --cta-ink:#15181D; --cta-ink-2:#44464A; --cta-edge:rgba(21,24,29,.42); --cta-btn:#FF5A1F; --cta-btn-ink:#15181D;
+  --pad:#FFFFFF; --pad-ink:#15181D; --pad-ink-2:#44464A; --pad-ink-3:#5B5D61; --pad-rule:#E9E3E0; --pad-box:#85878B;
+  --pad-under:#FFF1EB; --pad-under-ring:0 0 0 1px rgba(120,50,20,.07); --pad-shadow:0 1px 2px rgba(120,50,20,.10),0 24px 44px -24px rgba(120,50,20,.45);
+  --foot:transparent; --foot-ink:#44464A;
+}
+html[data-opt=a][data-theme=dark]{
+  --page:#15181D; --white:#232830; --mist:#1B1F25;
+  --ink:#FFFFFF; --ink-2:#C5CAD1; --ink-3:#A9AEB6; --line:#2E343D; --line-2:#3A414C;
+  --sunk:#2E343D; --hit:rgba(255,90,31,.14);
+  --bench:#1F242B; --dot:rgba(255,255,255,.05);      /* Charcoal/Slate midpoint */
+  --panel:rgba(35,40,48,.82); --panel-edge:rgba(255,255,255,.08); --shade:rgba(0,0,0,.55);
+  --hero:#15181D; --hero-ink:#FFFFFF; --hero-ink-2:#C5CAD1; --hero-o:#FF5A1F; --hero-u:transparent;
+  --wm:1; --wm-f:none; --wm-c:#232830;              /* Deep Slate on Charcoal */
+  --bar:rgba(21,24,29,.92); --bar-edge:rgba(255,255,255,.08);
+  /* contact card: a Deep Slate desk under one soft lamp (a single white glow above the pad), the pad one step lighter */
+  --cta:#232830; --cta-lamp:radial-gradient(64% 86% at 74% -8%,rgba(255,255,255,.10),transparent 72%); --cta-ring:rgba(255,255,255,.06); --cta-ink:#FFFFFF; --cta-ink-2:#C5CAD1; --cta-edge:#5B6470;
+  --pad:#2E343D; --pad-ink:#FFFFFF; --pad-ink-2:#C5CAD1; --pad-ink-3:#A9AEB6; --pad-rule:rgba(255,255,255,.10); --pad-box:#8A929E;
+  --pad-under:#272C34; --pad-under-ring:0 0 0 1px rgba(255,255,255,.05); --pad-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 0 0 1px rgba(255,255,255,.05),0 26px 48px -24px rgba(0,0,0,.75);
+  --foot:transparent; --foot-ink:#C5CAD1;
+}
+
+/* -------------------------------------------------------------------------------------
+   SHARED PAINT — the only rules; they read the variables above. Needed once, for all options.
+   `header.bar` (not `.bar`) because the trace rows also use a `.bar` class.
+   ------------------------------------------------------------------------------------- */
+html[data-opt] body{background:var(--page)}
+/* hero + nav */
+html[data-opt] .top{background:transparent;color:var(--hero-ink)}
+html[data-opt] .bgfan .wm{opacity:var(--wm);filter:var(--wm-f)}
+html[data-opt] .top .lede,html[data-opt] .top .who small{color:var(--hero-ink-2)}
+html[data-opt] .top h1 .o{color:var(--hero-o);text-decoration:underline var(--hero-u);text-decoration-thickness:.07em;text-underline-offset:.14em}
+html[data-opt] header.bar{color:var(--hero-ink)}
+html[data-opt] header.bar.solid{background:var(--bar);box-shadow:0 1px 0 var(--bar-edge)}
+html[data-opt] header.bar .nav ul a{color:var(--hero-ink-2)}
+html[data-opt] header.bar .nav ul a:hover{color:var(--hero-ink)}
+/* light hero (light mode only): the white logo would vanish, so show the dark one */
+html[data-opt=a]:not([data-theme=dark]) header.bar .logo{content:url(assets/yapliong-symbol-dark.svg)}
+/* demo area */
+html[data-opt] .bench{background:radial-gradient(var(--dot) 1px,transparent 1.2px) 0 0/16px 16px,var(--bench);border-color:var(--line);box-shadow:0 1px 2px var(--dot),0 24px 64px -24px var(--shade)}
+html[data-opt] .panel{background:var(--panel);border-color:var(--panel-edge);box-shadow:0 0 0 1px var(--dot),0 8px 24px -12px var(--shade)}
+html[data-opt] .eng .panel{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);box-shadow:none} /* keep the engineer glass as it is */
+html[data-opt] .msg.in{background:var(--sunk);color:var(--ink)}
+html[data-opt] tr.hit td{background:var(--hit)}
+/* footer (the contact card paints itself from --cta-* and --pad-*) */
+html[data-opt] footer{background:var(--foot);color:var(--foot-ink)}
+
+/* =====================================================================================
+   CLAUDE BAR RECREATION (shared by both options). My own Windows tool, redrawn in HTML/CSS.
+   Honesty: every figure is a sample number and says so; no logos; independent personal tool.
+   The frosted capsule is the real tool's look (Windows 11 Acrylic), not decoration.
+   ===================================================================================== */
+html[data-opt=a]{--cb-bg:rgba(246,246,248,.74);--cb-edge:rgba(255,255,255,.85);--cb-well:rgba(21,24,29,.06);--cb-on:#FFFFFF}
+html[data-opt=a][data-theme=dark]{--cb-bg:rgba(46,52,61,.78);--cb-edge:rgba(255,255,255,.10);--cb-well:rgba(255,255,255,.07);--cb-on:#4A515C}
+.tools h2{margin:16px 0 20px;max-width:22ch}
+.tnote{font-size:13px;color:var(--ink-2);max-width:72ch}
+.taud{font-size:15px;color:var(--ink-2);margin-top:16px;max-width:58ch}
+.taud b{color:var(--ink)}
+.cbs{position:relative;display:flex;flex-direction:column;gap:12px;padding:14px 12px 12px;border-radius:16px;background:var(--bench);border:1px solid var(--line);overflow:hidden}
+.cb-col{align-self:center;display:flex;flex-direction:column;gap:8px;width:max-content;max-width:100%}
+/* terminal under the bar: takes whatever height is left, so the frame never has an empty area */
+.cb-term{flex:1 1 auto;min-height:118px;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;background:var(--tty);box-shadow:0 0 0 1px var(--tty-ring),0 16px 32px -18px var(--tty-shade);font:400 12.5px/1.75 var(--mono);color:var(--tty-ink)}
+.cbt-h{display:flex;align-items:center;gap:2px 12px;flex-wrap:wrap;min-height:34px;padding:4px 8px 4px 14px;background:var(--tty-top);border-bottom:1px solid var(--tty-line);font:500 11.5px/1.5 var(--mono);color:var(--tty-3)}
+.cbt-h b{font-weight:500;color:var(--tty-ink)}
+.cbt-h .wc{margin-left:auto;gap:6px}.cbt-h .wc i{width:20px;height:20px;transform:scale(.9)}
+.cbt-lines{flex:1 1 0;min-height:44px;margin:6px 14px 12px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 16px);mask-image:linear-gradient(transparent,#000 16px)} /* older lines fade out at the top instead of being cut */
+.cbt-lines p{overflow-wrap:anywhere}
+.cbt-lines .ps{color:var(--tty-3)}
+.cbt-lines .old{color:var(--tty-2)}
+.cbt-lines .new{animation:in .35s var(--ease) both}
+.cbt-lines .hint{color:var(--tty-3);margin-left:8px}
+.cb{position:relative;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:6px;max-width:100%;min-height:48px;padding:6px 8px;border-radius:24px;font-size:13px;line-height:1.3;color:var(--ink);
+  background:var(--cb-bg);border:1px solid var(--cb-edge);box-shadow:0 0 0 1px var(--dot),0 10px 28px -10px var(--shade);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  }
+.cb-grip{flex:none;width:24px;height:36px;border-radius:12px;background:radial-gradient(circle,var(--ink-3) 1.2px,transparent 1.7px) center/6px 6px;background-clip:content-box;padding:9px 6px}
+.cb-usage{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 10px;border:0;border-radius:18px;background:none;white-space:nowrap;transition:background .15s}
+.cb-usage:hover,.cb-usage[aria-expanded=true]{background:var(--cb-well)}
+.cb-usage b{font-weight:700;font-variant-numeric:tabular-nums}
+.cb-usage span{color:var(--ink-3)}
+.cb-usage .sep{margin:0 3px}
+.cb-usage svg{width:10px;height:10px;margin-left:2px;color:var(--ink-3);transition:transform .2s}
+.cb-usage[aria-expanded=true] svg{transform:rotate(180deg)}
+.cb-tag{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line-2);border-radius:999px;padding:1px 7px;margin-left:4px;white-space:nowrap}
+.cb-search{flex:1 1 130px;min-width:130px;display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:18px;background:var(--cb-well)}
+.cb-search:focus-within{outline:2px solid var(--orange);outline-offset:1px}
+.cb-search svg{flex:none;width:13px;height:13px;color:var(--ink-3)}
+.cb-search input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);outline:0}
+.cb-search input::placeholder{color:var(--ink-3);opacity:1}
+.cb-seg{display:inline-flex;gap:2px;padding:3px;border-radius:18px;background:var(--cb-well)}
+.cb-seg button{border:0;background:none;height:30px;padding:0 12px;border-radius:15px;font-size:12.5px;font-weight:700;color:var(--ink-2);transition:background .2s,color .2s}
+.cb-seg button[aria-pressed=true]{background:var(--cb-on);color:var(--ink);box-shadow:0 1px 2px rgba(21,24,29,.14)}
+.cb-pop{width:0;min-width:100%;max-height:312px;overflow:auto;scrollbar-width:thin;background:var(--white);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -18px var(--shade);padding:14px 16px;animation:in .3s var(--ease) both}
+.cb-pop[hidden]{display:none}
+.cb-pop h3{font-size:14px}
+.cb-sub{font-size:12px;color:var(--ink-2);margin-top:2px}
+.cb-pop table{font-size:13px;margin-top:10px;font-variant-numeric:tabular-nums}
+.cb-pop th,.cb-pop td{padding:6px 10px;text-align:right}
+.cb-pop th:first-child,.cb-pop td:first-child{text-align:left;font-weight:700}
+.cb-pop tfoot td{font-weight:700;border-bottom:0}
+.cb-foot{font-size:12px;color:var(--ink-3);margin-top:8px}
+.cb-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.cb-apps{display:inline-flex;gap:4px;flex-wrap:wrap}
+.cb-apps[hidden]{display:none}
+.cb-apps button{border:1px solid var(--line-2);background:none;border-radius:999px;height:26px;padding:0 10px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.cb-apps button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--page)}
+.cb-list{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:2px}
+.cb-list li{display:flex;justify-content:space-between;align-items:center;gap:4px 16px;flex-wrap:wrap;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:600}
+.cb-list li code{font-family:var(--mono);font-size:12px;font-weight:400;color:var(--ink-2)}
+.cb-list li[aria-selected=true]{background:var(--sunk);box-shadow:inset 3px 0 0 var(--orange)}
+.cb-list li.none{cursor:default;font-weight:400;color:var(--ink-2)}
+.cb-list li.copied code{color:var(--ink);font-weight:500}
+@media (max-width:600px){.cb-col,.cb{width:100%}.cb-usage{flex:1 1 calc(100% - 40px);min-width:0;flex-wrap:wrap;height:auto;min-height:36px;padding:4px 10px;row-gap:2px}.cb-usage svg{margin-left:auto}.cb-search input{font-size:16px}.cb-pop{padding:12px}.cb-pop table{font-size:12px}.cb-pop th,.cb-pop td{padding:6px 4px}}
+
+/* =====================================================================================
+   OPTION 2 — "Flat Header"
+   Motion: an engine. The big symbol breathes and sways in a slow loop, idles at a slow turn,
+   spins up when the pointer moves or the page scrolls, coasts back down, and leans toward the pointer.
+   Chrome: GNOME libadwaita language: one window, a flat header bar with the view switcher in
+   the centre and round symbolic window buttons on the right, a tab bar under it, cards inside.
+   No dot board: the window is one flat sheet.
+   ===================================================================================== */
+.bgfan{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+/* size --s comes from the viewport only (no fixed px), so it is the same picture on a phone, a 2560 px screen and at any
+   browser zoom: 56% of the width on wide screens (never taller than the window), about 115% of the width on phones. */
+.bgfan .wm-p{--s:min(max(56vw,60vh),115vw,105vh);position:absolute;right:calc(var(--s) * -.21);top:calc(var(--s) * -.18);width:var(--s);aspect-ratio:1;pointer-events:none;user-select:none;will-change:transform}
+@media (max-aspect-ratio:4/5){.bgfan .wm-p{right:calc(var(--s) * -.36);top:calc(var(--s) * -.06)}} /* portrait: phones, upright tablets */
+.bgfan .wm-s{width:100%;height:100%;animation:wm-s 17s cubic-bezier(.37,0,.63,1) infinite alternate}
+.bgfan .wm-b{width:100%;height:100%;transform-origin:50% 41.6%;animation:wm-b 9s cubic-bezier(.37,0,.63,1) infinite alternate}
+.bgfan .wm-r{width:100%;height:100%;transform-origin:50% 41.6%;will-change:transform}
+.bgfan .wm-p .wm{position:static;display:block;width:100%;height:100%;will-change:transform;animation:fan 120s linear infinite}
+.bgfan .wm-p.live .wm{animation:none}           /* the engine script turns .wm-r instead */
+.bgfan .wm-p{transition:opacity .8s ease}
+.bgfan .wm-p.quiet{opacity:.35}
+.bgfan .wm-p.off *{animation-play-state:paused} /* hero off screen or tab hidden */
+@keyframes wm-s{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
+@keyframes wm-b{from{transform:translate3d(0,-2.5%,0) scale(.97)}to{transform:translate3d(0,2.5%,0) scale(1.045)}}
+
+/* one flat window */
+html[data-opt=a]{--ctl:rgba(21,24,29,.09);--card-ring:0 0 0 1px rgba(21,24,29,.07),0 1px 3px rgba(21,24,29,.08)}
+html[data-opt=a][data-theme=dark]{--ctl:rgba(255,255,255,.10);--card-ring:0 0 0 1px rgba(255,255,255,.08)}
+html[data-opt] .bench{background:var(--bench);border-radius:14px;padding:0;border-color:var(--line-2);overflow:hidden}
+.bench-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;min-height:48px;padding:6px 10px}
+html[data-opt] .bench .vs{grid-column:2;background:none;padding:0;gap:4px;border-radius:0}
+.bench .vs button{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:0 14px;border-radius:9px}
+.bench .vs svg{width:16px;height:16px;flex:none}
+html[data-opt] .bench .vs button[aria-pressed=true]{background:var(--ctl);color:var(--ink);box-shadow:none}
+.wc{grid-column:3;justify-self:end;display:flex;gap:8px}
+.wc i{position:relative;width:24px;height:24px;border-radius:50%;background:var(--ctl);color:var(--ink)}
+.wc i::before,.wc i::after{content:"";position:absolute;left:50%;top:50%;background:currentColor;border-radius:1px}
+.wc .min::before{width:9px;height:1.5px;margin:3px 0 0 -4.5px}
+.wc .max::before{width:8px;height:8px;margin:-4px 0 0 -4px;background:none;border:1.5px solid currentColor;border-radius:2px}
+.wc .cls::before,.wc .cls::after{width:11px;height:1.5px;margin:-.75px 0 0 -5.5px;transform:rotate(45deg)}
+.wc .cls::after{transform:rotate(-45deg)}
+html[data-opt] .bench .tabs{display:flex;gap:4px;padding:0 10px 8px;background:none;border-radius:0;border-bottom:1px solid var(--line)}
+.bench .tabs button{flex:1 0 auto;min-height:34px;border-radius:9px;font-size:13.5px}
+html[data-opt] .bench .tabs button[aria-selected=true]{background:var(--ctl);color:var(--ink);box-shadow:none}
+.bench>.grid{padding:12px}
+html[data-opt] .panel{background:var(--white);border:0;border-radius:12px;box-shadow:var(--card-ring);-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-opt] .eng{background:#15181D;border:0;border-radius:12px;box-shadow:0 0 0 1px rgba(255,255,255,.07);-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-opt] .eng .panel{background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.bottom{padding:10px 14px;border-top:1px solid var(--line)}
+@media (max-width:600px){.bench-top{grid-template-columns:1fr}html[data-opt] .bench .vs{grid-column:1;justify-self:center}.wc{display:none}html[data-opt] .bench{padding:0}.bench>.grid{padding:8px}}
+
+/* Claude Bar band, right under the demo: text and rows left, the bar right */
+.tools{padding:96px 0 0}
+.tools2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:980px){.tools2{grid-template-columns:minmax(0,1fr);gap:32px}}
+.rows{list-style:none;padding:0;margin:28px 0 16px;border-radius:12px;background:var(--white);box-shadow:var(--card-ring)}
+.rows li{padding:12px 16px;font-size:14px;color:var(--ink-2)}
+.rows li+li{border-top:1px solid var(--line)}
+.rows b{display:block;color:var(--ink);font-size:15px}
+/* lockup: my own Yapliong mark + the tool's name in type. No third-party logo or colours; "Claude Code" is plain text. */
+.lockup{display:flex;align-items:center;gap:14px;margin:18px 0 22px}
+.lk-mark{flex:none;width:52px;height:52px;display:block}
+/* the engine: my blade mark's hub without the blades; turns like an idling engine on hover */
+.lk-mark{width:52px;height:52px;flex:none;color:var(--orange);overflow:visible}
+.lk-mark g{transform-origin:50px 38px;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.lockup:hover .lk-mark g{transform:rotate(120deg)}
+.tools .lockup h2{margin:0;max-width:none;font-size:clamp(30px,3.2vw,38px);line-height:1.05}
+.lk-sub{margin-top:8px;padding-top:7px;border-top:1px solid var(--line-2);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
+.cbs{border-radius:16px;border:0;padding:0 12px 12px;background-color:var(--desk);background-image:var(--desk-img);box-shadow:0 0 0 1px var(--desk-ring),0 28px 64px -32px var(--shade)}
+.cbs>.desk-bar{margin:0 -12px 2px}
+.cbs:has(.cb-pop:not([hidden])){min-height:534px} /* open: fixed height, the terminal takes the slack; closed: the frame fits the bar + terminal */
+@media (max-width:600px){.cbs,.cbs:has(.cb-pop:not([hidden])){min-height:0}.cbs{padding:0 8px 8px}.cbs>.desk-bar{margin:0 -8px}}
+
+/* ===== round 5 (13 Nov): real photo + status line, numbered Work, Explore cards ===== */
+.face{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;background:var(--char);box-shadow:0 0 0 1px rgba(255,255,255,.2)}
+/* photo, name, bunny: one row, one height (56 px), centred on the same line */
+.who .buddy{width:50px;height:56px;margin-left:8px;align-self:center}
+.who .buddy-shadow{bottom:-4px;height:5px;background:rgba(0,0,0,.18)}
+.who .buddy img{filter:drop-shadow(0 3px 5px rgba(0,0,0,.18))}
+/* availability: a plain sentence in the body font (no pill, no glowing dot, no terminal prefix) */
+.status-line{margin-top:18px;font-size:15px;line-height:1.5;color:var(--d-ink-2)}
+.status-line b{color:#fff;font-weight:600}
+.eyebrow .num{font-family:var(--mono);font-weight:500;letter-spacing:0;margin-right:10px;color:var(--ink-3)}
+.work{padding:112px 0 24px}
+.work-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+.work-head h2{margin-top:12px}
+.work-head .lede{max-width:42ch}
+.feature{display:grid;grid-template-columns:1.1fr 1fr;gap:12px;border:1px solid var(--line);border-radius:22px;background:var(--mist);padding:12px}
+@media (max-width:860px){.feature{grid-template-columns:minmax(0,1fr)}}
+/* photo slideshow in the feature: swipe or arrows, no autoplay */
+.gallery{position:relative;min-width:0;border-radius:var(--r);overflow:hidden;background:var(--char)}
+.g-track{display:flex;height:100%;min-height:320px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.g-track::-webkit-scrollbar{display:none}
+.g-track:focus-visible{outline-offset:-3px}
+.g-slide{flex:0 0 100%;position:relative;margin:0;scroll-snap-align:start}
+.g-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block}
+.g-slide figcaption{position:absolute;left:12px;right:120px;bottom:14px;color:#fff;font-size:13px;line-height:1.4;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.g-slide::after{content:"";position:absolute;inset:auto 0 0;height:96px;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
+.g-slide figcaption{z-index:1}
+.g-ctrl{position:absolute;right:10px;bottom:10px;z-index:2;display:flex;align-items:center;gap:4px;padding:3px;border-radius:999px;background:rgba(21,24,29,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff}
+.g-btn{width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:#fff}
+.g-btn:hover{background:rgba(255,255,255,.14)}
+.g-btn:disabled{opacity:.35;cursor:default;background:transparent}
+.g-btn svg{width:16px;height:16px}
+.g-play[data-state=playing] .i-play,.g-play[data-state=paused] .i-pause{display:none}
+.g-count{font:500 12px/1 var(--mono);min-width:38px;text-align:center}
+.g-count b{font-weight:500}
+.feat-role{margin-top:-6px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.slot{margin:0;min-height:320px;border-radius:var(--r);border:2px dashed var(--line-2);background:var(--white);display:grid;place-items:center;padding:24px;text-align:center;color:var(--ink-2);font-size:14px;line-height:1.5}
+.slot div{max-width:36ch}
+.slot svg{width:28px;height:28px;margin:0 auto 10px;display:block;color:var(--ink-3)}
+.slot b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+.feat-body{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.feat-body .t-meta{display:flex;gap:6px 14px;flex-wrap:wrap;font:400 12.5px/1.4 var(--mono);color:var(--ink-3)}
+.feat-body h3{font-size:26px;letter-spacing:-.02em}
+.facts{list-style:none;padding:0;display:grid;gap:10px;font-size:15px;color:var(--ink-2)}
+.facts li{display:grid;grid-template-columns:104px 1fr;gap:12px;padding-top:10px;border-top:1px solid var(--line)}
+.facts b{color:var(--ink)}
+.feat-body .btn{align-self:flex-start;margin-top:auto}
+.wlist{list-style:none;padding:0;margin-top:12px;border-top:1px solid var(--line)}
+.wgroup{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin-top:40px;font-size:18px;font-weight:800;letter-spacing:-.01em}
+.wgroup span{font:400 12.5px/1.4 var(--mono);color:var(--ink-3);letter-spacing:0}
+.wlist li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:16px 4px;border-bottom:1px solid var(--line)}
+.wlist .y{font:400 12.5px/1.4 var(--mono);color:var(--ink-3)}
+.wlist b{font-weight:700}
+.wlist li p{margin-top:2px;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.wlist .tech{display:block;margin-top:6px;font:400 12px/1.4 var(--mono);color:var(--ink-3)}
+.wlist a{display:inline-block;padding:2px 0;font-size:14px;font-weight:600;text-underline-offset:3px;white-space:nowrap}
+.pm{display:inline-block;margin-left:8px;padding:0 8px;border:1px solid #F0E2B8;border-radius:999px;background:#FFF8E6;color:#5C4A12;font-size:12px;font-weight:600;vertical-align:1px}
+@media (max-width:600px){.feat-body .btn{align-self:stretch;justify-content:center;text-align:center;padding:10px 20px;border-radius:16px}.wlist li{grid-template-columns:minmax(0,1fr);gap:4px}.facts li{grid-template-columns:minmax(0,1fr);gap:2px}.feat-body{padding:20px}.slot{min-height:220px}.g-track{min-height:0;aspect-ratio:4/5}}
+/* Explore cards read the colour option's variables, so they work on the peach page and in dark mode */
+html[data-opt] footer.explore,footer.explore{padding:72px 0 40px;margin-top:96px;font-size:15px}
+.foot{display:grid;grid-template-columns:minmax(0,1fr);gap:16px 48px;align-items:start}
+.foot-me b{font-size:17px;font-weight:800}
+.foot-me p{margin-top:4px;font-size:15px;color:var(--ink-2);max-width:44ch}
+.flinks{list-style:none;padding:0;margin-left:-2px;display:flex;flex-wrap:wrap;gap:0 24px}
+.flinks a{display:inline-flex;align-items:baseline;gap:6px;min-height:44px;padding-top:10px;font-weight:600;color:var(--ink);text-decoration:none}
+.flinks a:hover{text-decoration:underline;text-underline-offset:4px}
+.flinks span{font:400 11.5px var(--mono);color:var(--ink-3)}
+.foot .fine{margin-top:16px;align-items:center}
+.fine .made{display:inline-flex;align-items:center;gap:10px}
+.fine .made img{flex:none;border-radius:5px}
+@media (max-width:600px){.foot{grid-template-columns:minmax(0,1fr)}}
+.fine{display:flex;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
+/* hero status line + photo ring on the option's hero colours */
+html[data-opt] .status-line{color:var(--hero-ink-2)}
+html[data-opt] .status-line b{color:var(--hero-ink)}
+html[data-opt] .face{background:var(--page);box-shadow:0 0 0 1px var(--line-2)}
+
+/* ===== build window: "Walk through the build" opens this over the page (native <dialog>, Esc closes, focus comes back) ===== */
+html:has(dialog.cs[open]){overflow:hidden}
+dialog.cs{--t-bg:#101317;--t-bar:#1B1F25;--t-ink:#E6E8EB;--t-2:#A9AEB6;--t-ok:#5BD69B;--t-warn:#FF8A5C;
+  width:min(960px,calc(100vw - 32px));height:min(860px,calc(100dvh - 32px));max-width:none;max-height:none;margin:auto;padding:0;border:0;border-radius:16px;
+  background:var(--page,#fff);color:var(--ink);box-shadow:0 0 0 1px var(--line-2),0 40px 90px -30px rgba(10,12,16,.55);overflow:hidden}
+dialog.cs[open]{display:flex;flex-direction:column;animation:cs-in .28s cubic-bezier(.2,.8,.2,1)}
+dialog.cs::backdrop{background:rgba(21,24,29,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+@keyframes cs-in{from{opacity:0;transform:translateY(12px) scale(.985)}}
+.cs-bar{flex:none;display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 10px 8px 20px;border-bottom:1px solid var(--line);background:var(--white)}
+.cs-bar p{flex:1;min-width:0;font:500 12.5px/1.4 var(--mono);color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-x{flex:none;width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--ink-2);cursor:pointer}
+.cs-x:hover{background:var(--line)}
+.cs-x svg{width:16px;height:16px}
+.cs-body{flex:1;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:36px 44px 48px}
+.cs-body h3{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.025em;line-height:1.08;max-width:16ch}
+.cs-body h4{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.cs-body h5{font-size:16px;font-weight:700;line-height:1.3}
+.cs-lede{margin-top:14px;font-size:18px;color:var(--ink-2);max-width:56ch}
+.cs-sec{padding-top:36px;margin-top:36px;border-top:1px solid var(--line)}
+.cs-sec>p{margin-top:8px;color:var(--ink-2);max-width:60ch}
+.cs-k{display:block;margin-bottom:8px;font:500 12px/1.4 var(--mono);color:var(--ink-3)}
+.cs-flow{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;gap:8px;margin-top:20px}
+.cs-who{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.cs-who small{display:block;margin-bottom:4px;font:500 11.5px/1.4 var(--mono);color:var(--ink-3)}
+.cs-who p{margin-top:4px;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.cs-who.us{box-shadow:inset 0 0 0 2px var(--ink);border-color:transparent}
+.cs-ar{display:grid;place-items:center;color:var(--ink-3)}
+.cs-net{margin-top:20px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--white)}
+.cs-seg{display:inline-flex;padding:3px;border-radius:999px;background:var(--line)}
+.cs-seg button{min-height:36px;padding:0 14px;border:0;border-radius:999px;background:transparent;font:600 14px Manrope,sans-serif;color:var(--ink-2);cursor:pointer}
+.cs-seg button[aria-pressed=true]{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(21,24,29,.15)}
+.cs-scroll{margin-top:8px;overflow-x:auto;scrollbar-width:thin}
+.cs-net svg{display:block;width:100%;height:auto;min-width:560px}
+.cs-net .lbl{font:600 13px Manrope,sans-serif;fill:var(--ink)}
+.cs-net .sub{font:400 11px var(--mono);fill:var(--ink-3)}
+.cs-net .box{fill:var(--page,#fff);stroke:var(--line-2)}
+.cs-net .hub{fill:var(--ink)}
+.cs-net .hub-t{font:700 13px Manrope,sans-serif;fill:var(--white)}
+.cs-net .hub-s{font:400 11px var(--mono);fill:var(--white);opacity:.75}
+.cs-net .wire{stroke:var(--ink-3);stroke-width:1.5;fill:none}
+.cs-net.road .wire{stroke-dasharray:5 5}
+.cs-net #cs-host,.cs-net .w-host{transition:opacity .3s}
+.cs-net.road #cs-host{opacity:.3}.cs-net.road .w-host{opacity:0}
+.cs-net-note{margin-top:8px;font-size:14px;color:var(--ink-2)}
+.cs-term{margin-top:20px;border-radius:12px;overflow:hidden;background:var(--t-bg);color:var(--t-ink);box-shadow:0 0 0 1px rgba(21,24,29,.2),0 24px 48px -30px rgba(21,24,29,.6)}
+.cs-tabs{display:flex;gap:2px;padding:8px 8px 0;background:var(--t-bar);overflow-x:auto;scrollbar-width:none}
+.cs-tabs::-webkit-scrollbar{display:none}
+.cs-tab{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border:0;border-radius:8px 8px 0 0;background:transparent;color:var(--t-2);font:500 12.5px var(--mono);white-space:nowrap;cursor:pointer}
+.cs-tab[aria-selected=true]{background:var(--t-bg);color:var(--t-ink)}
+.cs-tab:hover:not([aria-selected=true]){background:rgba(255,255,255,.05)}
+.cs-out{height:360px;margin:0;overflow:auto;padding:16px 18px;font:400 13px/1.7 var(--mono);white-space:pre-wrap;word-break:break-word;scrollbar-width:thin;scrollbar-color:#3A414C transparent}
+.cs-out .p,.cs-out .dim{color:var(--t-2)} .cs-out .ok{color:var(--t-ok)} .cs-out .warn{color:var(--t-warn)}
+.cs-out .cur{display:inline-block;width:.6em;height:1.15em;vertical-align:-.2em;background:var(--t-ink);animation:cs-blink 1s steps(1) infinite}
+@keyframes cs-blink{50%{opacity:0}}
+.cs-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 18px;border-top:1px solid rgba(255,255,255,.08);font:400 12px/1.5 var(--mono);color:var(--t-2)}
+.cs-run{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border:0;border-radius:999px;background:var(--orange);color:var(--char);font:700 13px Manrope,sans-serif;cursor:pointer}
+.cs-run:disabled{opacity:.5;cursor:default}
+.cs-small{margin-top:10px;font-size:13.5px;color:var(--ink-3)}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.cs-card{padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.cs-card p{margin-top:4px;font-size:15px;line-height:1.55;color:var(--ink-2)}
+.cs-story{list-style:none;padding:0;margin-top:20px;border-top:1px solid var(--line)}
+.cs-story li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cs-story span{color:var(--ink-2)}
+/* bunny guide (scroll-driven): the visitor scrolls, the bunny walks to the part in view and says its line. He walks inside the window (it lives in .cs-body, so it scrolls with the content) and stands on
+   the top edge of each part it explains, with a speech bubble. Scrolling by hand still works. */
+.cs-body{position:relative}
+.cs-walker{position:absolute;left:0;top:0;z-index:5;width:56px;height:62px;pointer-events:none;
+  transition:transform var(--walk,900ms) cubic-bezier(.45,.05,.4,1)}
+.cs-walker img{width:100%;height:100%;object-fit:contain;display:block;transform-origin:50% 100%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.28))}
+.cs-walker.walking img{animation:cs-step .32s ease-in-out infinite alternate}
+@keyframes cs-step{from{transform:translateY(0) rotate(-6deg)}to{transform:translateY(-7px) rotate(6deg)}}
+.cs-walker:not(.walking) img{animation:float 4s ease-in-out infinite}
+.cs-bub{position:absolute;left:0;top:0;width:min(330px,calc(100vw - 52px));padding:14px 16px 12px;border-radius:16px;
+  background:#15181D;color:#F5F6F7;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 18px 40px -18px rgba(10,12,16,.6);pointer-events:auto;
+  opacity:0;transform:translateY(6px) scale(.97);transition:opacity .2s,transform .2s}
+.cs-walker.talk .cs-bub{opacity:1;transform:none}
+.cs-bub p{font-size:14.5px;line-height:1.5}
+.cs-bub-f{display:flex;align-items:center;gap:6px;margin-top:10px}
+.cs-hint{flex:1;font-size:12.5px;color:rgba(255,255,255,.6)}
+.cs-hint[hidden]{display:block;visibility:hidden}
+/* scroll progress: a thin orange line under the window bar, filled by how far the visitor has scrolled */
+.cs-bar{position:relative}
+.cs-prog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--orange);transform-origin:0 50%;transform:scaleX(0)}
+.cs-bub button{min-height:32px;padding:0 12px;border:0;border-radius:999px;font:600 12.5px Manrope,sans-serif;cursor:pointer}
+.cs-gx{background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+.cs-gx:hover,.cs-gx:focus-visible{background:rgba(255,255,255,.16);color:#fff}
+.cs-again{position:absolute;right:22px;bottom:18px;z-index:6;display:none;width:56px;height:62px;padding:0;border:0;background:none;cursor:pointer}
+/* tour done: he listens to his music (eyes closed, nod, notes); a click starts the walk again */
+.cs-again img{width:100%;height:100%;object-fit:contain;display:block;transform-origin:50% 100%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.28));animation:nod 1.6s ease-in-out infinite}
+.cs-again .note{position:absolute;top:6px;font-size:15px;line-height:1;color:var(--orange);opacity:0;pointer-events:none}
+.cs-again .n1{left:-6px;animation:note 2.4s ease-out infinite}.cs-again .n2{right:-6px;animation:note 2.4s ease-out 1.2s infinite}
+.cs-again:hover img,.cs-again:focus-visible img{animation-duration:.8s}
+.cs-again:focus-visible{outline:2px solid var(--orange);outline-offset:4px;border-radius:12px}
+@media (prefers-reduced-motion:reduce){.cs-again img{animation:none}.cs-again .note{animation:none;opacity:1}}
+dialog.cs.mini .cs-again{display:inline-flex}
+dialog.cs.mini .cs-walker{display:none}
+.cs-spot{outline:2px solid var(--orange);outline-offset:6px;border-radius:12px}
+/* idle: the visitor stopped scrolling for 8 s, so he closes his eyes and listens to his music; any scroll wakes him */
+.cs-walker img.shut{position:absolute;left:0;top:0;opacity:0}
+.cs-walker.idle img.shut{opacity:1}.cs-walker.idle img:not(.shut){opacity:0}
+.cs-walker.idle:not(.walking) img{animation:nod 1.6s ease-in-out infinite}
+.cs-walker .note{position:absolute;top:4px;font-size:15px;line-height:1;color:var(--orange);opacity:0;pointer-events:none}
+.cs-walker .n1{left:-4px}.cs-walker .n2{right:-4px}
+.cs-walker.idle .n1{animation:note 2.4s ease-out infinite}.cs-walker.idle .n2{animation:note 2.4s ease-out 1.2s infinite}
+@media (prefers-reduced-motion:reduce){.cs-walker{transition:none}.cs-walker img{animation:none!important}.cs-walker.idle .note{animation:none;opacity:1}}
+@media (max-width:700px){
+  dialog.cs{width:100vw;height:100dvh;border-radius:0}
+  .cs-body{padding:24px 18px 40px}
+  .cs-flow,.cs-grid{grid-template-columns:minmax(0,1fr)}
+  .cs-ar{transform:rotate(90deg);height:20px}
+  .cs-walker{width:46px;height:51px}
+  .cs-bub p{font-size:14px}
+  .cs-story li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .cs-out{height:420px;font-size:12px;padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="splash" id="splash" aria-hidden="true"><div class="w w1"></div><div class="w w2"><svg class="zoom" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g class="zg"><path class="zo" fill-rule="evenodd" d="M-2450-2462H2550V2538H-2450Z M43.7 38a6.3 6.3 0 1 0 12.6 0a6.3 6.3 0 1 0-12.6 0Z"/><g class="zl"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></g></svg></div></div>
+<script>
+// Logo click, second half: the zoom-through. A short dip (the mark gathers itself), then mark and sheet grow from the hub by the same
+// ratio every frame until the hub's hole is past the farthest corner. That distance is measured in CSS px, so the end scale fits
+// a 320 px phone, a 2560 px screen and any browser zoom, always in the same 680 ms.
+window.splashOut = s => {
+  const z = s.querySelector('.zoom'), g = z.querySelector('.zg'), b = z.getBoundingClientRect(), hx = b.left + b.width * .5, hy = b.top + b.height * .38;
+  const far = Math.hypot(Math.max(hx, innerWidth - hx), Math.max(hy, innerHeight - hy)), hole = b.width * .059; // hole radius, inside its stroke
+  const END = (far + 16) / hole, LOW = .8, D = 680, DIP = .2;
+  let t0 = 0, done = false;
+  const end = () => { if (done) return; done = true; s.className = 'splash instant'; g.style.transform = ''; void s.offsetWidth; s.className = 'splash'; };
+  const frame = t => {
+    if (done) return; if (!t0) t0 = t;
+    const p = Math.min(1, (t - t0) / D); let sc, rot;
+    if (p < DIP) { const u = (1 - Math.cos(Math.PI * p / DIP)) / 2; sc = 1 - (1 - LOW) * u; rot = -14 * u; }
+    else { const u = (p - DIP) / (1 - DIP); sc = LOW * Math.pow(END / LOW, Math.pow(u, 1.25)); rot = -14 + 54 * u * u; }
+    g.style.transform = 'rotate(' + rot.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+    if (p < 1) requestAnimationFrame(frame); else end();
+  };
+  s.dataset.zs = END.toFixed(1); s.className = 'splash out'; requestAnimationFrame(frame);
+  setTimeout(end, D + 400); // if frames never come (tab in the background), still clear the splash
+};
+// came back from a logo click? start covered in orange at the top, hold a beat, then zoom through the logo into the new theme
+try { if (sessionStorage.getItem('splash')) { sessionStorage.removeItem('splash'); history.scrollRestoration = 'manual';
+  const s = document.getElementById('splash'); s.className = 'splash instant cover'; scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => { s.classList.remove('instant'); setTimeout(() => splashOut(s), 80); })); } } catch (e) {}
+</script>
+<div class="draft"><div class="wrap">Round 5b (13 Nov): version 1 now fails for the real reason (encoders left on Public); version 2 switches to Private by itself. "How I work" shows the brain. Round 5e: bunny's eyes open (they close when he dances); he runs the contact card as a chat and walks you through the pageant window. Check every Bisaya/Tagalog word. Confirmed 13 Nov: Arvin OK'd the pageant story, teammates OK'd the team photo, the PM OK'd the MSMA line.</div></div>
+
+<header class="bar" id="bar"><div class="wrap">
+  <nav class="nav" aria-label="Main"><a class="brand" id="home" href="./" aria-label="Arvin Dy, home. Also switches light and dark mode"><span class="logo-wrap"><img class="logo" src="assets/yapliong-symbol-white.svg" alt="" width="32" height="32"></span><svg class="wordmark" viewBox="283 92 588 150" width="86" height="22" aria-hidden="true" focusable="false"><path transform="translate(282.0,204.0)" d="M20.849999999999998 36.0 36.449999999999996 -6.8999999999999995 36.75 5.7 1.5 -81.0H22.65L46.35 -19.65H41.55L65.1 -81.0H85.5L39.75 36.0Z" fill="currentColor"/><path transform="translate(282.0,204.0)" d="M110.25 2.25Q101.55 2.25 95.51249999999999 -1.0875Q89.475 -4.425 86.3625 -10.0125Q83.25 -15.6 83.25 -22.349999999999998Q83.25 -27.974999999999998 84.975 -32.625Q86.7 -37.275 90.5625 -40.8375Q94.425 -44.4 100.95 -46.8Q105.45 -48.449999999999996 111.67500000000001 -49.724999999999994Q117.9 -51.0 125.775 -52.162499999999994Q133.65 -53.324999999999996 143.1 -54.75L135.75 -50.699999999999996Q135.75 -57.9 132.3 -61.27499999999999Q128.85 -64.64999999999999 120.75 -64.64999999999999Q116.25 -64.64999999999999 111.375 -62.474999999999994Q106.5 -60.3 104.55 -54.75L86.1 -60.599999999999994Q89.175 -70.64999999999999 97.65 -76.94999999999999Q106.125 -83.25 120.75 -83.25Q131.475 -83.25 139.8 -79.94999999999999Q148.125 -76.64999999999999 152.39999999999998 -68.55Q154.8 -64.05 155.25 -59.55Q155.7 -55.05 155.7 -49.5V0.0H137.85V-16.65L140.4 -13.2Q134.475 -5.0249999999999995 127.6125 -1.3874999999999997Q120.75 2.25 110.25 2.25ZM114.6 -13.799999999999999Q120.225 -13.799999999999999 124.08749999999999 -15.787499999999998Q127.94999999999999 -17.775 130.2375 -20.325Q132.525 -22.875 133.35 -24.599999999999998Q134.925 -27.9 135.1875 -32.287499999999994Q135.45 -36.675 135.45 -39.6L141.45 -38.1Q132.375 -36.6 126.75 -35.5875Q121.125 -34.574999999999996 117.675 -33.75Q114.225 -32.925 111.6 -31.95Q108.6 -30.75 106.76249999999999 -29.362499999999997Q104.925 -27.974999999999998 104.0625 -26.325Q103.2 -24.675 103.2 -22.65Q103.2 -19.875 104.5875 -17.8875Q105.975 -15.899999999999999 108.52499999999999 -14.849999999999998Q111.07499999999999 -13.799999999999999 114.6 -13.799999999999999Z" fill="currentColor"/><path transform="translate(282.0,204.0)" d="M209.7 2.25Q197.625 2.25 189.52499999999998 -3.375Q181.42499999999998 -9.0 177.33749999999998 -18.674999999999997Q173.25 -28.349999999999998 173.25 -40.5Q173.25 -52.65 177.3 -62.325Q181.35 -72.0 189.225 -77.625Q197.1 -83.25 208.64999999999998 -83.25Q220.27499999999998 -83.25 228.89999999999998 -77.69999999999999Q237.52499999999998 -72.14999999999999 242.28749999999997 -62.512499999999996Q247.04999999999998 -52.875 247.04999999999998 -40.5Q247.04999999999998 -28.349999999999998 242.36249999999998 -18.674999999999997Q237.67499999999998 -9.0 229.27499999999998 -3.375Q220.875 2.25 209.7 2.25ZM169.79999999999998 36.0V-81.0H187.79999999999998V-25.5H190.35V36.0ZM206.39999999999998 -15.899999999999999Q213.0 -15.899999999999999 217.2 -19.2Q221.39999999999998 -22.5 223.42499999999998 -28.0875Q225.45 -33.675 225.45 -40.5Q225.45 -47.25 223.35 -52.8375Q221.25 -58.425 216.8625 -61.762499999999996Q212.475 -65.1 205.64999999999998 -65.1Q199.27499999999998 -65.1 195.33749999999998 -62.02499999999999Q191.39999999999998 -58.949999999999996 189.59999999999997 -53.4Q187.79999999999998 -47.85 187.79999999999998 -40.5Q187.79999999999998 -33.15 189.59999999999997 -27.6Q191.39999999999998 -22.05 195.48749999999998 -18.975Q199.575 -15.899999999999999 206.39999999999998 -15.899999999999999Z" fill="currentColor"/><path transform="translate(282.0,204.0)" d="M259.79999999999995 0.0V-110.25H280.2V0.0Z" fill="currentColor"/><path transform="translate(569.0,204.0)" d="M12.0 0.0V-81.0H32.4V0.0Z" fill="currentColor"/><circle cx="591.2" cy="105.0" r="12.2" fill="#FF5A1F"/><path transform="translate(282.0,204.0)" d="M373.04999999999995 2.25Q360.825 2.25 351.59999999999997 -3.2249999999999996Q342.37499999999994 -8.7 337.23749999999995 -18.3375Q332.09999999999997 -27.974999999999998 332.09999999999997 -40.5Q332.09999999999997 -53.175 337.34999999999997 -62.8125Q342.59999999999997 -72.45 351.82499999999993 -77.85Q361.04999999999995 -83.25 373.04999999999995 -83.25Q385.275 -83.25 394.53749999999997 -77.775Q403.79999999999995 -72.3 408.97499999999997 -62.662499999999994Q414.15 -53.025 414.15 -40.5Q414.15 -27.9 408.9375 -18.2625Q403.72499999999997 -8.625 394.4625 -3.1875Q385.19999999999993 2.25 373.04999999999995 2.25ZM373.04999999999995 -16.8Q382.87499999999994 -16.8 387.7125 -23.4375Q392.54999999999995 -30.075 392.54999999999995 -40.5Q392.54999999999995 -51.3 387.63749999999993 -57.75Q382.72499999999997 -64.2 373.04999999999995 -64.2Q366.37499999999994 -64.2 362.09999999999997 -61.2Q357.825 -58.199999999999996 355.7625 -52.875Q353.7 -47.55 353.7 -40.5Q353.7 -29.625 358.61249999999995 -23.2125Q363.525 -16.8 373.04999999999995 -16.8Z" fill="currentColor"/><path transform="translate(282.0,204.0)" d="M480.59999999999997 0.0V-38.25Q480.59999999999997 -41.025 480.29999999999995 -45.3375Q480.0 -49.65 478.42499999999995 -54.0Q476.84999999999997 -58.349999999999994 473.28749999999997 -61.275Q469.72499999999997 -64.2 463.2 -64.2Q460.575 -64.2 457.575 -63.375Q454.575 -62.55 451.95 -60.1875Q449.325 -57.824999999999996 447.6375 -53.25Q445.95 -48.675 445.95 -41.1L434.25 -46.65Q434.25 -56.25 438.15 -64.65Q442.04999999999995 -73.05 449.88749999999993 -78.225Q457.72499999999997 -83.39999999999999 469.65 -83.39999999999999Q479.17499999999995 -83.39999999999999 485.17499999999995 -80.175Q491.17499999999995 -76.95 494.51249999999993 -72.0Q497.84999999999997 -67.05 499.275 -61.6875Q500.7 -56.324999999999996 501.0 -51.9Q501.29999999999995 -47.475 501.29999999999995 -45.449999999999996V0.0ZM425.25 0.0V-81.0H443.4V-54.15H445.95V0.0Z" fill="currentColor"/><path transform="translate(282.0,204.0)" d="M550.1999999999999 38.25Q543.3 38.25 537.0749999999999 36.037499999999994Q530.8499999999999 33.824999999999996 525.9375 29.887499999999996Q521.025 25.95 517.9499999999999 20.7L536.8499999999999 11.549999999999999Q538.8 15.149999999999999 542.4375 17.025Q546.0749999999999 18.9 550.3499999999999 18.9Q554.925 18.9 558.9749999999999 17.362499999999997Q563.025 15.825 565.4625 12.7875Q567.9 9.75 567.75 5.25V-18.3H570.3V-81.0H588.15V5.55Q588.15 8.549999999999999 587.8875 11.212499999999999Q587.625 13.875 586.9499999999999 16.5Q585.0 23.925 579.7125 28.725Q574.425 33.525 566.775 35.8875Q559.125 38.25 550.1999999999999 38.25ZM548.4 2.25Q537.2249999999999 2.25 528.8249999999999 -3.375Q520.425 -9.0 515.7375 -18.674999999999997Q511.04999999999995 -28.349999999999998 511.04999999999995 -40.5Q511.04999999999995 -52.875 515.8125 -62.512499999999996Q520.5749999999999 -72.14999999999999 529.1999999999999 -77.69999999999999Q537.8249999999999 -83.25 549.4499999999999 -83.25Q561.0 -83.25 568.875 -77.625Q576.75 -72.0 580.8 -62.325Q584.8499999999999 -52.65 584.8499999999999 -40.5Q584.8499999999999 -28.349999999999998 580.7624999999999 -18.674999999999997Q576.675 -9.0 568.5749999999999 -3.375Q560.4749999999999 2.25 548.4 2.25ZM551.6999999999999 -15.899999999999999Q558.525 -15.899999999999999 562.6125 -18.975Q566.6999999999999 -22.05 568.5 -27.6Q570.3 -33.15 570.3 -40.5Q570.3 -47.85 568.5 -53.4Q566.6999999999999 -58.949999999999996 562.7624999999999 -62.02499999999999Q558.8249999999999 -65.1 552.4499999999999 -65.1Q545.625 -65.1 541.2375 -61.762499999999996Q536.8499999999999 -58.425 534.75 -52.8375Q532.65 -47.25 532.65 -40.5Q532.65 -33.675 534.675 -28.0875Q536.6999999999999 -22.5 540.8999999999999 -19.2Q545.0999999999999 -15.899999999999999 551.6999999999999 -15.899999999999999Z" fill="currentColor"/></svg></a>
+    <ul><li><a href="#bench">Demos</a></li><li><a href="#work">Work</a></li><li><a href="#how">How I work</a></li><li><a href="#tools">Tools</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+</div></header>
+<div class="bgfan" aria-hidden="true"><div class="wm-p"><div class="wm-s"><div class="wm-b"><div class="wm-r"><svg class="wm" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g id="blade" transform="translate(102.4,114.7) scale(8.1920)"><path d="M39.86 12.52C37.537 11.635 35.182 10.846 32.79 10.17C27.268 8.61 21.45 7.736 15.72 7.49C14.547 7.44 13.374 7.43 12.2 7.43C11.016 7.43 9.832 7.462 8.65 7.52C8.578 7.524 7.301 7.593 7.23 7.61C6.627 7.753 6.022 7.911 5.45 8.15C3.143 9.115 1.282 11 0.33 13.31C-2.246 19.558 2.398 26.438 9.15 26.42C9.77 26.418 10.388 26.331 11 26.23C11.18 26.2 11.339 26.095 11.51 26.03C12.02 25.835 12.534 25.649 13.05 25.47C14.61 24.93 16.189 24.434 17.79 24.03C24.33 22.38 30.829 21.796 37.56 22.26L39.86 12.52Z" fill="currentColor"/><path d="M77.13 41.95C78.19 41.11 79.211 40.229 80.22 39.33C86.386 33.835 91.715 27.146 95.73 19.93C96.304 18.898 96.858 17.855 97.39 16.8C97.497 16.587 97.642 16.389 97.71 16.16C97.887 15.564 98.041 14.957 98.12 14.34C98.976 7.636 92.732 2.203 86.21 3.97C84.399 4.461 82.772 5.486 81.54 6.9C80.634 7.941 80.177 8.827 79.69 10.11C79.625 10.28 79.638 10.47 79.61 10.65C79.582 10.83 79.55 11.01 79.52 11.19C79.37 12.091 79.192 12.987 79 13.88C78.378 16.775 77.514 19.633 76.46 22.4C74.756 26.873 72.523 31.131 69.85 35.1L77.13 41.95Z" fill="currentColor"/><path d="M33.01 59.52C33.427 61.845 33.866 64.166 34.39 66.47C36.275 74.763 38.854 82.895 42.14 90.74C42.66 91.981 43.199 93.213 43.75 94.44C43.77 94.485 44.397 95.875 44.42 95.91C44.76 96.427 45.12 96.936 45.54 97.39C47.245 99.231 49.643 100.335 52.15 100.43C55.315 100.549 58.338 99.082 60.2 96.52C61.67 94.497 62.292 91.922 61.9 89.45C61.682 88.075 61.29 87.174 60.61 85.97C60.495 85.766 60.318 85.603 60.17 85.42C59.725 84.87 59.284 84.319 58.85 83.76C57.394 81.885 55.974 79.977 54.63 78.02C53.956 77.038 53.285 76.055 52.63 75.06C50.915 72.455 49.312 69.772 47.79 67.05C45.897 63.664 44.195 60.18 42.59 56.65L33.01 59.52Z" fill="currentColor"/><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg></div></div></div></div></div>
+<div class="top">
+<div class="wrap">
+
+  <header class="hero">
+    <div class="who"><img class="face" src="assets/arvin-portrait-320.webp" width="56" height="56" alt="Photo of Arvin Dy"><div><!-- Title: use exactly what your MSMA contract or HR says. Arvin 13 Nov: "Junior AI Engineer", as on his Facebook. -->
+      <strong>Junior AI Engineer at <a href="https://msma.ph">MSMA</a>, Cebu</strong><small>Open for side projects</small></div><button class="buddy" id="buddy" type="button" aria-expanded="false" aria-controls="bmenu" aria-label="Talk to my bunny"><span class="buddy-in"><img class="awake" src="assets/bunny-awake.webp" width="218" height="240" alt="" draggable="false"><img class="shut" src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"></span><span class="buddy-shadow" aria-hidden="true"></span><span class="note n1" aria-hidden="true">♪</span><span class="note n2" aria-hidden="true">♫</span><span class="note n3" aria-hidden="true">♪</span></button>
+      <!-- bunny menu: pre-written, no AI. Lines by Claude: Arvin checks the Bisaya. -->
+      <div class="bmenu" id="bmenu" hidden><p>Uy, nakamata ko! I'm Arvin's bunny. Unsa'y gusto nimo makita?</p>
+        <button type="button" data-do="tour"><b>Walk me through a real build</b><small>The pageant scoring network, step by step</small></button>
+        <button type="button" data-do="chat"><b>Help me message Arvin</b><small>Three taps, and I write your first message</small></button>
+        <button type="button" data-do="dance"><b>Play your music</b><small>Eyes closed, headphones on</small></button>
+      </div></div>
+    <h1>See the work <span class="o">before</span> you message me.</h1>
+    <p class="lede">Below is a pretend bakery running the same Messenger setup I built for my own Page. Send it a message and see what the owner gets.</p>
+  </header>
+
+</div></div>
+<div class="wrap pull">
+  <!-- ================= WORKBENCH ================= -->
+  <div class="bench" id="bench">
+    <div class="bench-top">
+      <div class="seg vs" aria-label="View">
+        <button type="button" aria-pressed="true" data-view="owner"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="currentColor"/></svg>Owner view</button>
+        <button type="button" aria-pressed="false" data-view="eng"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Engineer view</button>
+      </div>
+      <span class="wc" aria-hidden="true"><i class="min"></i><i class="max"></i><i class="cls"></i></span>
+    </div>
+    <div class="seg tabs" role="tablist" aria-label="Demos">
+      <button role="tab" aria-selected="true">Shop inquiry desk</button>
+      <button role="tab" aria-selected="false" disabled>Clinic reminder<span class="soon">soon</span></button>
+    </div>
+    <div class="grid">
+      <!-- customer side -->
+      <div class="panel">
+        <div class="ph">Messenger <span>Sample Bakery · fake Page</span></div>
+        <div class="chat" id="chat" aria-live="polite"><p class="empty">Pick a message below. Typos included.</p></div>
+        <div class="chips" id="chips"><small>Send as the customer</small></div>
+      </div>
+
+      <div class="views">
+        <!-- OWNER VIEW -->
+        <div class="view owner on" data-v="owner">
+          <div class="panel">
+            <div class="ph">Google Sheet · Menu & Hours <span>you edit this</span></div>
+            <div class="tablebox"><table id="sheet"><thead><tr><th></th><th>Item</th><th>Answer</th></tr></thead><tbody></tbody></table></div>
+          </div>
+          <div class="panel">
+            <div class="ph">Your inbox <span id="mailState" class="badge">quiet</span></div>
+            <div class="mail skip" id="mail">Nothing yet. You only get an email when someone wants to order.</div>
+          </div>
+          <div class="panel wide">
+            <div class="ph">Google Sheet · Log <span>every message, nothing lost</span></div>
+            <div class="tablebox"><table id="log"><thead><tr><th></th><th>Time</th><th>Customer said</th><th>Topic</th><th>Lang</th><th>Owner told</th></tr></thead><tbody></tbody></table></div>
+          </div>
+          <div class="panel wide">
+            <div class="ph">6:00 pm summary <span>emailed every day</span></div>
+            <div class="sum"><dl><div><dt>Messages</dt><dd id="sMsg">0</dd></div><div><dt>Answered by the Sheet</dt><dd id="sAuto">0</dd></div><div><dt>Orders for you</dt><dd id="sOrd">0</dd></div></dl>
+              <p class="muted" style="font-size:13px">Counted from what you did in this demo.</p></div>
+          </div>
+        </div>
+
+        <!-- ENGINEER VIEW -->
+        <div class="view eng" data-v="eng">
+          <div class="eng-head">
+            <div class="seg seg-dark" aria-label="Engineer view">
+              <button type="button" aria-pressed="true" data-em="trace">Run trace</button>
+              <button type="button" aria-pressed="false" data-em="arch">System design</button>
+            </div>
+            <span class="mono" id="runId">no run yet</span>
+          </div>
+
+          <div class="emode on" data-m="trace">
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Run trace <span>click a step</span></div><div class="trace" id="trace"></div></div>
+              <div class="panel"><div class="ph">Inspector <span id="inspName">pick a step</span></div>
+                <pre id="insp"><span class="c">// Send a message, then click a step in the trace.</span></pre></div>
+            </div>
+            <p class="note">Bar lengths show order and overlap, not measured times. Request bodies are trimmed and use fake data.</p>
+          </div>
+
+          <div class="emode" data-m="arch">
+            <div class="panel">
+              <div class="ph">System design <span>one message, left to right</span></div>
+              <div class="sys">
+                <div class="zone"><b>Customer</b><div class="node">Messenger<small>phone or laptop</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Meta platform</b><div class="node" data-n="0">Page webhook<small>POST · signed</small></div><div class="node" data-n="4">Send API<small>reply out</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone trust"><b>n8n workflow</b><span class="tb">Trust boundary · signed requests only</span>
+                  <div class="node" data-n="1">Verify signature<small>HMAC SHA-256 · fail → 403</small></div>
+                  <div class="node" data-n="2">Rules engine<small>normalise · typos · keywords</small></div>
+                  <div class="node route">Route<small>hours · price · order · other</small></div></div>
+                <span class="arrow" aria-hidden="true"></span>
+                <div class="zone"><b>Owner's tools</b><div class="node" data-n="3">Menu &amp; Hours<small>Google Sheet · read</small></div><div class="node" data-n="5">Log<small>Google Sheet · append</small></div><div class="node" data-n="6">Gmail<small>order or other only</small></div><div class="node">6 pm summary<small>schedule · Asia/Manila</small></div></div>
+              </div>
+            </div>
+            <div class="eng-split">
+              <div class="panel"><div class="ph">Design decisions <span>and why</span></div>
+                <ol class="adr">
+                  <li><b>Rules first, AI optional.</b> Every answer points to a Sheet row, so it can be tested and explained. <span class="mono">48 tests</span></li>
+                  <li><b>The owner's Sheet is the database.</b> No new app; a price edit applies on the next reply.</li>
+                  <li><b>Verify at the edge.</b> Nothing is read or stored before Meta's signature matches. <span class="mono">167739e</span></li>
+                  <li><b>Quiet by default.</b> The owner is emailed for orders and unknown questions, plus one summary at 6 pm. <span class="mono">run #48, #49</span></li>
+                </ol></div>
+              <div class="panel"><div class="ph">When something goes wrong <span>failure paths</span></div>
+                <ul class="fail">
+                  <li><span class="pill ok">built</span><span>Unsigned or tampered request: dropped with 403, nothing stored.</span></li>
+                  <li><span class="pill ok">built</span><span>Question no rule knows: routed as "other", owner emailed to answer it.</span></li>
+                  <li><span class="pill ok">built</span><span>Workflow export going public: the cleaner refuses any email address. <span class="mono">383a06d</span></span></li>
+                  <li><span class="pill">planned</span><span>Price left blank in the Sheet: "message us" instead of a guess.</span></li>
+                </ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <div class="ctrl">
+        <button class="icon" type="button" id="pp" aria-label="Pause the run">II</button>
+        <button class="icon" type="button" id="stepBtn" aria-label="Next step">›</button>
+      </div>
+      <ol class="steps" id="steps" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+      <p class="status" id="status" aria-live="polite">Ready.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= 01 WORK: status list, pageant build featured (round 5) ================= -->
+<section id="work" class="work"><div class="wrap">
+  <div class="work-head">
+    <div><p class="eyebrow"><span class="num">01</span>Work</p><h2>What I've built so far.</h2></div>
+    <p class="lede">Most of it is recent. The pageant network comes first because it had to work on the night.</p>
+  </div>
+  <article class="feature" aria-labelledby="pg-h">
+    <div class="gallery" aria-roledescription="carousel" aria-label="Photos from the two nights">
+      <div class="g-track" tabindex="0">
+        <figure class="g-slide" aria-label="Photo 1 of 3"><img src="assets/pageant-techdesk-600.webp" srcset="assets/pageant-techdesk-600.webp 600w, assets/pageant-techdesk-930.webp 930w" sizes="(max-width:860px) 100vw, 600px" width="930" height="1240" alt="Arvin at the technical desk beside the stage, laptop open, before the show"><figcaption>Tech desk, before the show</figcaption></figure>
+        <figure class="g-slide" aria-label="Photo 2 of 3"><img src="assets/pageant-audit-table-600.webp" srcset="assets/pageant-audit-table-600.webp 600w, assets/pageant-audit-table-930.webp 930w" sizes="(max-width:860px) 100vw, 600px" width="930" height="1162" loading="lazy" alt="Arvin and two audit teammates at the audit table, laptops on the offline network"><figcaption>The audit table. Screens blurred on purpose</figcaption></figure>
+        <figure class="g-slide" aria-label="Photo 3 of 3"><img src="assets/pageant-event-sign-600.webp" srcset="assets/pageant-event-sign-600.webp 600w, assets/pageant-event-sign-930.webp 930w" sizes="(max-width:860px) 100vw, 600px" width="930" height="1162" loading="lazy" alt="Arvin in front of the event sign, staff lanyard on"><figcaption>Coronation night</figcaption></figure>
+      </div>
+      <div class="g-ctrl">
+        <button type="button" class="g-btn" data-dir="-1" aria-label="Previous photo"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="g-btn g-play" aria-pressed="false" aria-label="Pause slideshow" data-state="playing"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9M10.5 3.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6L12.5 8z" fill="currentColor"/></svg></button>
+        <span class="g-count" aria-live="polite"><b>1</b> / 3</span>
+        <button type="button" class="g-btn" data-dir="1" aria-label="Next photo"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+    <div class="feat-body">
+      <!-- From Arvin's account (13 Nov: hotspot = test network on the drive; at the venue only the host was set up) + his real HOST.bat / ENCODER.bat / RETURN-ROUTER.bat. -->
+      <p class="t-meta"><span>Miss Asia Pacific International 2026</span><span>Preliminaries + coronation night</span></p>
+      <h3 id="pg-h">Pageant scoring network</h3>
+      <p class="feat-role">IT specialist, audit team</p>
+      <p>The judges score on tablets run by the official tabulator. Our team of CPAs checks every score on a separate system and hands the final results to the host. I built that system's network: five laptops, one shared workbook, no internet, and three scripts that connect them.</p>
+      <ul class="facts">
+        <li><b>Setup</b><span>The host laptop keeps the original Excel workbook and shares one folder. Four encoders open the workbook from it.</span></li>
+        <li><b>Version 1 failed</b><span>The host was ready, but no encoder could reach it. I had left their Wi-Fi on Public, and Windows won't share files on a Public network. So I rewrote the scripts: version 2 switches the laptop to Private by itself when it runs, then finds the host, by name first, then by address. It worked on every laptop.</span></li>
+        <li><b>Locked down</b><span>No internet. Sharing turns on only over our own Wi-Fi, through one account that can open one folder. No password is stored in any script.</span></li>
+        <li><b>Set up in traffic</b><span>The drive to J Park Island ran long, so I used it. With my phone's hotspot as a test network, I ran version 2 on each encoder on the way and watched it switch to Private and connect. At the venue only the host was left; the encoders joined the router and found it.</span></li>
+        <li><b>Result</b><span>Both nights ran without lag. I had the encoders save one at a time, after every few candidates, so two saves never hit the workbook at once.</span></li>
+      </ul>
+      <button class="btn btn-ghost" type="button" data-open="build" aria-haspopup="dialog">Walk through the build<span aria-hidden="true">→</span></button>
+    </div>
+  </article>
+  <h3 class="wgroup">At MSMA<span>Junior AI Engineer · since September 2026</span></h3>
+  <!-- Unlaunched company product: no name, domain, features or stack until MSMA announces it. PM OK'd this exact text (13 Nov 2026); any change needs a new OK. -->
+  <ol class="wlist">
+    <li><span class="y">2026</span><div><b>An in-house product</b><p>I'm one of the developers on a product our in-house team is building. It isn't public yet, so this line stays short until launch.</p><span class="tech">In development</span></div><a href="https://msma.ph">msma.ph</a></li>
+  </ol>
+  <h3 class="wgroup">My own projects<span>Built under Yapliong, on my own time</span></h3>
+  <ol class="wlist">
+    <li><span class="y">2026</span><div><b>Messenger inquiry desk</b><p>Replies to price questions on a Facebook Page, using prices kept in a Google Sheet. Built and tested; a week of real use comes next.</p><span class="tech">n8n · Google Sheets</span></div><a href="#bench">Try it above</a></li>
+    <li><span class="y">2026</span><div><b>Claude Bar</b><p>A thin bar at the top of my Windows screen that tracks my AI usage and finds commands I've saved. I use it daily.</p><span class="tech">PowerShell</span></div><a href="#tools">See it below</a></li>
+    <li><span class="y">2026</span><div><b>This portfolio</b><p>The site you're on. Every change is drafted with Claude Code and read by me before it goes live.</p><span class="tech">React · Vite · GitHub Pages</span></div><a href="https://github.com/adymsma-works/arvindy">See the code</a></li>
+  </ol>
+  <h3 class="wgroup">School and internships<span>2024 – 2025</span></h3>
+  <ol class="wlist">
+    <li><span class="y">2025</span><div><b>Bail bonds and records system</b><p>Internship project that replaced manual encoding of records.</p></div><span></span></li>
+    <li><span class="y">2024</span><div><b>POS system rollout</b><p>Internship. I tested the system and wrote its training guides.</p></div><span></span></li>
+    <li><span class="y">2024</span><div><b>BinBetter</b><p>Capstone project with my classmates. I was one of the programmers.</p></div><span></span></li>
+  </ol>
+</div></section>
+<!-- ================= MY OWN TOOLS: CLAUDE BAR (recreation, sample numbers) ================= -->
+<section id="tools" class="tools"><div class="wrap tools2">
+  <div>
+    <p class="eyebrow"><span class="num">02</span>My own tools</p>
+    <div class="lockup">
+      <svg class="lk-mark" viewBox="30 18 40 40" aria-hidden="true" focusable="false"><g><path d="M35.66 26.79L38.93 30.81C37.753 32.739 39.989 29.258 35.96 33.17C33.875 35.195 32.204 39.518 32.34 42.4C32.38 43.248 32.867 44.013 33.13 44.82L38.24 43.99C39.327 45.999 37.384 42.207 38.79 47.74C39.505 50.552 42.419 54.168 44.98 55.49C45.734 55.879 46.64 55.843 47.47 56.02L49.31 51.18C51.588 51.246 47.334 51.028 52.83 52.58C55.628 53.37 60.209 52.644 62.64 51.09C63.352 50.635 63.773 49.837 64.34 49.21L61.07 45.19C62.247 43.261 60.011 46.742 64.04 42.83C66.125 40.805 67.796 36.482 67.66 33.6C67.62 32.752 67.133 31.987 66.87 31.18L61.76 32.01C60.673 30.001 62.616 33.793 61.21 28.26C60.495 25.448 57.581 21.832 55.02 20.51C54.266 20.121 53.36 20.157 52.53 19.98L50.69 24.82C48.412 24.754 52.666 24.972 47.17 23.42C44.372 22.63 39.791 23.356 37.36 24.91C36.648 25.365 36.227 26.163 35.66 26.79Z M43.40 38 a6.6 6.6 0 1 0 13.2 0 a6.6 6.6 0 1 0 -13.2 0 Z" fill="currentColor" fill-rule="evenodd" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></g></svg>
+      <div><h2>Claude Bar</h2><p class="lk-sub">Built for Claude Code</p></div>
+    </div>
+    <p class="lede">It sits at the top of my Windows screen, counts my Claude Code tokens by model for the day and the week, and searches the commands I've saved. This copy works the same way, with sample numbers.</p>
+    <ul class="rows">
+      <li><b>Reads local files only</b>The session logs Claude Code already writes on my PC.</li>
+      <li><b>Sends nothing</b>The numbers stay on the machine they came from.</li>
+      <li><b>Never reads credentials</b>Suggestions use only the active window's name and title, in memory. No shell history.</li>
+    </ul>
+    <p class="tnote">Built with Claude Code. An independent personal tool, not made or endorsed by Anthropic. Every figure in this recreation is a sample number, not real usage.</p>
+  </div>
+  <div class="cbs" id="cbStage" data-pin data-open="usage">
+    <div class="desk-bar" aria-hidden="true"><span class="ws"><i class="on"></i><i></i><i></i><i></i></span><span data-clock></span><span></span></div>
+    <div class="cb-col">
+    <div class="cb" id="cb">
+      <span class="cb-grip" id="cbGrip" aria-hidden="true"></span>
+      <button class="cb-usage" id="cbUsage" type="button" aria-expanded="false" aria-controls="cbDrop" aria-label="Token use, sample numbers: 1.24M today, 8.61M this week. Show every model"><b>1.24M</b><span>today</span><span class="sep" aria-hidden="true">·</span><b>8.61M</b><span>week</span><em class="cb-tag">sample numbers</em><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <label class="cb-search"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="6" cy="6" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m9.2 9.2 3.3 3.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="sr">Search commands</span><input id="cbQ" type="text" placeholder="Search commands" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="cbList" aria-autocomplete="list"></label>
+      <div class="cb-seg" role="group" aria-label="Commands for"><button type="button" aria-pressed="true" data-os="win">Windows</button><button type="button" aria-pressed="false" data-os="ub">Ubuntu</button></div>
+      </div>
+      <div class="cb-pop" id="cbDrop" hidden>
+        <h3>Claude Code usage</h3>
+        <p class="cb-sub">Sample numbers, not real usage · Windows + Ubuntu sessions</p>
+        <div class="tablebox"><table>
+          <thead><tr><th>Model</th><th>Today</th><th>This week</th><th>Replies</th><th>Written</th></tr></thead>
+          <tbody>
+            <tr><td>Opus</td><td>0.82M</td><td>5.90M</td><td>412</td><td>96K</td></tr>
+            <tr><td>Sonnet</td><td>0.36M</td><td>2.40M</td><td>655</td><td>141K</td></tr>
+            <tr><td>Haiku</td><td>0.06M</td><td>0.31M</td><td>208</td><td>22K</td></tr>
+          </tbody>
+          <tfoot><tr><td>All models</td><td>1.24M</td><td>8.61M</td><td>1,275</td><td>259K</td></tr></tfoot>
+        </table></div>
+        <p class="cb-foot">Sample numbers. Tokens count input, output and cache; the week starts Monday.</p>
+      </div>
+      <div class="cb-pop" id="cbDeck" hidden>
+        <div class="cb-hint"><span id="cbHint">Suggested for the window you were last in:</span><span class="cb-apps" id="cbApps" role="group" aria-label="Last window (demo)"><button type="button" aria-pressed="true" data-app="terminal">Terminal</button><button type="button" aria-pressed="false" data-app="vscode">VS Code</button><button type="button" aria-pressed="false" data-app="docker">Docker Desktop</button><button type="button" aria-pressed="false" data-app="explorer">Explorer</button></span></div>
+        <ul class="cb-list" id="cbList" role="listbox" aria-label="Commands"></ul>
+        <p class="cb-foot">Enter or a click copies the command.</p>
+      </div>
+    </div>
+    <div class="cb-term">
+      <p class="cbt-h"><b>Terminal</b><span>last window · demo, nothing runs</span><span class="wc" aria-hidden="true"><i class="min"></i><i class="max"></i><i class="cls"></i></span></p>
+      <div class="cbt-lines" id="cbTermLines" aria-hidden="true"></div>
+      <p class="sr" id="cbTerm" aria-live="polite"></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ================= HOW I WORK ================= -->
+<section id="how"><div class="wrap how">
+  <div class="how-left">
+    <p class="eyebrow"><span class="num">03</span>How I work</p>
+    <h2>One real build, step by step.</h2>
+    <p class="lede">Before I build the inquiry desk for anyone, it runs on my own Facebook Page. Here is its build log, in order. A client project goes through the same steps.</p>
+    <ul class="promises rail">
+      <!-- "brain" = ~/brain (private repo): BRAIN.md 20 rules (cap 20), playbooks/, lessons/, /learn. Never link or quote it: it holds MSMA notes. Arvin confirmed 13 Nov 2026. -->
+      <li><b class="h">Claude types. My brain checks.</b>I build with Claude Code, an AI coding tool. Before it writes anything, it reads my brain: 20 rules I learned from real mistakes, and checklists for reviews, deploys and security. It drafts; I read every change and test it. Each bug gets a failing test before the fix, and each lesson goes back into the brain.</li>
+      <li><b class="h">The hard part goes first.</b>If something can't be done, you'll know in the first week.</li>
+      <li><b class="h">Tried on my own Page first.</b>I find the mistakes before your customers do.</li>
+      <li><b class="h">You own it.</b>It runs on your Page, your Sheet and your accounts, so you're never tied to me.</li>
+    </ul>
+  </div>
+  <div class="desk">
+    <div class="desk-bar" aria-hidden="true"><span class="ws"><i class="on"></i><i></i><i></i><i></i></span><span data-clock></span><span></span></div>
+    <div class="desk-in">
+    <div class="tty" id="tty" role="group" aria-label="Build log, shown in a terminal window">
+      <div class="tty-bar" aria-hidden="true"><span class="tty-title">arvin@cebu: ~/inquiry-desk</span><span class="wc"><i class="min"></i><i class="max"></i><i class="cls"></i></span></div>
+      <div class="tty-body">
+        <p class="tty-ps" aria-hidden="true"><span class="host">arvin@cebu:</span>~/inquiry-desk$ <span class="cmd">less build.log</span></p>
+        <ol class="tlog rail">
+          <li class="rv" style="--i:0">
+            <p class="t-meta"><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Risky part first</span></p>
+            <h3>Connected to a real Facebook Page before writing any replies</h3>
+            <p class="t-p">Meta's connection is where projects like this usually stall, so it came first. A real message on my Page reached the workflow.</p>
+            <p class="t-rc">run <b>#34</b><i aria-hidden="true">·</i>Meta verify <b>passed</b></p>
+          </li>
+          <li class="rv" style="--i:1">
+            <p class="t-meta"><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Safety</span></p>
+            <h3>Only Meta can talk to it</h3>
+            <p class="t-p">Every incoming message is checked for Meta's signature. Fake requests are dropped before they touch your Sheet.</p>
+            <p class="t-rc">commit <b>167739e</b><i aria-hidden="true">·</i>Meta test + real message <b>pass</b></p>
+          </li>
+          <li class="rv" style="--i:2">
+            <p class="t-meta"><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Tested</span></p>
+            <h3>Rules you can read, in your customers' words</h3>
+            <p class="t-p">Answers come from plain keyword rules and your Google Sheet, so you can see why it said what it said. Typos were added on 11 Nov. Today it understands English and Bisaya; another language, like Tagalog, is a rules update with tests.</p>
+            <p class="t-rc">tests <b>38</b><i aria-hidden="true">·</i>commits <b>ae7b25b</b>, <b>cf5a424</b></p>
+          </li>
+          <li class="rv" style="--i:3">
+            <p class="t-meta"><time datetime="2026-11-10">10 Nov 2026</time><span class="t-tag">Your tools</span></p>
+            <h3>Prices from your Sheet, every message in a log</h3>
+            <p class="t-p">No new app to learn. Change a price in the Sheet and the next reply uses it.</p>
+            <p class="t-rc">commit <b>484c6ed</b><i aria-hidden="true">·</i>live runs <b>#43–45</b></p>
+          </li>
+          <li class="rv" style="--i:4">
+            <p class="t-meta"><time datetime="2026-11-11">11 Nov 2026</time><span class="t-tag">Quiet by default</span></p>
+            <h3>It bothers the owner only for orders</h3>
+            <p class="t-p">An order sends you an email. A price question doesn't. At 6 pm you get one summary of the day.</p>
+            <p class="t-rc">order → email <b>run #48</b><i aria-hidden="true">·</i>price → none <b>run #49</b><i aria-hidden="true">·</i>summary <b>e146aea</b></p>
+          </li>
+          <li class="rv next" style="--i:5">
+            <p class="t-meta"><span>Next</span><span class="t-tag">Real use</span></p>
+            <h3>A real week on my Page, then yours</h3>
+            <p class="t-p">Real messages for a week, then the numbers go here, unedited.</p>
+          </li>
+        </ol>
+        <p class="tty-end rv" style="--i:6"><span class="end" aria-hidden="true">(END)</span><span>5 done · 1 next</span><span class="src">receipts: roadmap, 10–11 Nov 2026</span></p>
+      </div>
+    </div>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap" id="contact"><div class="cta">
+  <div class="cta-head"><h2>What would you hand off first?</h2><p>My bunny asks three quick questions and writes your first message to me. Change any word before you send it. I usually reply within a day, in Bisaya or English.</p></div>
+  <!-- bunny chat: pre-written questions and answers (no AI, nothing stored or sent). Lines by Claude: Arvin checks every Bisaya/Tagalog word. -->
+  <div class="cta-pick"><div class="pad bchat" id="bchat">
+    <div class="chat-top"><img class="chat-av" id="chatAv" src="assets/bunny-awake.webp" width="218" height="240" alt=""><div><b>Arvin's bunny</b><small>Guide · pre-written replies, not AI</small></div>
+      <button class="chat-reset" id="chatReset" type="button" hidden>Start over</button></div>
+    <div class="chat-log" id="chatLog" aria-live="polite"></div>
+    <div class="opts" id="chatOpts" role="group" aria-label="Your answer"></div>
+    <div class="mnote" id="mnote" hidden><p class="mnote-to"><span>To: Yapliong on Messenger</span><span>Your draft</span></p><p class="bubble" id="msg"></p></div>
+  </div></div>
+  <div class="cta-btns"><a class="btn btn-main" id="msgGo" href="https://m.me/61596157541965" target="_blank" rel="noopener">Message me on Messenger</a><a class="btn btn-dline" href="#work">See the work first</a>
+    <p class="cta-fine" id="msgFine">Tapping the button copies your draft. Paste it in the chat.</p></div>
+</div></div>
+<footer class="explore"><div class="wrap foot">
+  <nav aria-label="More pages"><ul class="flinks">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Resume<span>PDF</span></a></li>
+    <li><a href="#">Uses</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul></nav>
+  <p class="fine"><span class="made"><img src="assets/yapliong-favicon.svg" width="20" height="20" alt="Yapliong">Made in Cebu. Powered by Claude Code and my brain.</span><span>© 2026 Arvin D. Yapliong</span></p>
+</div></footer>
+<!-- ================= BUILD WINDOW (pageant). Copy by Claude from Arvin's account + his real HOST.bat / ENCODER.bat / RETURN-ROUTER.bat.
+     Terminal = the scripts' own messages; network, laptop, address, share and file names changed. No passwords exist in the scripts. ================= -->
+<dialog class="cs" id="build" aria-labelledby="cs-h">
+  <div class="cs-bar"><span class="cs-prog" id="cs-prog" aria-hidden="true"></span><p>pageant-scoring-network · how it was built</p><button class="cs-x" type="button" data-close aria-label="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+  <div class="cs-body">
+    <span class="cs-k">Miss Asia Pacific International 2026 · IT, audit team</span>
+    <!-- bunny guide. Lines by Claude in Bisaya + Tagalog + English (Arvin's request): Arvin checks every Bisaya/Tagalog word. -->
+    <div class="cs-walker" id="cs-walker"><div class="cs-bub" role="status" aria-live="polite"><p id="cs-say"></p>
+      <div class="cs-bub-f"><span class="cs-hint" id="cs-hint">Scroll down &darr;</span><button class="cs-gx" id="cs-gx" type="button">Skip</button></div></div>
+      <img src="assets/bunny-awake.webp" width="218" height="240" alt="" draggable="false"><img class="shut" src="assets/bunny-avatar.webp" width="218" height="240" alt="" draggable="false"><span class="note n1" aria-hidden="true">&#9834;</span><span class="note n2" aria-hidden="true">&#9835;</span></div>
+    <h3 id="cs-h">Five laptops, one workbook, no internet.</h3>
+    <p class="cs-lede">How five laptops shared one scoring workbook on both pageant nights. Switch between the drive and the venue, then run each script to see what it printed.</p>
+
+    <div class="cs-sec"><span class="cs-k">01 · Who does what</span><h4>Two separate counts.</h4>
+      <p>The judges' tablets and server belong to the official tabulator. Our audit team works on its own network, so the two systems never touch. That separation is the point of an audit.</p>
+      <div class="cs-flow">
+        <div class="cs-who"><small>Judges + tabulator</small><h5>Score each round</h5><p>On tablets, run by a separate company on its own server.</p></div>
+        <div class="cs-ar" aria-hidden="true">→</div>
+        <div class="cs-who us"><small>Audit team (us)</small><h5>Check every score</h5><p>Four encoders and a host laptop in one shared workbook. I handle the IT.</p></div>
+        <div class="cs-ar" aria-hidden="true">→</div>
+        <div class="cs-who"><small>Host</small><h5>Gets the final results</h5><p>The audited results go to the host to announce.</p></div>
+      </div>
+    </div>
+
+    <div class="cs-sec"><span class="cs-k">02 · The network</span><h4>Tested on the road, run at the venue.</h4>
+      <p>Neither network had internet. Nothing outside our table could reach the workbook, and the venue's Wi-Fi had no say in whether we could score.</p>
+      <div class="cs-net">
+        <div class="cs-seg" role="group" aria-label="Which network"><button type="button" aria-pressed="false" data-plan="road">On the road · hotspot</button><button type="button" aria-pressed="true" data-plan="venue">At the venue · router</button></div>
+        <div class="cs-scroll" tabindex="0" aria-label="Network diagram"><svg viewBox="0 0 720 330" role="img" aria-labelledby="cs-net-t">
+          <title id="cs-net-t">On the road: four encoder laptops on a phone hotspot with no internet, for setup and testing. At the venue: the host laptop and four encoders on an offline TP-Link router, sharing the workbook over SMB, port 445.</title>
+          <g id="cs-wires"><path class="wire w-host" d="M190 170 H300"/><path class="wire" d="M420 170 C470 170 470 50 520 50"/><path class="wire" d="M420 170 C470 170 470 130 520 130"/><path class="wire" d="M420 170 C470 170 470 210 520 210"/><path class="wire" d="M420 170 C470 170 470 290 520 290"/></g>
+          <g transform="translate(360 40)"><path d="M-34 14 a14 14 0 0 1 6 -26 a20 20 0 0 1 38 -4 a14 14 0 0 1 22 18 a10 10 0 0 1 -4 12 z" fill="none" stroke="var(--line-2)" stroke-width="1.5"/><path d="M-30 -22 L30 18" stroke="var(--orange)" stroke-width="2"/><text class="sub" x="0" y="40" text-anchor="middle">no internet</text></g>
+          <path d="M360 92 V130" stroke="var(--line-2)" stroke-dasharray="3 4" stroke-width="1.5"/>
+          <rect class="hub" x="300" y="138" width="120" height="64" rx="12"/><text class="hub-t" x="360" y="164" text-anchor="middle" id="cs-hub-t">TP-Link router</text><text class="hub-s" x="360" y="183" text-anchor="middle" id="cs-hub-s">2.4 + 5 GHz</text>
+          <g id="cs-host"><rect class="box" x="30" y="132" width="160" height="76" rx="12"/><text class="lbl" x="48" y="160">Host laptop</text><text class="sub" x="48" y="179" id="cs-host-s">original workbook</text><text class="sub" x="48" y="195">1 shared folder</text></g>
+          <rect class="box" x="520" y="28" width="170" height="44" rx="10"/><text class="lbl" x="536" y="55">Encoder 1</text>
+          <rect class="box" x="520" y="108" width="170" height="44" rx="10"/><text class="lbl" x="536" y="135">Encoder 2</text>
+          <rect class="box" x="520" y="188" width="170" height="44" rx="10"/><text class="lbl" x="536" y="215">Encoder 3</text>
+          <rect class="box" x="520" y="268" width="170" height="44" rx="10"/><text class="lbl" x="536" y="295">Encoder 4</text>
+          <text class="sub w-host" x="245" y="160" text-anchor="middle">SMB · 445</text><text class="sub w-host" x="110" y="232" text-anchor="middle">saves name + IP</text><text class="sub" x="605" y="326" text-anchor="middle" id="cs-enc-s">find the host: name, then IP</text>
+        </svg></div>
+        <p class="cs-net-note" id="cs-net-note">At the venue: our own TP-Link router, with no internet. I set up the host here. The encoders joined and found it by themselves, and the scripts refuse to share on any other network.</p>
+      </div>
+    </div>
+
+    <div class="cs-sec"><span class="cs-k">03 · The scripts</span><h4>Three batch files, run in order.</h4>
+      <p>Press Run to replay what each one printed. The messages are the scripts' own; I changed the network, laptop and file names and the addresses.</p>
+      <div class="cs-term">
+        <div class="cs-tabs" role="tablist" aria-label="Scripts">
+          <button class="cs-tab" role="tab" aria-selected="true" data-s="host"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor"/><path d="m4 6 2 2-2 2M8 10h4" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>1 · HOST.bat</button>
+          <button class="cs-tab" role="tab" aria-selected="false" data-s="enc"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor"/><path d="m4 6 2 2-2 2M8 10h4" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>2 · ENCODER.bat</button>
+          <button class="cs-tab" role="tab" aria-selected="false" data-s="ret"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor"/><path d="m4 6 2 2-2 2M8 10h4" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>3 · RETURN-ROUTER.bat</button>
+        </div>
+        <pre class="cs-out" id="cs-out" tabindex="0" aria-label="Script output"></pre>
+        <div class="cs-foot"><span id="cs-note"></span><button class="cs-run" id="cs-run" type="button"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.5v9l7-4.5z" fill="currentColor"/></svg><span>Run</span></button></div>
+      </div>
+      <p class="cs-small">Windows batch files with a little PowerShell, because every laptop at the table ran Windows. Passwords never appear in the scripts; Windows asks for them.</p>
+    </div>
+
+    <div class="cs-sec"><span class="cs-k">04 · Locked down</span><h4>Only our laptops, and only one folder.</h4>
+      <div class="cs-grid">
+        <div class="cs-card"><h5>No internet at all</h5><p>Neither the router nor the test hotspot had a connection out. Nothing outside the room could reach the scores.</p></div>
+        <div class="cs-card"><h5>Only on the event Wi-Fi</h5><p>Each script checks the network name first and stops on any other. Windows shares files only on Private networks, so the script sets that itself, and only on the network it expects.</p></div>
+        <div class="cs-card"><h5>One account, one folder</h5><p>Encoders sign in with a separate Windows account that can change files in the shared folder and nothing else. Its password is typed by hand each time.</p></div>
+        <div class="cs-card"><h5>The workbook stays original</h5><p>The scripts copy the file into the shared folder once and open it. They never rename or edit it.</p></div>
+      </div>
+    </div>
+
+    <div class="cs-sec"><span class="cs-k">05 · How it went</span><h4>Most of the setup happened in traffic.</h4>
+      <ol class="cs-story">
+        <li><b>Version 1</b><span>I set up the host, and the encoders couldn't connect. Their Wi-Fi was still on Public, where Windows blocks file sharing. My mistake: I hadn't switched them first.</span></li>
+        <li><b>Version 2</b><span>I rewrote the scripts so nobody has to remember. Run the .bat, and it switches the Wi-Fi to Private, reads the host's name and address from HOST.txt, and connects. It worked on every laptop.</span></li>
+        <li><b>On the road</b><span>Traffic to J Park Island, Lapu-Lapu, was heavy, and we had to be ready before 7 pm. On my phone's hotspot, with no internet, I ran version 2 on each encoder on the way and checked it connected.</span></li>
+        <li><b>At the venue</b><span>Only the host was left. I set it up on the router; the encoders switched over with RETURN-ROUTER.bat and connected to it.</span></li>
+        <li><b>Result</b><span>Both nights ran without lag. I had the encoders save one at a time, after every few candidates, so two saves never hit the workbook at once.</span></li>
+      </ol>
+    </div>
+  </div>
+  <button class="cs-again" id="cs-again" type="button" aria-label="Walk me through again" title="Walk me through again"><img src="assets/bunny-avatar.webp" width="218" height="240" alt=""><span class="note n1" aria-hidden="true">&#9834;</span><span class="note n2" aria-hidden="true">&#9835;</span></button>
+</dialog>
+
+
+<script>
+/* ---------- fake shop data ---------- */
+const SHEET = [
+  ['Hours', 'Mon–Sat, 7 am–7 pm'],
+  ['Ensaymada', '₱35 each'],
+  ['Ube cheese pandesal', '₱180 per box of 10'],
+  ['Delivery', 'Cebu City only'],
+];
+const SCEN = {
+  hours: {chip:'What time do you open?', text:'What time do you open?', lang:'en', norm:'what time do you open', rule:'hours', kw:'what time + open', row:0,
+          reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
+  price: {chip:'Pila ang ensaymada?', text:'Pila ang ensaymada?', lang:'ceb', norm:'pila ang ensaymada', rule:'price', kw:'pila + ensaymada', row:1,
+          reply:'Ensaymada: ₱35 matag usa. Gusto ka mo-order?', order:false},
+  typo:  {chip:'wat time u open tmrw', text:'wat time u open tmrw', lang:'en', norm:'what time you open tomorrow', rule:'hours', kw:'what time + open', row:0,
+          reply:"We're open Monday to Saturday, 7 am–7 pm.", order:false},
+  order: {chip:'Order 2 boxes ube pandesal', text:'Order 2 boxes ube pandesal', lang:'en', norm:'order 2 boxes ube pandesal', rule:'order', kw:'order', row:2,
+          reply:'Thank you! The owner has your order and will message you shortly.', order:true},
+};
+const STEPS = ['Page message','Verify signature','Read the words','Look up the Sheet','Send reply','Write the log','Tell the owner'];
+// relative start/length on a 0-100 track (illustrative order, not timings)
+const BARS = [[0,8],[8,6],[14,14],[28,26],[54,18],[54,22],[72,20]];
+
+/* ---------- elements ---------- */
+const $ = s => document.querySelector(s);
+const chat = $('#chat'), chips = $('#chips'), sheetBody = $('#sheet tbody'), logBody = $('#log tbody');
+const trace = $('#trace'), insp = $('#insp'), status = $('#status');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const BEAT = 600;
+let run = null, timer = null, paused = false, runNo = 100, totals = {msg:0, auto:0, ord:0};
+
+SHEET.forEach(([a,b],i) => sheetBody.insertAdjacentHTML('beforeend', `<tr data-r="${i}"><td class="n">${i+2}</td><td><b>${a}</b></td><td>${b}</td></tr>`));
+Object.entries(SCEN).forEach(([k,s]) => chips.insertAdjacentHTML('beforeend', `<button class="chip" type="button" data-s="${k}">${s.chip}</button>`));
+STEPS.forEach((n,i) => trace.insertAdjacentHTML('beforeend',
+  `<button class="span" type="button" data-i="${i}"><span>${n}</span><span class="bar"><i style="left:${BARS[i][0]}%;width:${BARS[i][1]}%"></i></span><span class="st">—</span></button>`));
+
+/* ---------- view switch ---------- */
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.dataset.v === b.dataset.view));
+});
+
+document.querySelectorAll('[data-em]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-em]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.emode').forEach(m => m.classList.toggle('on', m.dataset.m === b.dataset.em));
+});
+
+/* ---------- payloads for the inspector ---------- */
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const J = o => esc(JSON.stringify(o, null, 2)).replace(/"([^"]+)":/g,'<span class="k">"$1"</span>:').replace(/: "([^"]*)"/g,': <span class="s">"$1"</span>');
+function payload(i, s) {
+  const t = run.time;
+  return [
+    {in:{object:'page', entry:[{messaging:[{sender:{id:'PSID…'}, message:{text:s.text}, timestamp:t}]}]}},
+    {header:'X-Hub-Signature-256: sha256=…', check:'HMAC(app secret, raw body)', result:'match', on_mismatch:'drop, 403, nothing stored'},
+    {text:s.text, normalised:s.norm, lang:s.lang, matched_rule:s.rule, keyword:s.kw, ai_used:false},
+    {sheet:'Menu & Hours', row:s.row+2, item:SHEET[s.row][0], answer:SHEET[s.row][1]},
+    {recipient:{id:'PSID…'}, message:{text:s.reply}, messaging_type:'RESPONSE'},
+    {sheet:'Log', append:[t, s.text, s.rule, s.lang, s.order ? 'yes' : 'no']},
+    s.order ? {to:'owner (Gmail)', subject:'New order from Messenger', body:s.text} : {skipped:true, reason:`topic "${s.rule}" is not an order`},
+  ][i];
+}
+function inspect(i) {
+  if (!run) return;
+  trace.querySelectorAll('.span').forEach(x => x.classList.toggle('sel', +x.dataset.i === i));
+  $('#inspName').textContent = STEPS[i];
+  insp.innerHTML = J(payload(i, run.s));
+}
+trace.onclick = e => { const b = e.target.closest('.span'); if (b && run && +b.dataset.i < run.i) inspect(+b.dataset.i); };
+
+/* ---------- the run ---------- */
+const now = () => { const d = new Date(); return d.toLocaleTimeString('en-PH',{hour:'numeric',minute:'2-digit'}); };
+function setChips(on) { chips.querySelectorAll('.chip').forEach(c => c.disabled = !on); }
+function start(key) {
+  const s = SCEN[key];
+  chat.querySelector('.empty')?.remove();
+  run = {s, i:0, time:now()}; runNo++;
+  $('#runId').textContent = `synthetic run #${runNo}`;
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('act','done','skip'));
+  document.querySelectorAll('#steps li').forEach(l => l.className = '');
+  trace.querySelectorAll('.span').forEach(x => { x.className = 'span'; x.querySelector('.st').textContent = '—'; x.querySelector('.st').className = 'st'; });
+  sheetBody.querySelectorAll('tr').forEach(r => r.classList.remove('hit'));
+  chat.insertAdjacentHTML('beforeend', `<div class="msg in">${esc(s.text)}<small>Customer · ${run.time}</small></div>`);
+  chat.scrollTop = chat.scrollHeight;
+  setChips(false); paused = false; $('#pp').textContent = 'II';
+  tick();
+}
+function advance() {
+  const {s, i} = run;
+  const node = document.querySelector(`.node[data-n="${i}"]`);
+  const li = document.querySelectorAll('#steps li')[i];
+  const sp = trace.querySelectorAll('.span')[i];
+  document.querySelectorAll('.node.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  document.querySelectorAll('#steps li.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  trace.querySelectorAll('.span.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+  const skip = i === 6 && !s.order;
+  node?.classList.add(skip ? 'skip' : 'act'); li.classList.add(skip ? 'skip' : 'act'); sp.classList.add(skip ? 'done' : 'act');
+  const st = sp.querySelector('.st'); st.textContent = skip ? 'skipped' : 'ok'; if (!skip) st.classList.add('ok');
+  status.innerHTML = `<b>${STEPS[i]}</b> · ${['Message arrives from Meta','Signature matches, request is real','Rule "'+s.rule+'" matched','Answer found in row '+(s.row+2),'Reply sent to the customer','Row added to the log', s.order?'Order email sent to the owner':'Not an order, owner not disturbed'][i]}`;
+  if (i === 2 && s.norm !== s.text.toLowerCase().replace(/[?!.]/g,'')) status.innerHTML += ' · typos fixed';
+  if (i === 3) { sheetBody.querySelector(`[data-r="${s.row}"]`).classList.add('hit'); }
+  if (i === 4) { chat.insertAdjacentHTML('beforeend', `<div class="msg out">${esc(s.reply)}<small>Auto-reply from the Sheet · ${run.time}</small></div>`); chat.scrollTop = chat.scrollHeight; }
+  if (i === 3) { chat.insertAdjacentHTML('beforeend', `<div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>`); chat.scrollTop = chat.scrollHeight; }
+  if (i === 4) chat.querySelector('.typing')?.remove();
+  if (i === 5) {
+    totals.msg++; if (!s.order) totals.auto++;
+    logBody.insertAdjacentHTML('afterbegin', `<tr class="new"><td class="n">${totals.msg+1}</td><td>${run.time}</td><td>${esc(s.text)}</td><td>${s.rule}</td><td>${s.lang}</td><td>${s.order?'yes':'no'}</td></tr>`);
+  }
+  if (i === 6) {
+    const m = $('#mail'), b = $('#mailState');
+    if (s.order) { totals.ord++; m.className = 'mail'; m.innerHTML = `<span class="from">Inquiry desk · ${run.time}</span><span>New order from Messenger</span><span class="muted">“${esc(s.text)}” · reply to the customer when ready</span>`; b.className = 'badge on'; b.textContent = '1 new'; }
+    else { b.className = 'badge'; b.textContent = 'quiet'; }
+    $('#sMsg').textContent = totals.msg; $('#sAuto').textContent = totals.auto; $('#sOrd').textContent = totals.ord;
+  }
+  inspect(i);
+  if (window.onStep) window.onStep(i);
+  run.i++;
+  if (run.i === STEPS.length) {
+    document.querySelectorAll('.node.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    document.querySelectorAll('#steps li.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    trace.querySelectorAll('.span.act').forEach(n => { n.classList.remove('act'); n.classList.add('done'); });
+    setChips(true);
+  }
+}
+function tick() {
+  clearTimeout(timer);
+  if (!run || run.i >= STEPS.length) return;
+  if (reduce) { while (run.i < STEPS.length) advance(); return; }
+  advance();
+  if (!paused && run.i < STEPS.length) timer = setTimeout(tick, BEAT * 2);
+}
+chips.onclick = e => { const c = e.target.closest('.chip'); if (c && !c.disabled) start(c.dataset.s); };
+$('#pp').onclick = () => {
+  paused = !paused; $('#pp').textContent = paused ? '▶' : 'II';
+  $('#pp').setAttribute('aria-label', paused ? 'Play the run' : 'Pause the run');
+  if (!paused) timer = setTimeout(tick, BEAT);
+  else clearTimeout(timer);
+};
+$('#stepBtn').onclick = () => { paused = true; $('#pp').textContent = '▶'; clearTimeout(timer); if (run && run.i < STEPS.length) advance(); };
+
+/* auto-play one run when the bench scrolls into view (once) */
+new IntersectionObserver(([e], o) => { if (e.isIntersecting && !run) { start('price'); o.disconnect(); } }, {threshold:.4}).observe($('#bench'));
+
+// home logo: the orange wipe covers the page, then a real reload (like opening the home page fresh) and the zoom-through.
+// Reduced motion: no splash at all, the theme switches in place and the page jumps to the top.
+(() => {
+  const a = document.getElementById('home'), s = document.getElementById('splash');
+  a.addEventListener('click', e => {
+    if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return; // new-tab clicks behave normally
+    e.preventDefault();
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    if (reduce) { try { localStorage.setItem('theme', next); } catch (err) {} document.documentElement.dataset.theme = next; scrollTo(0, 0); return; }
+    s.className = 'splash instant'; void s.offsetWidth; s.className = 'splash in';
+    setTimeout(() => {
+      try { localStorage.setItem('theme', next); sessionStorage.setItem('splash', '1'); history.scrollRestoration = 'manual'; location.reload(); }
+      catch (err) { document.documentElement.dataset.theme = next; scrollTo(0, 0); splashOut(s); } // storage blocked: same feel, no reload
+    }, 560);
+  });
+  const bar = document.getElementById('bar'), solid = () => bar.classList.toggle('solid', scrollY > 8);
+  addEventListener('scroll', solid, { passive: true }); solid();
+})();
+
+// bunny: idle = he listens to music (eyes closed); click = he wakes up (eyes open) and shows what he can do;
+// "Play your music" = the dance, one loop of the hero video (10 s)
+(() => {
+  const b = document.getElementById('buddy'); let t;
+  const m = document.getElementById('bmenu');
+  const set = on => { b.classList.toggle('playing', on); clearTimeout(t); if (on) t = setTimeout(() => set(false), 10000); };
+  const menu = on => { m.hidden = !on; b.setAttribute('aria-expanded', on); if (on) m.querySelector('button').focus(); };
+  b.addEventListener('click', () => { set(false); b.classList.remove('idle'); menu(m.hidden); });
+  m.addEventListener('click', e => {
+    const a = e.target.closest('[data-do]'); if (!a) return; menu(false);
+    if (a.dataset.do === 'dance') set(true);
+    if (a.dataset.do === 'tour') document.querySelector('[data-open="build"]').click();
+    if (a.dataset.do === 'chat') document.getElementById('contact').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !m.hidden) { menu(false); b.focus(); } });
+  addEventListener('pointerdown', e => { if (!m.hidden && !m.contains(e.target) && !b.contains(e.target)) menu(false); });
+  // idle: after 6 s with no mouse, touch, scroll or key, he closes his eyes and listens; any of those wakes him
+  let idle; const wake = () => { b.classList.remove('idle'); clearTimeout(idle); idle = setTimeout(() => { if (!document.hidden && m.hidden) b.classList.add('idle'); }, 6000); };
+  ['pointermove', 'pointerdown', 'keydown', 'scroll', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true }));
+  wake();
+})();
+</script>
+<script>
+// Claude Bar recreation: usage dropdown, command search with suggestions, Windows | Ubuntu switch, a terminal the copied command lands in.
+// All figures are sample numbers written in the HTML; nothing is read, stored or sent.
+(() => {
+  const cb = document.getElementById('cb'), stage = document.getElementById('cbStage'); if (!cb || !stage) return;
+  const q = document.getElementById('cbQ'), drop = document.getElementById('cbDrop'), deck = document.getElementById('cbDeck');
+  const list = document.getElementById('cbList'), usage = document.getElementById('cbUsage'), hint = document.getElementById('cbHint');
+  const apps = document.getElementById('cbApps'), term = document.getElementById('cbTerm');
+  const h = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const CMDS = [
+    ['win','terminal','Show listening ports','netstat -ano | findstr LISTENING'],
+    ['win','terminal','Shut down WSL','wsl --shutdown'],
+    ['win','terminal','Open this folder in Explorer','explorer .'],
+    ['win','vscode','Open this folder in VS Code','code .'],
+    ['win','vscode','List installed extensions','code --list-extensions'],
+    ['win','docker','List running containers','docker ps'],
+    ['win','docker','Follow the container logs','docker compose logs -f'],
+    ['win','explorer','Open a terminal in this folder','wt -d .'],
+    ['win','explorer','Copy this folder path','(Get-Location).Path | Set-Clipboard'],
+    ['ub','terminal','Pull the latest work','git pull --rebase'],
+    ['ub','terminal','Branch status','git status -sb'],
+    ['ub','terminal','Last ten commits','git log --oneline -10'],
+    ['ub','terminal','What is on port 3000','ss -ltnp | grep :3000'],
+    ['ub','vscode','Open this folder in VS Code','code .'],
+    ['ub','vscode','Run the tests','npm test'],
+    ['ub','docker','Start the containers','docker compose up -d'],
+    ['ub','docker','Last 100 log lines','docker compose logs --tail=100'],
+    ['ub','explorer','Open this folder in Explorer','explorer.exe .'],
+  ].map(([os, app, label, cmd]) => ({os, app, label, cmd}));
+  let os = 'win', app = 'terminal', active = 0, shown = [];
+
+  function open(which) {
+    drop.hidden = which !== 'usage'; deck.hidden = which !== 'deck';
+    usage.setAttribute('aria-expanded', which === 'usage'); q.setAttribute('aria-expanded', which === 'deck');
+  }
+  function render() {
+    const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    shown = CMDS.filter(c => c.os === os && (words.length ? words.every(w => (c.label + ' ' + c.cmd).toLowerCase().includes(w)) : c.app === app));
+    active = Math.max(0, Math.min(active, shown.length - 1));
+    apps.hidden = words.length > 0;
+    hint.textContent = words.length ? (shown.length === 1 ? '1 command' : shown.length + ' commands') + ' in the ' + (os === 'win' ? 'Windows' : 'Ubuntu') + ' deck' : 'Suggested for the window you were last in:';
+    list.innerHTML = shown.length
+      ? shown.map((c, i) => `<li role="option" id="cbo${i}" data-i="${i}" aria-selected="${i === active}"><span>${h(c.label)}</span><code>${h(c.cmd)}</code></li>`).join('')
+      : '<li class="none">Try a shorter word, like log, port or branch.</li>';
+    if (shown.length) q.setAttribute('aria-activedescendant', 'cbo' + active); else q.removeAttribute('aria-activedescendant');
+  }
+  function copy(i) {
+    const c = shown[i]; if (!c) return;
+    try { navigator.clipboard && navigator.clipboard.writeText(c.cmd).catch(() => {}); } catch (e) {}
+    const li = list.children[i]; li.classList.add('copied'); li.querySelector('code').textContent = 'Copied';
+    paste(c);
+    setTimeout(render, 1100);
+  }
+  usage.addEventListener('click', () => open(drop.hidden ? 'usage' : null));
+  q.addEventListener('focus', () => { render(); open('deck'); });
+  q.addEventListener('input', () => { active = 0; render(); open('deck'); });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!shown.length) return; active = (active + (e.key === 'ArrowDown' ? 1 : shown.length - 1)) % shown.length; render(); }
+    else if (e.key === 'Enter') { e.preventDefault(); copy(active); }
+    else if (e.key === 'Escape') { open(null); q.blur(); }
+  });
+  list.addEventListener('click', e => { const li = e.target.closest('li[data-i]'); if (li) { active = +li.dataset.i; copy(active); } });
+  apps.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; app = b.dataset.app; active = 0;
+    apps.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); render(); });
+  cb.querySelectorAll('[data-os]').forEach(b => b.addEventListener('click', () => { os = b.dataset.os; active = 0;
+    cb.querySelectorAll('[data-os]').forEach(x => x.setAttribute('aria-pressed', x === b)); render(); if (deck.hidden) open('deck'); }));
+  if (!('pin' in stage.dataset)) document.addEventListener('pointerdown', e => { if (!cb.contains(e.target)) open(null); });
+  render(); if (stage.dataset.open) open(stage.dataset.open);
+  // the terminal under the bar: a copied command lands on the prompt, as if pasted. Demo only: nothing runs.
+  const lines = document.getElementById('cbTermLines'), PS = {win: 'PS C:\\dev>', ub: 'arvin@cebu:~/dev$'};
+  const hist = [{os: 'win', cmd: 'docker ps'}, {os: 'win', cmd: 'code .'}]; let pasted = false;
+  function drawTerm() {
+    if (!lines) return;
+    lines.innerHTML = hist.map(l => `<p class="old"><span class="ps">${h(PS[l.os])}</span> ${h(l.cmd)}</p>`).join('')
+      + `<p><span class="ps">${h(PS[os])}</span> <i class="cur"></i>${pasted ? '' : '<span class="hint">copied commands land here</span>'}</p>`;
+  }
+  function paste(c) {
+    hist.push({os: c.os, cmd: c.cmd}); if (hist.length > 14) hist.shift(); pasted = true; drawTerm();
+    if (lines && lines.lastElementChild.previousElementSibling) lines.lastElementChild.previousElementSibling.className = 'new';
+    if (term) term.textContent = 'Copied: ' + c.cmd;
+  }
+  cb.querySelectorAll('[data-os]').forEach(b => b.addEventListener('click', drawTerm));
+  drawTerm();
+
+  // phone: the search field is narrow, so the placeholder is one word (the label still says "Search commands")
+  const narrow = matchMedia('(max-width: 600px)'), ph = () => { q.placeholder = narrow.matches ? 'Search' : 'Search commands'; };
+  ph(); narrow.addEventListener('change', ph);
+})();
+</script>
+<script>
+// Hero blade: an engine. It always idles; a moving mouse or finger (or scrolling) spins it up, then it coasts back down.
+// It follows the mouse or the finger anywhere and stays behind the whole page while scrolling (fixed layer, .bgfan).
+// Every distance is a share of the viewport, so it behaves the same on a 320 px phone, a 2560 px screen and at any browser zoom.
+// One requestAnimationFrame loop, transform only; stops when the tab is hidden. All listeners are passive: touch never blocks scrolling.
+// Reduced motion: nothing runs, the blade is still.
+(() => {
+  const p = document.querySelector('.bgfan .wm-p'), r = p && p.querySelector('.wm-r');
+  if (!p || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  p.classList.add('live'); // JS owns the rotation now (the CSS turn is only the no-script fallback)
+  const IDLE = 9, MAX = 150;                       // degrees per second
+  const PULL = .7, REACH = .66;                    // follow: share of the gap to the pointer; max travel as a share of the longer viewport side
+  const REV_MOVE = 220, REV_SCROLL = 170;          // spin-up, deg/s, for a pointer move of one viewport side / a scroll of one viewport height
+  let ang = 0, om = IDLE, boost = 0, tx = 0, ty = 0, px = 0, py = 0, lastY = scrollY, lx = null, ly = 0;
+  let last = 0, raf = 0, side = 1, vh = 1, reach = 1, size = 1, hx = 0, hy = 0;
+  const measure = () => {                          // on load, resize, rotate and browser zoom (zoom fires resize)
+    side = Math.max(innerWidth, innerHeight); vh = innerHeight; reach = REACH * side;
+    size = p.offsetWidth; hx = p.offsetLeft + size / 2; hy = p.offsetTop + size * .416; // home: the blade's hub
+    if (lx !== null) aim(lx, ly);
+  };
+  const ease = (dt, tau) => 1 - Math.exp(-dt / tau);
+  const frame = t => {
+    const dt = Math.min(.05, Math.max(0, (t - last) / 1000)); last = t;
+    boost *= Math.exp(-dt / 1.5);                  // coast down slowly, like a flywheel
+    om += (IDLE + boost - om) * ease(dt, .25);     // spin up quickly
+    ang = (ang + om * dt) % 360;
+    px += (tx - px) * ease(dt, .55); py += (ty - py) * ease(dt, .55); // heavy, smooth follow
+    const tilt = Math.max(-1, Math.min(1, (tx - px) / (reach * .13)));
+    r.style.transform = 'rotate(' + ang.toFixed(2) + 'deg)';
+    p.style.transform = 'perspective(' + (size * 1.6).toFixed(0) + 'px) translate3d(' + px.toFixed(1) + 'px,' + py.toFixed(1) + 'px,0) rotateY(' + (tilt * 8).toFixed(2) + 'deg)';
+    raf = requestAnimationFrame(frame);
+  };
+  const sync = () => {
+    const on = !document.hidden;
+    p.classList.toggle('off', !on);
+    if (on && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    else if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
+  };
+  const rev = d => { boost = Math.min(MAX, boost + d); };
+  const clamp = v => Math.max(-reach, Math.min(reach, v));
+  const aim = (x, y) => { tx = clamp((x - hx) * PULL); ty = clamp((y - hy) * PULL); };
+  // Follow: the hub drifts toward the mouse or finger (PULL of the gap, at most `reach`), then glides home when it leaves.
+  const point = (x, y) => {
+    if (!raf) return;
+    if (lx !== null) rev(Math.hypot(x - lx, y - ly) / side * REV_MOVE);
+    lx = x; ly = y; aim(x, y);
+  };
+  const home = () => { tx = ty = 0; lx = null; };
+  const opt = { passive: true };
+  addEventListener('pointermove', e => { if (e.pointerType !== 'touch') point(e.clientX, e.clientY); }, opt); // mouse, pen
+  document.documentElement.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') home(); }); // mouse left the window
+  // Touch: touch events keep coming while the page scrolls (pointer events are cancelled then), so the blade stays with the finger.
+  const finger = e => { const t = e.touches[0]; if (t) point(t.clientX, t.clientY); };
+  addEventListener('touchstart', e => { lx = null; finger(e); }, opt);
+  addEventListener('touchmove', finger, opt);
+  addEventListener('touchend', e => { if (!e.touches.length) home(); }, opt);
+  addEventListener('touchcancel', home, opt);
+  addEventListener('scroll', () => { rev(Math.abs(scrollY - lastY) / vh * REV_SCROLL); lastY = scrollY; }, opt);
+  addEventListener('resize', measure, opt);
+  document.addEventListener('visibilitychange', sync);
+  measure(); sync();
+})();
+
+// Desktop panel clock: the visitor's own time, text only (no seconds, so nothing ticks).
+(() => {
+  const els = document.querySelectorAll('[data-clock]'); if (!els.length) return;
+  const draw = () => { const d = new Date(), s = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(',', '')
+    + '  ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); els.forEach(e => { e.textContent = s; }); };
+  draw(); setInterval(draw, 30000);
+})();
+
+// Contact band: the bunny asks three questions, one at a time; taps build the first message. The draft bubble shows it as it
+// will arrive; the button copies it and opens my Page's chat (m.me can't prefill text reliably, so the visitor pastes).
+// Pre-written lines only: no AI, nothing stored or sent.
+(() => {
+  const chat = document.getElementById('bchat'), go = document.getElementById('msgGo'), fine = document.getElementById('msgFine');
+  if (!chat || !go) return;
+  const log = document.getElementById('chatLog'), opts = document.getElementById('chatOpts'), note = document.getElementById('mnote'),
+        msg = document.getElementById('msg'), reset = document.getElementById('chatReset'), av = document.getElementById('chatAv');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches, fine0 = fine.textContent;
+  const Q = [
+    { k: 'biz', ask: "Kumusta! I'm Arvin's bunny. Three quick taps and I'll write your first message to him. Unsa imong negosyo? What do you run?",
+      opts: [['Online shop', 'an online shop'], ['Clinic', 'a clinic'], ['Food business', 'a food business'], ['Church', 'a church ministry'], ['Something else', 'a small business']] },
+    { k: 'job', ask: 'Nindot! What eats your day?',
+      opts: [['Price questions', 'answering the same price questions', 'price'], ['Orders from chat', 'copying orders from chat into a notebook', 'orders'],
+             ['Reminders', 'reminding people about their bookings', 'remind'], ['Totals by hand', 'adding up totals by hand', 'totals'], ['Something else', "something I'll explain in my next message", 'other']] },
+    { k: 'time', ask: 'Grabe, kapoy na! How long does it take each day?',
+      opts: [['Under an hour', 'under an hour'], ['1–3 hours', 'one to three hours'], ['Half my day', 'half my day or more']] },
+  ];
+  const SAY = {
+    price:  '<strong>Kaya na!</strong> A reply that reads your own price list answers the repeats, and you step in when someone wants to order. That\'s the demo at the top of this page.',
+    orders: '<strong>Oo, kaya.</strong> Each order can land as a row in your Google Sheet, with an email to you. The demo above logs every message that way.',
+    remind: '<strong>Kaya, pero wala pa nahimo.</strong> A message the day before each booking. Arvin can describe it now and build it with you.',
+    totals: '<strong>Oo.</strong> A sheet that adds itself up as the numbers come in. The pageant scoring network under Work is the same idea, built for one event.',
+    other:  '<strong>Basin.</strong> Tell Arvin in one message. If a workflow can\'t do it well, he\'ll say so before any work starts.',
+  };
+  let pick = {}, step = 0, job = 0;
+  const h = t => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const add = (cls, html) => { const p = document.createElement('p'); p.className = 'cm ' + cls; p.innerHTML = html; log.append(p); return p; };
+  const hop = () => { av.classList.remove('hop'); void av.offsetWidth; av.classList.add('hop'); };
+  async function bunny(html) {
+    const me = job;
+    if (!still) { const t = add('b typing', '<i></i><i></i><i></i>'); await wait(650); t.remove(); if (me !== job) return false; }
+    add('b', html); hop(); return true;
+  }
+  async function ask() {
+    const q = Q[step]; opts.innerHTML = ''; if (!await bunny(q.ask)) return;
+    opts.innerHTML = q.opts.map(([l, v, c]) => `<button class="opt" type="button" data-v="${h(v)}"${c ? ` data-c="${c}"` : ''}>${h(l)}</button>`).join('');
+  }
+  async function finish() {
+    if (!await bunny(SAY[pick.job.c])) return;
+    if (!await bunny('Here\'s your message to Arvin. Tap <strong>Message me on Messenger</strong>: it copies the text, so you just paste it in the chat.')) return;
+    msg.textContent = text(); note.hidden = false;
+  }
+  const text = () => `Hi Arvin! I run ${pick.biz ? pick.biz.v : 'a small business'}. The part that eats my day is ${pick.job ? pick.job.v : 'something I\'ll explain'}`
+    + (pick.time ? `, about ${pick.time.v} a day` : '') + '. Could a workflow take that off my hands?';
+  opts.addEventListener('click', e => {
+    const b = e.target.closest('.opt'); if (!b) return; const q = Q[step];
+    pick[q.k] = { v: b.dataset.v, c: b.dataset.c }; opts.innerHTML = ''; add('u', h(b.textContent)); reset.hidden = false;
+    step++; step < Q.length ? ask() : finish();
+  });
+  reset.addEventListener('click', () => { job++; pick = {}; step = 0; log.innerHTML = ''; note.hidden = true; reset.hidden = true; fine.textContent = fine0; ask(); });
+  // copy inside the same tap, before the new tab takes focus; old browsers fall back to a hidden textarea
+  go.addEventListener('click', () => {
+    if (!Object.keys(pick).length) return; const t = text();
+    const old = () => { const a = document.createElement('textarea'); a.value = t; a.setAttribute('readonly', ''); a.style.cssText = 'position:fixed;opacity:0'; document.body.append(a); a.select(); try { document.execCommand('copy'); } catch (err) {} a.remove(); };
+    try { navigator.clipboard.writeText(t).catch(old); } catch (err) { old(); }
+    fine.textContent = 'Copied. Paste it in the chat that just opened.';
+  });
+  // the bunny starts talking when the card comes into view, so the visitor sees him type
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); ask(); } }, { threshold: .4 }).observe(chat);
+  else ask();
+})();
+
+// How I work console: the log lines come in once, when the pane scrolls into view. The text is in the page from the
+// start; without scripting, or with reduced motion, nothing is hidden and nothing moves.
+(() => {
+  const t = document.getElementById('tty');
+  if (!t || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  t.classList.add('arm');
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { t.classList.add('go'); o.disconnect(); } }, { rootMargin: '0px 0px -18% 0px' }).observe(t);
+})();
+</script>
+<script>
+/* photo slideshow: arrows scroll one photo (wraps around); the count follows swipes too.
+   Auto-advances every 5 s. It waits while the mouse is over it, a control has keyboard focus, it is off screen,
+   the tab is hidden, or for 8 s after any click or swipe. Pause button stops it. Off for reduced motion. */
+(()=>{for(const g of document.querySelectorAll('.gallery')){
+  const t=g.querySelector('.g-track'),n=t.children.length,b=g.querySelectorAll('.g-btn[data-dir]'),c=g.querySelector('.g-count b'),
+        live=g.querySelector('.g-count'),pb=g.querySelector('.g-play');
+  const smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const at=()=>Math.round(t.scrollLeft/t.clientWidth);
+  const go=i=>t.scrollTo({left:((i+n)%n)*t.clientWidth,behavior:smooth?'smooth':'auto'});
+  let playing=smooth,hover=false,seen=false,last=0;
+  const setPlay=v=>{playing=v;pb.setAttribute('aria-pressed',String(!v));pb.setAttribute('aria-label',v?'Pause slideshow':'Play slideshow');
+    pb.dataset.state=v?'playing':'paused';live.setAttribute('aria-live',v?'off':'polite')};
+  const touched=()=>{last=Date.now()};
+  b.forEach(x=>x.addEventListener('click',()=>{touched();go(at()+(+x.dataset.dir))}));
+  pb.addEventListener('click',()=>{touched();setPlay(!playing)});
+  t.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();b[e.key==='ArrowRight'?1:0].click()}});
+  t.addEventListener('pointerdown',touched,{passive:true});t.addEventListener('wheel',touched,{passive:true});
+  g.addEventListener('mouseenter',()=>{hover=true});g.addEventListener('mouseleave',()=>{hover=false});
+  new IntersectionObserver(([e])=>{seen=e.isIntersecting},{threshold:.5}).observe(g);
+  setInterval(()=>{if(playing&&!hover&&!g.querySelector(':focus-visible')&&seen&&!document.hidden&&Date.now()-last>8000)go(at()+1)},5000);
+  let q;t.addEventListener('scroll',()=>{cancelAnimationFrame(q);q=requestAnimationFrame(()=>{c.textContent=at()+1})},{passive:true});
+  setPlay(playing);c.textContent=at()+1}})();
+</script>
+<script>
+/* the background mark steps back once the visitor scrolls past the top, so lists and text stay easy to read */
+(()=>{const p=document.querySelector('.bgfan .wm-p');if(!p)return;let q;const f=()=>p.classList.toggle('quiet',scrollY>innerHeight*.6);
+addEventListener('scroll',()=>{cancelAnimationFrame(q);q=requestAnimationFrame(f)},{passive:true});f()})();
+</script>
+<script>
+/* build window: open/close, road/venue diagram, terminal replay of the scripts' own messages (names changed) */
+(()=>{
+  const d=document.getElementById('build'); if(!d||!d.showModal) return;
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let opener=null;
+  document.querySelectorAll('[data-open="build"]').forEach(b=>b.addEventListener('click',()=>{opener=b;d.showModal();d.querySelector('.cs-body').scrollTop=0;tab('host',!still)}));
+  d.querySelector('[data-close]').addEventListener('click',()=>d.close());
+  d.addEventListener('click',e=>{if(e.target===d)d.close()});            // click outside the window closes it
+  d.addEventListener('close',()=>{job++;opener&&opener.focus()});
+  // diagram
+  const pb=d.querySelectorAll('[data-plan]'),w=d.querySelector('#cs-wires'),ht=d.querySelector('#cs-hub-t'),hs=d.querySelector('#cs-hub-s'),nn=d.querySelector('#cs-net-note');
+  const PL={venue:['TP-Link router','2.4 + 5 GHz','At the venue: our own TP-Link router, with no internet. I set up the host here. The encoders joined and found it by themselves, and the scripts refuse to share on any other network.','find the host: name, then IP'],
+            road:['Phone hotspot','test network','On the road: my phone\'s hotspot, with no internet, standing in for the router. I ran version 2 on each encoder; it switched the Wi-Fi to Private and connected. The host waited for the venue.','version 2 tested']};
+  pb.forEach(b=>b.addEventListener('click',()=>{pb.forEach(x=>x.setAttribute('aria-pressed',x===b));const p=PL[b.dataset.plan];ht.textContent=p[0];hs.textContent=p[1];nn.textContent=p[2];d.querySelector('#cs-enc-s').textContent=p[3];d.querySelector('.cs-net').classList.toggle('road',b.dataset.plan==='road')}));
+  // terminal
+  const P='C:\\event>';
+  const S={
+    host:{note:'Runs on the host first. Shares the workbook and saves its address.',cmd:'HOST.bat',out:[
+      ['','============================================================'],['','  SCORING FILE HOST'],['','============================================================'],
+      ['p','S = One-time share login setup, C = Check host readiness, E = Exit: C'],['',''],
+      ['','Checking the event Wi-Fi ...'],['ok','[OK] Connected to event SSID: EVENT-WIFI_5G'],['dim','  Windows profile: EVENT-WIFI_5G = Private'],['',''],
+      ['',"Writing this laptop's current host name and Wi-Fi IPv4 to:"],['dim','  C:\\event\\HOST.txt'],['dim','  Host: HOST-01  |  Wi-Fi IPv4: 192.168.0.101'],
+      ['','Copy HOST.txt beside ENCODER.bat on each encoder/test laptop.'],['',''],
+      ['','[1/3] Checking the share and workbook ...'],['ok','[OK] Share and unchanged workbook are ready.'],
+      ['','[2/3] Host details are shown above and stored in HOST.txt.'],['dim','  Share path:    \\\\HOST-01\\SCORES'],['dim','  Encoder login: HOST-01\\scores_encoder'],
+      ['','[3/3] Host is ready. The shared workbook is at:'],['dim','  \\\\HOST-01\\SCORES\\Scoring-Workbook.xlsx'],['p','Press any key to continue . . .']]},
+    enc:{note:'Runs on each encoder. Finds the host by name, falls back to its address.',cmd:'ENCODER.bat',out:[
+      ['','============================================================'],['','  ENCODER / TEST LAPTOP CONNECT'],['','============================================================'],
+      ['ok','[OK] Connected to event SSID: EVENT-WIFI_5G'],['','The host laptop must also be connected to the same event Wi-Fi.'],['',''],
+      ['ok','[OK] Host: HOST-01  |  Fallback IPv4: 192.168.0.101'],['','Checking the host share on port 445 ...'],
+      ['warn','Host name did not respond. Trying the saved fallback IPv4 ...'],['ok','[OK] Using host address: 192.168.0.101'],['',''],
+      ['','Save and close Excel on this laptop before reconnecting to the shared folder.'],['','Windows will prompt for the password of scores_encoder.'],
+      ['p',"Enter the password for 'HOST-01\\scores_encoder' to connect to '192.168.0.101': ********"],['','The command completed successfully.'],['',''],
+      ['ok','[OK] Opening the shared workbook.'],['','Save regularly. Save and close Excel before switching Wi-Fi.'],['p','Press any key to continue . . .']]},
+    ret:{note:'Moves a laptop from the test hotspot to the event Wi-Fi, then reconnects to the host.',cmd:'RETURN-ROUTER.bat',out:[
+      ['','============================================================'],['','  RETURN TO EVENT WI-FI'],['','============================================================'],
+      ['p','Choose this laptop: H = Workbook host, E = Encoder/test laptop: E'],['','Save and close Excel on this laptop before switching Wi-Fi.'],['',''],
+      ['','Choose the same network name on both laptops.'],['dim','  1 = EVENT-WIFI (recommended for better range)'],['dim','  2 = EVENT-WIFI_5G (use if both laptops are near the router)'],
+      ['p','Type 1 or 2: 2'],['',''],['','Connecting to saved Wi-Fi profile EVENT-WIFI_5G ...'],['','Connection request was completed successfully.'],
+      ['ok','[OK] Connected to EVENT-WIFI_5G.'],['','Current Wi-Fi IPv4 address:'],['dim','  192.168.0.112'],['',''],['dim','(starts ENCODER.bat)']]}
+  };
+  const out=d.querySelector('#cs-out'),run=d.querySelector('#cs-run'),rl=run.querySelector('span'),note=d.querySelector('#cs-note'),tabs=d.querySelectorAll('.cs-tab');
+  let cur='host',job=0;
+  const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const line=(c,t)=>(c?`<span class="${c}">${esc(t)}</span>`:esc(t))+'\n';
+  const head=s=>`<span class="p">${esc(P)}</span>${esc(s.cmd)}`;
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  async function play(){
+    const me=++job,s=S[cur];run.disabled=true;let h=head(s)+'\n';
+    if(still){h+=s.out.map(([c,t])=>line(c,t)).join('');}
+    else for(const [c,t] of s.out){await wait(t===''?60:c==='warn'?700:c==='p'?420:130);if(me!==job)return;h+=line(c,t);out.innerHTML=h+'<span class="cur"></span>';out.scrollTop=out.scrollHeight}
+    if(me!==job)return;out.innerHTML=h+`\n<span class="p">${esc(P)}</span><span class="cur"></span>`;out.scrollTop=out.scrollHeight;run.disabled=false;rl.textContent='Run again';
+  }
+  function tab(k,auto){job++;cur=k;tabs.forEach(x=>x.setAttribute('aria-selected',x.dataset.s===k));note.textContent=S[k].note;out.innerHTML=head(S[k])+'<span class="cur"></span>';run.disabled=false;rl.textContent='Run';if(auto)setTimeout(()=>{if(d.open&&cur===k)play()},500)}
+  tabs.forEach(t=>t.addEventListener('click',()=>tab(t.dataset.s,false)));
+  tabs[0].parentElement.addEventListener('keydown',e=>{const i=[...tabs].findIndex(x=>x.dataset.s===cur),n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!n)return;const t=tabs[(i+n+tabs.length)%tabs.length];t.focus();tab(t.dataset.s,false)});
+  run.addEventListener('click',play);
+  tab('host',false);
+})();
+</script>
+<script>
+/* bunny guide: walks to each part of the build window and explains it. Facts only from the window's own text. */
+(()=>{
+  const d=document.getElementById('build'),wk=document.getElementById('cs-walker'); if(!d||!wk) return;
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $=q=>d.querySelector(q),body=$('.cs-body'),say=$('#cs-say'),hint=$('#cs-hint'),bar=$('#cs-prog');
+  const plan=k=>$(`[data-plan="${k}"]`).click();
+  const script=k=>{$(`.cs-tab[data-s="${k}"]`).click();setTimeout(()=>{if(d.open)$('#cs-run').click()},still?0:900)};
+  const STOPS=[
+    {t:"Hello! Ako si bunny ni Arvin. Scroll down lang, musunod ko nimo. Seven stops ra, mga one minute lang.",el:'#cs-h'},
+    {t:"Duha ka separate counts. Ang scores sa judges, sa official tabulator. Ang audit team ni Arvin, nag-check sa every score sa sariling network.",el:'.cs-flow'},
+    {t:"Sa biyahe: hotspot sa phone ni Arvin, walang internet. Gi-setup ug gi-test niya ang every encoder bisan traffic.",el:'.cs-net',go:()=>plan('road')},
+    {at:.55,t:"Pag-abot sa venue: ilang kaugalingong router, wala gihapoy internet. Host na lang ang kulang.",el:'.cs-net',go:()=>plan('venue')},
+    {t:"Tan-awa ni: mag-connect ang encoder. Name una, then ang saved address kung dili mo-respond.",el:'.cs-term',go:()=>script('enc')},
+    {t:"Locked down kaayo: walang internet, event Wi-Fi lang, ug one account na isa ra ka folder ang ma-touch.",el:'.cs-grid'},
+    {t:"Version 1 failed, oy! Naka-Public pa ang Wi-Fi sa encoders. Ang version 2, kusa na mo-switch to Private.",el:'.cs-story li:nth-child(2)'},
+    {t:"Both nights, walang lag! Mao ra na, salamat sa pag-tour. Music sa ko ha.",el:'.cs-story li:last-child'}
+  ];
+
+  let i=-1,spot=null,x=null,y=null,tm,endT;
+  // where the bunny stands: on the top edge of the target, near its right end (in .cs-body content coordinates)
+  function spotFor(el){
+    const b=body.getBoundingClientRect(),r=el.getBoundingClientRect(),w=wk.offsetWidth,h=wk.offsetHeight;
+    const right=Math.min(r.right-b.left+body.scrollLeft,body.clientWidth-8);
+    return {x:Math.max(8,right-w-14),y:r.top-b.top+body.scrollTop-h+4};
+  }
+  const bub=wk.querySelector('.cs-bub');
+  function bubAt(p){
+    const cw=body.clientWidth,w=wk.offsetWidth,h=wk.offsetHeight,bw=bub.offsetWidth,bh=bub.offsetHeight;
+    let l,t;
+    if(p.x>=bw+16){l=-bw-8;t=h-8-bh}                       // room on the left of the bunny
+    else if(cw-p.x-w>=bw+16){l=w+8;t=h-8-bh}               // room on the right
+    else{l=Math.max(8-p.x,Math.min(cw-8-bw-p.x,w-bw));t=-bh-6}  // narrow: above the bunny, kept inside
+    if(p.y+t<8)t=t===-bh-6?h+6:0;                          // too close to the top: below / level with the bunny
+    return {l,t};
+  }
+  // quick = follow the scroll (no walk animation, bubble stays open); otherwise a real walk to a new stop
+  function walkTo(p,quick){
+    const bp=bubAt(p);bub.style.left=bp.l+'px';bub.style.top=bp.t+'px';
+    if(quick){if(x!==null&&Math.abs(p.y-y)<1&&Math.abs(p.x-x)<1)return;wk.style.setProperty('--walk','0ms');}
+    else{if(x!==null&&Math.abs(p.y-y)<2&&Math.abs(p.x-x)<2){if(!wk.classList.contains('walking')&&!wk.classList.contains('talk'))requestAnimationFrame(arrive);return}
+      // already there (or already walking there): no new walk
+      const dist=x===null?0:Math.hypot(p.x-x,p.y-y),ms=still||x===null?0:Math.round(Math.min(1200,Math.max(450,dist*1.4)));
+      wk.style.setProperty('--walk',ms+'ms');wk.classList.remove('talk');if(ms)wk.classList.add('walking');
+      clearTimeout(tm);if(ms)tm=setTimeout(arrive,ms+400);else requestAnimationFrame(arrive);}
+    wk.style.transform=`translate(${p.x}px,${p.y}px)`;x=p.x;y=p.y;
+  }
+  // he talks only once the walk has really ended on screen (transitionend), with a timer as a fallback
+  function arrive(){clearTimeout(tm);wk.classList.remove('walking');place(true);wk.classList.add('talk')}
+  wk.addEventListener('transitionend',e=>{if(e.target===wk&&e.propertyName==='transform'&&wk.classList.contains('walking'))arrive()});
+  // stand on the target, but never leave the visible part of the window (he and his bubble stay in view)
+  function place(quick){
+    const p=spotFor($(STOPS[i].el)),st=body.scrollTop,ch=body.clientHeight,h=wk.offsetHeight,bh=bub.offsetHeight;
+    const y0=p.y;for(let n=0;n<2;n++){const bp=bubAt(p),lo=st+12-Math.min(0,bp.t),hi=st+ch-h-12-Math.max(0,bp.t+bh-h);
+      p.y=Math.max(lo,Math.min(hi,y0))}                                // twice: the bubble side can flip after the clamp
+    walkTo(p,quick);
+  }
+  // which stop is in view. Each stop starts when its part reaches 45% of the window. Parts near the bottom can never
+  // get that high, so their start points are pulled up: the last stop starts at the very bottom, and every stop keeps
+  // at least 140 px of scrolling before the next one, so none is skipped.
+  function current(){
+    const b=body.getBoundingClientRect(),st=body.scrollTop,ch=body.clientHeight,max=body.scrollHeight-ch;
+    const T=STOPS.map(s=>{const r=$(s.el).getBoundingClientRect();return Math.max(0,Math.min(max,r.top-b.top+st+(s.at||0)*r.height-ch*.45))});
+    for(let n=T.length-2;n>0;n--)T[n]=Math.min(T[n],T[n+1]-140);T[0]=0;
+    let k=0;T.forEach((t,n)=>{if(st>=t-1)k=n});return k;
+  }
+  function show(k){
+    i=k;const s=STOPS[i],el=$(s.el);say.textContent=s.t;hint.hidden=i!==0;
+    if(spot!==el){spot&&spot.classList.remove('cs-spot');spot=null;if(i>0){spot=el;el.classList.add('cs-spot')}}
+    s.go&&s.go();clearTimeout(endT);
+    requestAnimationFrame(()=>place(false));run();                    // after the demo changed the layout
+    if(i===STOPS.length-1)endT=setTimeout(()=>{if(d.open&&i===STOPS.length-1)mini(true)},6000); // done: music time
+  }
+  const prog=()=>{const m=body.scrollHeight-body.clientHeight;bar.style.transform=`scaleX(${m>0?Math.min(1,body.scrollTop/m):0})`};
+  const mini=on=>{d.classList.toggle('mini',on);clearTimeout(endT);if(on){spot&&spot.classList.remove('cs-spot');spot=null}else run()};
+  // every frame while the window is open and he is guiding: progress line, which stop, keep him in view.
+  // (A frame loop instead of scroll events: layout also changes without scrolling, e.g. the script output growing.)
+  let loop=0;
+  function tick(){loop=0;if(!d.open||d.classList.contains('mini'))return;prog();
+    if(i>=0){const k=current();if(k!==i)show(k);else if(wk.classList.contains('walking'))place(false);else place(true)}
+    loop=requestAnimationFrame(tick)}
+  const run=()=>{if(!loop)loop=requestAnimationFrame(tick)};
+  $('#cs-gx').addEventListener('click',()=>mini(true));
+  // a demo step can change a part's size after he was placed (the diagram switch): place him again when that happens
+  // idle music: 8 s with no scroll, wheel, key, pointer or touch in the window
+  let idleT;const wake=()=>{wk.classList.remove('idle');clearTimeout(idleT);
+    idleT=setTimeout(()=>{if(d.open&&!d.classList.contains('mini'))wk.classList.add('idle')},8000)};
+  ['scroll'].forEach(e=>body.addEventListener(e,wake,{passive:true}));
+  ['pointermove','pointerdown','keydown','wheel','touchstart'].forEach(e=>d.addEventListener(e,wake,{passive:true}));
+  d.addEventListener('close',()=>{clearTimeout(idleT);wk.classList.remove('idle')});
+  // music bunny clicked: guide again from where the visitor is; from the end, back to the top
+  $('#cs-again').addEventListener('click',()=>{mini(false);x=y=null;spot=null;let k=current();
+    if(k===STOPS.length-1){body.scrollTo({top:0,behavior:still?'auto':'smooth'});k=0}show(k)});
+  document.querySelectorAll('[data-open="build"]').forEach(b=>b.addEventListener('click',()=>{mini(false);x=y=null;i=-1;body.scrollTop=0;prog();setTimeout(()=>show(0),350);wake()}));
+  addEventListener('resize',()=>{if(d.open&&!d.classList.contains('mini')&&i>=0){x=null;place(false)}});
+  d.addEventListener('close',()=>{spot&&spot.classList.remove('cs-spot');spot=null});
+})();
+</script>
+</body>
+</html>
