@@ -22,12 +22,12 @@ export default function About() {
         </figure>
         <div className="about-copy">
           <h1 className="h1" id="about-title">
-            I'm Arvin. I build the systems HR opens first thing in the morning.
+            I'm Arvin. I build the systems a business runs on.
           </h1>
           <div className="prose">
             <p className="lede">
-              I am a full-stack developer in Cebu City, working as an IT associate and developer at MSMA Solutions Department, where I am
-              building a cloud HRIS with biometric and face-recognition attendance.
+              I am a junior AI engineer at MSMA in Cebu City, building an in-house product that has not launched yet. I work with Claude
+              Code and read and test every change it makes.
             </p>
             <p>
               Before that I was a web developer intern at Alpha Insurance &amp; Surety, where I led a <a href={url("work/bail-bonds-records/")}>bail bonds and

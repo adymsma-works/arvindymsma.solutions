@@ -41,7 +41,7 @@ Search: `Ctrl/Cmd + K` or `/` on any page.
 ### Add a case study
 
 1. Add an entry to `PROJECTS` in `src/data.js` (copy an existing one; `mock` picks a product window from `src/site/mocks.jsx`).
-2. Copy `work/cloud-hris/index.html` to `work/<new-slug>/index.html` and change `data-slug`, the title and the description.
+2. Copy `work/bail-bonds-records/index.html` to `work/<new-slug>/index.html` and change `data-slug`, the title and the description.
 3. `npm run build && npm run check`. The check fails if a link points to a page that does not exist.
 
 House rules from the Basalt skill: real facts only, no em dashes, no emoji, numbers only where they are true.

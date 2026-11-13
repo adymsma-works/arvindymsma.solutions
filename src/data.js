@@ -27,7 +27,7 @@ export const SITE = {
   name: profile.name,
   short: `${profile.firstName} ${profile.lastName}`,
   initials: "AY",
-  role: "Full-stack developer",
+  role: "Junior AI engineer",
   location: `${profile.city}, ${profile.country}`,
   timeZone: "Philippine time, UTC+8",
   openTo: "Freelance builds, automation, collaboration",
@@ -35,7 +35,7 @@ export const SITE = {
   bestFit: "Businesses that have outgrown spreadsheets and paper. Churches and ministries: website design and build, free. Small stores: a free consultation to find the fix.",
   tagline: "Well-built systems for businesses. Websites for churches and ministries, built free.",
   summary:
-    "Junior developer working toward AI engineering. I use AI coding tools to build faster and I check their code before it goes live. By day I build the payroll and records system of a Cebu professional services firm. On the side I build business systems and workflow automation (for example: a customer fills your website or Facebook form, the details land in your Google Sheet, and you are notified right away, no retyping), design and build websites for churches and ministries for free, and give small stores a free consultation: I study the problem, propose a fix, and can build it.",
+    "Junior developer working toward AI engineering. I use AI coding tools to build faster and I check their code before it goes live. By day I am a junior AI engineer at MSMA in Cebu City. On the side I build business systems and workflow automation (for example: a customer fills your website or Facebook form, the details land in your Google Sheet, and you are notified right away, no retyping), design and build websites for churches and ministries for free, and give small stores a free consultation: I study the problem, propose a fix, and can build it.",
   education: [
     ["BS Information Technology", "University of Cebu, 2025"],
     ["TVL Computer Programming", "College of Technological Sciences Cebu, 2019"],
@@ -56,63 +56,6 @@ export const KINDS = {
    Each slug needs a page file: work/<slug>/index.html (copy an existing one).
    npm run check fails the deploy if one is missing. */
 export const PROJECTS = [
-  {
-    slug: "cloud-hris",
-    name: "Cloud HRIS",
-    kind: "inhouse",
-    years: "in progress",
-    mock: "hris",
-    cover: "images/cover-cloud-hris.webp",
-    summary: "Payroll and records system I'm building for a professional services firm: employee files, attendance, pay with government contributions and BIR tax forms, hiring, old-system import.",
-    intro:
-      "At MSMA Solutions Department I am building a cloud HRIS that replaces paper time cards and spreadsheets with one system for employee records and attendance. Every time-in is checked twice: by the biometric device and by face recognition.",
-    facts: [
-      ["Role", "IT Associate Developer"],
-      ["Timeline", "In progress"],
-      ["Team", "MSMA Solutions Department"],
-      ["Stack", "React, Angular, Node.js, MySQL, n8n"],
-    ],
-    card: ["6 modules", "2 checks per time-in"],
-    outcomes: [
-      { v: 6, label: "modules, from employee records to the HR dashboard" },
-      { v: 2, label: "checks per time-in: biometric and face" },
-      { v: 4, label: "layers, from HR staff down to MySQL" },
-      { v: 3, label: "n8n workflows running beside the API" },
-    ],
-    problem: [
-      "Attendance lived on paper time cards and in spreadsheets. HR re-typed the same punches into other sheets, and a time-in was only as reliable as whoever wrote it down.",
-      "Employee records were scattered the same way, so a simple question like who is on leave today meant opening several files.",
-    ],
-    constraints: [
-      ["Proof, not trust", "A time-in has to be backed by the biometric device and a face match, not a signature on a card."],
-      ["HR first", "The people using it every day are HR staff, so screens follow their routine, not the database."],
-      ["Cloud access", "Records and attendance must be reachable from the cloud, not from one office computer."],
-    ],
-    approach: [
-      ["scan", "Two checks for every time-in", "The biometric device sends the punch and face recognition confirms it is the same person. Anything that does not match goes to a review list instead of quietly passing."],
-      ["layers", "Four clear layers", "HR staff and employees use the web app, the web app talks to API services, and the API owns the MySQL database. Nothing skips a layer."],
-      ["zap", "Automation beside the API", "n8n workflows react to events: a new employee record syncs the database, sends an email and starts the document workflow; a biometric event is validated, processed and reported."],
-    ],
-    figure: {
-      type: "flow",
-      steps: [
-        ["Web app", "HR staff and employees: records, attendance, dashboards."],
-        ["API services", "Validates every request and runs the attendance rules."],
-        ["MySQL", "Employees, punches and HR data in one database."],
-      ],
-      caption: "The HRIS in three layers, under the people who use it. n8n workflows listen to the API for notifications and process automation.",
-    },
-    gallery: [
-      { piece: "hrFace", pw: 22, k: 0.6, label: "Each time-in shows both checks: the device punch and the face match. Anything unclear is flagged for HR." },
-      { piece: "hrFlow", pw: 22, k: 0.74, label: "A new employee record starts an n8n workflow: database sync, email notification and the document workflow." },
-    ],
-    results: [
-      "The HRIS is still being built, so this is a progress report rather than a victory lap. Six modules are on the board: employee information, biometric integration, face-recognition verification, the attendance dashboard, HR data management and cloud access.",
-      "The part I like most is the boring one: attendance that no longer depends on anybody's handwriting.",
-    ],
-    reflection:
-      "Building for HR taught me to design around a morning routine instead of a data model. The next update to this page should have real numbers in it, once the system has a few months of attendance behind it.",
-  },
   {
     slug: "bail-bonds-records",
     name: "Bail bonds and records system",
@@ -219,7 +162,6 @@ export const PROJECTS = [
 
 /* ---- Everything else (work page archive) ---- */
 export const ARCHIVE = [
-  { y: "Now", n: "Cloud HRIS", d: "Employee records and attendance with biometric and face-recognition checks.", k: "inhouse", w: "React, Angular, Node.js, MySQL, n8n", slug: "cloud-hris" },
   { y: "2026", n: "This portfolio", d: "React and Vite on GitHub Pages, with a printable business card, QR code and contact file.", k: "personal", w: "React, Vite, GitHub Actions", ext: "https://github.com/adymsma-works/arvindymsma.solutions" },
   { y: "2026", n: "Bunny hero loop", d: "The 10-second animated loop on the home page, starring my avatar.", k: "personal", w: "Remotion, React, ffmpeg" },
   { y: "2025", n: "Bail bonds and records system", d: "Replaced manual encoding with searchable bond records.", k: "internship", w: "", slug: "bail-bonds-records" },
@@ -231,17 +173,16 @@ export const ARCHIVE = [
 /* ---- Experience (home tabs, résumé) ---- */
 export const XP = [
   {
-    id: "msma", co: "MSMA Solutions", chip: "MS", role: "IT Associate | Developer", when: "Now", where: profile.city,
-    summary: "Building and improving business software, including the cloud HRIS. Supporting testing, implementation and automation work.",
+    id: "msma", co: "MSMA Solutions", chip: "MS", role: "Junior AI Engineer", when: "Now", where: profile.city,
+    summary: "Building and testing an in-house software product that has not launched yet.",
     bullets: [
-      "Building a cloud HRIS with biometric and face-recognition attendance verification",
-      "Automating HR steps with n8n: record sync, email notifications and document workflows",
-      "Supporting testing and implementation of the department's business software",
+      "Building and testing features for an in-house product that is not public yet",
+      "Reviewing AI-written code before it merges, with a regression test for every bug fix",
     ],
-    stack: ["React", "Angular", "Node.js", "MySQL", "n8n"],
+    stack: [],
   },
   {
-    id: "alpha", co: "Alpha Insurance & Surety", chip: "AI", role: "Web Developer Intern", when: "2025", where: "",
+    id: "alpha", co: "Alpha Insurance & Surety", chip: "AI", role: "Web Developer Intern", when: "Feb – Apr 2025", where: "",
     summary: "Developed and maintained a bail bonds and records management system.",
     bullets: [
       "Led development of a system to manage bail bonds and records",
@@ -251,7 +192,7 @@ export const XP = [
     stack: [],
   },
   {
-    id: "innosoft", co: "Cebu Innosoft Solutions", chip: "CI", role: "Software Implementor Intern", when: "2024", where: "",
+    id: "innosoft", co: "Cebu Innosoft Solutions", chip: "CI", role: "Software Implementor Intern", when: "Sep – Oct 2024", where: "",
     summary: "Tested POS systems for sales, inventory and customers.",
     bullets: [
       "Found and reported bugs to the developers",
@@ -260,13 +201,6 @@ export const XP = [
     ],
     stack: ["POS systems", "Testing", "Documentation"],
   },
-];
-
-/* ---- n8n workflows (home) ---- */
-export const WORKFLOWS = [
-  { when: "A new employee record is created", then: "Sync the database, send an email notification, start the document workflow." },
-  { when: "A biometric attendance event arrives", then: "Validate the attendance, process the data, generate reports." },
-  { when: "A system event fires", then: "Call the other system's API, transfer the data, continue the workflow." },
 ];
 
 /* ---- How I work (home) ---- */
@@ -308,7 +242,7 @@ export const USES = [
 
 /* ---- Career milestones (about page), newest first ---- */
 export const MILESTONES = [
-  { y: "Now", p: ["IT Associate | Developer at MSMA Solutions Department", "Building a cloud HRIS with biometric and face-recognition attendance", "Automating HR workflows with n8n"] },
+  { y: "Now", p: ["Junior AI Engineer at MSMA, Cebu City (since September 2026)", "Building an in-house product that has not launched yet"] },
   { y: "2025", p: ["BS Information Technology, University of Cebu", "Web developer intern at Alpha Insurance & Surety: led a bail bonds and records system"] },
   { y: "2024", p: ["Software implementor intern at Cebu Innosoft Solutions: POS testing and documentation", "Programmer on BinBetter, our capstone project"] },
   { y: "2023", p: ["Project manager and programmer on eSportsPP"] },

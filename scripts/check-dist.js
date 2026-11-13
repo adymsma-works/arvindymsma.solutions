@@ -42,6 +42,14 @@ for (const f of files.filter((f) => [".html", ".css", ".js", ".vcf", ".xml", ".t
 // 3. Personal finance files (old Pitaka presets/backups) must never be published.
 for (const f of files) if (/(preset.*|pitaka-backup-.*)\.json$/i.test(f)) fail(`${f}: personal data files must never be published`);
 
+// 3a. MSMA's product is confidential until launch (13 Nov 2026): no name, features or screens of it.
+//     "HR and payroll" in the sideline boundary is fine; these words describe the product itself.
+const CONFIDENTIAL = /\bHRIS\b|biometric|face[- ]recognition|cloud-hris/i;
+for (const f of files.filter((f) => [".html", ".js", ".xml", ".txt", ".vcf"].includes(extname(f)))) {
+  const m = readFileSync(f, "utf8").match(CONFIDENTIAL);
+  if (m) fail(`${f}: "${m[0]}" describes MSMA's unlaunched product (confidential until launch)`);
+}
+
 // 3b. Every page was prerendered (content is in the HTML before any JavaScript runs).
 for (const p of findPages()) {
   const f = join(dist, p, "index.html");

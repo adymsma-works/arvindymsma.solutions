@@ -126,7 +126,7 @@ export default function Contact() {
             <Icon name="briefcase" />
             <div>
               Best fit
-              <span>HR, attendance and workflow systems, business software, n8n automation</span>
+              <span>Business software, n8n automation, church and ministry websites</span>
             </div>
           </div>
         </div>

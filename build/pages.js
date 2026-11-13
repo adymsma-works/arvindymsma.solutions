@@ -5,7 +5,7 @@ import { join } from "node:path";
 
 const SKIP = new Set(["node_modules", "dist", ".ssr", "public", "src", "build", "scripts", "docs", ".git", ".github"]);
 
-/** ["", "about/", "work/", "work/cloud-hris/", ...] relative to the site root. */
+/** ["", "about/", "work/", "work/bail-bonds-records/", ...] relative to the site root. */
 export function findPages(root = ".") {
   const out = [];
   const walk = (dir, rel) => {

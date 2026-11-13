@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Icon from "../Icon.jsx";
 import { ArrowLink, CtaBand, Rail, WorkCard } from "../ui.jsx";
 import { reduceMotion } from "../hooks.js";
-import { APPROACH, PROJECTS, USES, WORKFLOWS, XP, url } from "../../data.js";
+import { APPROACH, PROJECTS, USES, XP, url } from "../../data.js";
 
 /* The bunny loop, playing inside a Basalt product window next to the headline.
    Plays only while on screen; never autoplays for prefers-reduced-motion. */
@@ -193,12 +193,12 @@ export default function Home() {
         <div className="hero-row">
           <div className="hero-copy">
             <p className="hero-lede" data-hero style={{ "--i": 1 }}>
-              I'm Arvin, an IT associate and developer at MSMA Solutions in Cebu City. I build the systems HR teams open first thing in the
-              morning: employee records, attendance that checks your face before it believes your time-in, and n8n workflows that do the
-              copy-paste nobody signed up for. The headphones are usually on, which is why the bunny wears them too.
+              I'm Arvin, a junior AI engineer at MSMA in Cebu City. I build business software and n8n workflows that do the copy-paste
+              nobody signed up for. Claude Code types; I read and test every change before it ships. The headphones are usually on, which
+              is why the bunny wears them too.
             </p>
             <p className="hero-building" data-hero style={{ "--i": 2 }}>
-              Building the <a href={url("work/cloud-hris/")}>Cloud HRIS</a> at MSMA, one n8n workflow at a time.
+              Building something new at MSMA. It isn't public yet, so it isn't here.
             </p>
           </div>
           <HeroWindow />
@@ -213,8 +213,7 @@ export default function Home() {
                 Selected work
               </h2>
               <p>
-                Three projects, three kinds of work: an HRIS I am building now, a records system I led as an intern, and POS software I
-                tested and documented.
+                Two projects from my internships: a records system I led, and POS software I tested and documented.
               </p>
             </div>
             <ArrowLink href={url("work/")}>All projects</ArrowLink>
@@ -233,36 +232,10 @@ export default function Home() {
             <h2 className="h2" id="xp-h">
               Experience
             </h2>
-            <p>Two internships and one full-time role, all in business software: records, point of sale and now HR.</p>
+            <p>Two internships and one full-time role, all in business software.</p>
             <ArrowLink href={url("resume/")}>Read the résumé</ArrowLink>
           </div>
           <XpTabs />
-        </div>
-      </section>
-
-      <section className="section" id="workflows" aria-labelledby="wf-h">
-        <div className="container">
-          <div className="sec-head" data-reveal>
-            <div>
-              <h2 className="h2" id="wf-h">
-                Workflows I build with n8n
-              </h2>
-              <p>Something happens, the work gets done. Three that run beside the HRIS.</p>
-            </div>
-          </div>
-          <ol className="wf-list">
-            {WORKFLOWS.map((w, i) => (
-              <li key={w.when} className="wf-row glow" data-reveal style={{ "--i": i }}>
-                <span className="wf-k">When</span>
-                <p className="wf-when">{w.when}</p>
-                <span className="wf-arrow" aria-hidden="true">
-                  <Icon name="arrow-right" />
-                </span>
-                <span className="wf-k">Then</span>
-                <p className="wf-then">{w.then}</p>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 

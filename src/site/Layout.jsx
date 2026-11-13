@@ -153,7 +153,7 @@ function PaletteBody({ onDone }) {
         </span>
       </div>
       <div className="palette-list" id="palette-list" role="listbox" aria-label="Results">
-        {!items.length && <div className="palette-empty">No results for "{q}". Try "HRIS", "résumé" or "email".</div>}
+        {!items.length && <div className="palette-empty">No results for "{q}". Try "bail bonds", "résumé" or "email".</div>}
         {items.map((x, i) => {
           const head = x.g !== group ? (group = x.g) : null;
           return (
@@ -209,7 +209,7 @@ function Footer({ openPalette }) {
       <div className="container footer-grid">
         <div className="footer-brand">
           <Brand />
-          <p>Full-stack developer in {SITE.location}. Well-built systems for businesses. Websites for churches and ministries, built free.</p>
+          <p>Junior AI engineer in {SITE.location}. Well-built systems for businesses. Websites for churches and ministries, built free.</p>
           <div className="footer-actions">
             <a className="btn btn-ghost btn-sm" href={links.vcard} download>
               <Icon name="id-card" />
