@@ -109,17 +109,17 @@ export const PROJECTS = [
   },
   {
     slug: "pos-implementation",
-    name: "POS system implementation",
+    name: "POS system testing",
     kind: "internship",
     years: "2024",
     mock: "pos",
     cover: "images/cover-pos-implementation.webp",
     summary: "POS systems for sales, inventory and customers: finding bugs and keeping the implementation and training documents current.",
     intro:
-      "As a software implementor intern at Cebu Innosoft Solutions Services, I worked on POS systems for sales, inventory and customers. The company's developers built the software; my part was testing it to find bugs and keeping the implementation notes and in-store training documents up to date.",
+      "As a manual QA tester intern at Cebu Innosoft Solutions Services, I worked on POS systems for sales, inventory and customers. The company's developers built the software; my part was testing it to find bugs and keeping the implementation notes and in-store training documents up to date.",
     facts: [
-      ["Role", "Software implementor intern"],
-      ["Timeline", "2024"],
+      ["Role", "Manual QA tester intern"],
+      ["Timeline", "Sep – Oct 2024"],
       ["Company", "Cebu Innosoft Solutions Services Inc."],
       ["Scope", "Testing and documentation"],
     ],
@@ -165,7 +165,7 @@ export const ARCHIVE = [
   { y: "2026", n: "This portfolio", d: "React and Vite on GitHub Pages, with a printable business card, QR code and contact file.", k: "personal", w: "React, Vite, GitHub Actions", ext: "https://github.com/adymsma-works/arvindymsma.solutions" },
   { y: "2026", n: "Bunny hero loop", d: "The 10-second animated loop on the home page, starring my avatar.", k: "personal", w: "Remotion, React, ffmpeg" },
   { y: "2025", n: "Bail bonds and records system", d: "Replaced manual encoding with searchable bond records.", k: "internship", w: "", slug: "bail-bonds-records" },
-  { y: "2024", n: "POS system implementation", d: "Sales, inventory and customers: testing, bug reports, implementation and training documents.", k: "internship", w: "", slug: "pos-implementation" },
+  { y: "2024", n: "POS system testing", d: "Sales, inventory and customers: testing, bug reports, implementation and training documents.", k: "internship", w: "", slug: "pos-implementation" },
   { y: "2024", n: "BinBetter", d: "Capstone project. I was one of the programmers.", k: "school", w: "" },
   { y: "2023", n: "eSportsPP", d: "Project manager and programmer: managed the project while building features.", k: "team", w: "" },
 ];
@@ -192,7 +192,7 @@ export const XP = [
     stack: [],
   },
   {
-    id: "innosoft", co: "Cebu Innosoft Solutions", chip: "CI", role: "Software Implementor Intern", when: "Sep – Oct 2024", where: "",
+    id: "innosoft", co: "Cebu Innosoft Solutions", chip: "CI", role: "Manual QA Tester Intern", when: "Sep – Oct 2024", where: "",
     summary: "Tested POS systems for sales, inventory and customers.",
     bullets: [
       "Found and reported bugs to the developers",
@@ -244,7 +244,7 @@ export const USES = [
 export const MILESTONES = [
   { y: "Now", p: ["Junior AI Engineer at MSMA, Cebu City (since September 2026)", "Building an in-house product that has not launched yet"] },
   { y: "2025", p: ["BS Information Technology, University of Cebu", "Web developer intern at Alpha Insurance & Surety: led a bail bonds and records system"] },
-  { y: "2024", p: ["Software implementor intern at Cebu Innosoft Solutions: POS testing and documentation", "Programmer on BinBetter, our capstone project"] },
+  { y: "2024", p: ["Manual QA tester intern at Cebu Innosoft Solutions: POS testing and documentation", "Programmer on BinBetter, our capstone project"] },
   { y: "2023", p: ["Project manager and programmer on eSportsPP"] },
   { y: "2019", p: ["TVL Computer Programming, College of Technological Sciences Cebu"] },
 ];
